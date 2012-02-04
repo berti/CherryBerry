@@ -3,5 +3,8 @@
 
     <string name="hello">Hello World, CherryBerryActivity!</string>
     <string name="app_name">CherryBerry</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="default_pomodoro_timer">0:00</string>
 
 </resources>
