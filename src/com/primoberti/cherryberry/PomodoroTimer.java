@@ -40,6 +40,8 @@ public class PomodoroTimer {
 
 	private long breakDuration = 5 * 60 * 1000;
 
+	private PomodoroTimerListener listener;
+
 	/**
 	 * Start a pomodoro count down timer.
 	 * 
@@ -50,7 +52,7 @@ public class PomodoroTimer {
 			cancel();
 		}
 
-		timer = new InternalTimer(millis, 1000);
+		timer = new InternalTimer(millis, 1000, listener);
 		timer.start();
 	}
 
@@ -74,7 +76,7 @@ public class PomodoroTimer {
 					+ " state");
 		}
 
-		timer = new InternalTimer(millis, 1000);
+		timer = new InternalTimer(millis, 1000, listener);
 		timer.start();
 	}
 
@@ -122,6 +124,14 @@ public class PomodoroTimer {
 		this.breakDuration = breakDuration;
 	}
 
+	public PomodoroTimerListener getListener() {
+		return listener;
+	}
+
+	public void setListener(PomodoroTimerListener listener) {
+		this.listener = listener;
+	}
+
 	/* Private methods ************************* */
 
 	/**
@@ -136,20 +146,27 @@ public class PomodoroTimer {
 
 	private class InternalTimer extends CountDownTimer {
 
-		public InternalTimer(long millisInFuture, long countDownInterval) {
+		private PomodoroTimerListener listener;
+
+		public InternalTimer(long millisInFuture, long countDownInterval,
+				PomodoroTimerListener listener) {
 			super(millisInFuture, countDownInterval);
+
+			this.listener = listener;
 		}
 
 		@Override
 		public void onFinish() {
-			// TODO Auto-generated method stub
-
+			if (listener != null) {
+				listener.onFinish(PomodoroTimer.this);
+			}
 		}
 
 		@Override
 		public void onTick(long millisUntilFinished) {
-			// TODO Auto-generated method stub
-
+			if (listener != null) {
+				listener.onTick(PomodoroTimer.this, millisUntilFinished);
+			}
 		}
 
 	}
