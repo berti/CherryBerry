@@ -19,6 +19,8 @@
 
 package com.primoberti.cherryberry;
 
+import android.os.CountDownTimer;
+
 /**
  * Timer-related functionality to control a pomodoro.
  * 
@@ -32,21 +34,67 @@ public class PomodoroTimer {
 
 	private Status status;
 
+	private InternalTimer timer;
+
+	private long pomodoroDuration = 25 * 60 * 1000;
+
+	private long breakDuration = 5 * 60 * 1000;
+
+	/**
+	 * Start a pomodoro count down timer.
+	 * 
+	 * @param millis the duration of the pomodoro
+	 */
 	public void startPomodoro(long millis) {
 		if (isRunning()) {
 			cancel();
 		}
+
+		timer = new InternalTimer(millis, 1000);
+		timer.start();
 	}
 
+	/**
+	 * Start a pomodoro with the default pomodoro duration.
+	 * 
+	 * @see #setPomodoroDuration(long)
+	 */
+	public void startPomodoro() {
+		startPomodoro(pomodoroDuration);
+	}
+
+	/**
+	 * Start a break countdown timer.
+	 * 
+	 * @param millis the duration of the break
+	 */
 	public void startBreak(long millis) {
 		if (status != Status.POMODORO_FINISHED) {
 			throw new IllegalStateException("Can't start break in " + status
 					+ " state");
 		}
+
+		timer = new InternalTimer(millis, 1000);
+		timer.start();
 	}
 
-	public void cancel() {
+	/**
+	 * Start a break with the default break duration.
+	 * 
+	 * @see #setBreakDuration(long)
+	 */
+	public void startBreak() {
+		startBreak(breakDuration);
+	}
 
+	/**
+	 * Cancels the current count down timer.
+	 */
+	public void cancel() {
+		if (timer != null) {
+			timer.cancel();
+			timer = null;
+		}
 	}
 
 	public Status getStatus() {
@@ -56,6 +104,54 @@ public class PomodoroTimer {
 	public boolean isRunning() {
 		return status == Status.POMODORO_RUNNING
 				|| status == Status.BREAK_RUNNING;
+	}
+
+	public long getPomodoroDuration() {
+		return pomodoroDuration;
+	}
+
+	public void setPomodoroDuration(long pomodoroDuration) {
+		this.pomodoroDuration = pomodoroDuration;
+	}
+
+	public long getBreakDuration() {
+		return breakDuration;
+	}
+
+	public void setBreakDuration(long breakDuration) {
+		this.breakDuration = breakDuration;
+	}
+
+	/* Private methods ************************* */
+
+	/**
+	 * Returns the time instant in which the period with the given duration will
+	 * end. Usefull for setting the timer expire time based on its duration.
+	 */
+	private long finishTime(long duration) {
+		return System.currentTimeMillis() + duration;
+	}
+
+	/* Private inner classes ******************* */
+
+	private class InternalTimer extends CountDownTimer {
+
+		public InternalTimer(long millisInFuture, long countDownInterval) {
+			super(millisInFuture, countDownInterval);
+		}
+
+		@Override
+		public void onFinish() {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onTick(long millisUntilFinished) {
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 
 }
