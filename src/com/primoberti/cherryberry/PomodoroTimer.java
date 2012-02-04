@@ -157,6 +157,13 @@ public class PomodoroTimer {
 
 		@Override
 		public void onFinish() {
+			if (status == Status.POMODORO_RUNNING) {
+				status = Status.POMODORO_FINISHED;
+			}
+			else if (status == Status.BREAK_RUNNING) {
+				status = Status.BREAK_FINISHED;
+			}
+			
 			if (listener != null) {
 				listener.onFinish(PomodoroTimer.this);
 			}
