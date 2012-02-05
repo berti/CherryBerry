@@ -78,16 +78,7 @@ public class PomodoroTimerService extends Service {
 	 * @param millis the duration of the pomodoro
 	 */
 	public void startPomodoro(long millis) {
-		if (isRunning()) {
-			cancel();
-		}
-
-		timer = new InternalTimer(millis, 1000, listener);
-		timer.start();
-
-		timerStart = System.currentTimeMillis();
-		timerEnd = timerStart + millis;
-
+		startPomodoroTimer(millis);
 		setPomodoroAlarm(millis);
 	}
 
@@ -101,6 +92,17 @@ public class PomodoroTimerService extends Service {
 	}
 
 	/**
+	 * Start a pomodoro count down timer with the remaining time, but don't set
+	 * any alarm. Use this to continue an existing count down after the timer
+	 * was shutdown.
+	 * 
+	 * @param millis the remaining duration of the pomodoro
+	 */
+	public void continuePomodoro(long millis) {
+		startPomodoroTimer(millis);
+	}
+
+	/**
 	 * Start a break countdown timer.
 	 * 
 	 * @param millis the duration of the break
@@ -111,12 +113,7 @@ public class PomodoroTimerService extends Service {
 					+ " state");
 		}
 
-		timer = new InternalTimer(millis, 1000, listener);
-		timer.start();
-
-		timerStart = System.currentTimeMillis();
-		timerEnd = timerStart + millis;
-
+		startBreakTimer(millis);
 		setBreakAlarm(millis);
 	}
 
@@ -127,6 +124,17 @@ public class PomodoroTimerService extends Service {
 	 */
 	public void startBreak() {
 		startBreak(breakDuration);
+	}
+
+	/**
+	 * Start a break count down timer with the remaining time, but don't set any
+	 * alarm. Use this to continue an existing count down after the timer was
+	 * shutdown.
+	 * 
+	 * @param millis the remaining duration of the break
+	 */
+	public void continueBreak(long millis) {
+		startBreakTimer(millis);
 	}
 
 	/**
@@ -191,6 +199,28 @@ public class PomodoroTimerService extends Service {
 	}
 
 	/* Private methods ************************* */
+
+	private void startPomodoroTimer(long millis) {
+		startTimer(millis);
+		status = Status.POMODORO_RUNNING;
+	}
+
+	public void startBreakTimer(long millis) {
+		startTimer(millis);
+		status = Status.BREAK_RUNNING;
+	}
+
+	private void startTimer(long millis) {
+		if (isRunning()) {
+			cancel();
+		}
+
+		timer = new InternalTimer(millis, 1000, listener);
+		timer.start();
+
+		timerStart = System.currentTimeMillis();
+		timerEnd = timerStart + millis;
+	}
 
 	/**
 	 * Sets an alarm to notify {@link NotificationService} of a finished
