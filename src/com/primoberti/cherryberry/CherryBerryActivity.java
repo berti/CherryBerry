@@ -104,7 +104,7 @@ public class CherryBerryActivity extends Activity {
 	}
 
 	private void onStartClick() {
-		timer.startPomodoro();
+		timer.startPomodoro(this);
 		setPomodoroAlarm(timer.getPomodoroDuration());
 		((Button) findViewById(R.id.startButton)).setEnabled(false);
 		((Button) findViewById(R.id.stopButton)).setEnabled(true);

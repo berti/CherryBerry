@@ -19,6 +19,7 @@
 
 package com.primoberti.cherryberry;
 
+import android.app.Activity;
 import android.os.CountDownTimer;
 
 /**
@@ -51,7 +52,7 @@ public class PomodoroTimer {
 	 * 
 	 * @param millis the duration of the pomodoro
 	 */
-	public void startPomodoro(long millis) {
+	public void startPomodoro(Activity activity, long millis) {
 		if (isRunning()) {
 			cancel();
 		}
@@ -65,8 +66,8 @@ public class PomodoroTimer {
 	 * 
 	 * @see #setPomodoroDuration(long)
 	 */
-	public void startPomodoro() {
-		startPomodoro(pomodoroDuration);
+	public void startPomodoro(Activity activity) {
+		startPomodoro(activity, pomodoroDuration);
 	}
 
 	/**
@@ -74,7 +75,7 @@ public class PomodoroTimer {
 	 * 
 	 * @param millis the duration of the break
 	 */
-	public void startBreak(long millis) {
+	public void startBreak(Activity activity, long millis) {
 		if (status != Status.POMODORO_FINISHED) {
 			throw new IllegalStateException("Can't start break in " + status
 					+ " state");
@@ -89,8 +90,8 @@ public class PomodoroTimer {
 	 * 
 	 * @see #setBreakDuration(long)
 	 */
-	public void startBreak() {
-		startBreak(breakDuration);
+	public void startBreak(Activity activity) {
+		startBreak(activity, breakDuration);
 	}
 
 	/**
