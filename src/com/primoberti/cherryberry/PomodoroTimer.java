@@ -32,6 +32,10 @@ public class PomodoroTimer {
 		IDLE, POMODORO_RUNNING, POMODORO_FINISHED, BREAK_RUNNING, BREAK_FINISHED
 	};
 
+	public static String BREAK_FINISHED = "com.primoberti.cherryberry.BREAK_FINISHED";
+
+	public static String POMODORO_FINISHED = "com.primoberti.cherryberry.POMODORO_FINISHED";
+
 	private Status status;
 
 	private InternalTimer timer;
@@ -163,7 +167,7 @@ public class PomodoroTimer {
 			else if (status == Status.BREAK_RUNNING) {
 				status = Status.BREAK_FINISHED;
 			}
-			
+
 			if (listener != null) {
 				listener.onFinish(PomodoroTimer.this);
 			}

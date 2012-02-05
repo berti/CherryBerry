@@ -32,10 +32,6 @@ import android.widget.TextView;
 
 public class CherryBerryActivity extends Activity {
 
-	public static String POMODORO_FINISHED = "com.primoberti.cherryberry.POMODORO_FINISHED";
-
-	public static String BREAK_FINISHED = "com.primoberti.cherryberry.BREAK_FINISHED";
-
 	private PomodoroTimer timer;
 
 	/** Called when the activity is first created. */
@@ -77,7 +73,7 @@ public class CherryBerryActivity extends Activity {
 	 * @param millis duration of the pomodoro
 	 */
 	private void setPomodoroAlarm(long millis) {
-		setAlarm(millis, POMODORO_FINISHED);
+		setAlarm(millis, PomodoroTimer.POMODORO_FINISHED);
 	}
 
 	/**
@@ -86,7 +82,7 @@ public class CherryBerryActivity extends Activity {
 	 * @param millis duration of the break
 	 */
 	private void setBreakAlarm(long millis) {
-		setAlarm(millis, BREAK_FINISHED);
+		setAlarm(millis, PomodoroTimer.BREAK_FINISHED);
 	}
 
 	/**
