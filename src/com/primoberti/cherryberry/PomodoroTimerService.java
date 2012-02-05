@@ -25,6 +25,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 
@@ -59,12 +60,13 @@ public class PomodoroTimerService extends Service {
 
 	private PomodoroTimerListener listener;
 
+	private IBinder binder = new LocalBinder();
+
 	/* Public methods ************************** */
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
-		return null;
+		return binder;
 	}
 
 	/**
@@ -207,6 +209,16 @@ public class PomodoroTimerService extends Service {
 	 */
 	private long finishTime(long duration) {
 		return System.currentTimeMillis() + duration;
+	}
+
+	/* Public inner classes ******************** */
+
+	public class LocalBinder extends Binder {
+
+		PomodoroTimerService getService() {
+			return PomodoroTimerService.this;
+		}
+
 	}
 
 	/* Private inner classes ******************* */
