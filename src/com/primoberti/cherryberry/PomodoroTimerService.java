@@ -35,13 +35,19 @@ import android.os.IBinder;
  */
 public class PomodoroTimerService extends Service {
 
+	/* Public enumerations ********************* */
+
 	public enum Status {
 		IDLE, POMODORO_RUNNING, POMODORO_FINISHED, BREAK_RUNNING, BREAK_FINISHED
 	};
 
-	public static String BREAK_FINISHED = "com.primoberti.cherryberry.BREAK_FINISHED";
+	/* Public constants ************************ */
 
-	public static String POMODORO_FINISHED = "com.primoberti.cherryberry.POMODORO_FINISHED";
+	public final static String BREAK_FINISHED = "com.primoberti.cherryberry.BREAK_FINISHED";
+
+	public final static String POMODORO_FINISHED = "com.primoberti.cherryberry.POMODORO_FINISHED";
+
+	/* Private fields ************************** */
 
 	private Status status;
 
@@ -52,6 +58,8 @@ public class PomodoroTimerService extends Service {
 	private long breakDuration = 5 * 60 * 1000;
 
 	private PomodoroTimerListener listener;
+
+	/* Public methods ************************** */
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -97,7 +105,7 @@ public class PomodoroTimerService extends Service {
 
 		timer = new InternalTimer(millis, 1000, listener);
 		timer.start();
-		
+
 		setBreakAlarm(activity, millis);
 	}
 
