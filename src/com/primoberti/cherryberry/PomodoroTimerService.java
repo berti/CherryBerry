@@ -54,6 +54,10 @@ public class PomodoroTimerService extends Service {
 
 	private InternalTimer timer;
 
+	private long timerStart;
+
+	private long timerEnd;
+
 	private long pomodoroDuration = 25 * 60 * 1000;
 
 	private long breakDuration = 5 * 60 * 1000;
@@ -82,6 +86,9 @@ public class PomodoroTimerService extends Service {
 		timer = new InternalTimer(millis, 1000, listener);
 		timer.start();
 
+		timerStart = System.currentTimeMillis();
+		timerEnd = timerStart + millis;
+
 		setPomodoroAlarm(activity, millis);
 	}
 
@@ -107,6 +114,9 @@ public class PomodoroTimerService extends Service {
 
 		timer = new InternalTimer(millis, 1000, listener);
 		timer.start();
+
+		timerStart = System.currentTimeMillis();
+		timerEnd = timerStart + millis;
 
 		setBreakAlarm(activity, millis);
 	}
@@ -137,6 +147,24 @@ public class PomodoroTimerService extends Service {
 	public boolean isRunning() {
 		return status == Status.POMODORO_RUNNING
 				|| status == Status.BREAK_RUNNING;
+	}
+
+	/**
+	 * Returns the start time of the current count down timer.
+	 * 
+	 * @return start time of the current count down timer
+	 */
+	public long getTimerStart() {
+		return timerStart;
+	}
+
+	/**
+	 * Returns the end time of the current count down timer.
+	 * 
+	 * @return start time of the current count down timer
+	 */
+	public long getTimerEnd() {
+		return timerEnd;
 	}
 
 	public long getPomodoroDuration() {
