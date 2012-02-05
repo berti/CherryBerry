@@ -19,8 +19,15 @@
 
 package com.primoberti.cherryberry;
 
+import com.primoberti.cherryberry.PomodoroTimerService.LocalBinder;
+
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -29,8 +36,10 @@ import android.widget.TextView;
 public class CherryBerryActivity extends Activity {
 
 	private PomodoroTimerService timerService;
-	
+
 	private boolean timerServiceBound = false;
+
+	private ServiceConnection timerServiceConnection;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -38,10 +47,7 @@ public class CherryBerryActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		timerService = new PomodoroTimerService();
-		timerService.setPomodoroDuration(25 * 60 * 1000);
-		timerService.setBreakDuration(5 * 60 * 1000);
-		timerService.setListener(new MyPomodoroTimerListener());
+		timerServiceConnection = new PomodoroTimerServiceConnector();
 
 		Button button = (Button) findViewById(R.id.startButton);
 		button.setOnClickListener(new OnClickListener() {
@@ -62,17 +68,29 @@ public class CherryBerryActivity extends Activity {
 		});
 	}
 
+	@Override
+	protected void onStart() {
+		super.onStart();
+
+		Intent intent = new Intent(this, PomodoroTimerService.class);
+		bindService(intent, timerServiceConnection, BIND_AUTO_CREATE);
+	}
+
 	/* Private methods ************************* */
 
 	private void onStartClick() {
-		timerService.startPomodoro(this);
-		((Button) findViewById(R.id.startButton)).setEnabled(false);
-		((Button) findViewById(R.id.stopButton)).setEnabled(true);
+		if (timerServiceBound) {
+			timerService.startPomodoro(this);
+			((Button) findViewById(R.id.startButton)).setEnabled(false);
+			((Button) findViewById(R.id.stopButton)).setEnabled(true);
+		}
 	}
 
 	private void onStopClick() {
-		timerService.cancel();
-		onFinish();
+		if (timerServiceBound) {
+			timerService.cancel();
+			onFinish();
+		}
 	}
 
 	private void updateTimer(long millis) {
@@ -90,6 +108,28 @@ public class CherryBerryActivity extends Activity {
 	}
 
 	/* Private inner classes ******************* */
+
+	private class PomodoroTimerServiceConnector implements ServiceConnection {
+
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			timerService = ((LocalBinder) service).getService();
+			timerServiceBound = true;
+
+			timerService.setPomodoroDuration(25 * 60 * 1000);
+			timerService.setBreakDuration(5 * 60 * 1000);
+			timerService.setListener(new MyPomodoroTimerListener());
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			Log.e(CherryBerryActivity.class.getName(), "onServiceConnected");
+
+			timerService = null;
+			timerServiceBound = false;
+		}
+
+	}
 
 	private class MyPomodoroTimerListener implements PomodoroTimerListener {
 
