@@ -64,10 +64,13 @@ public class CherryBerryActivity extends Activity {
 
 	private void onStartClick() {
 		timer.startPomodoro();
+		((Button) findViewById(R.id.startButton)).setEnabled(false);
+		((Button) findViewById(R.id.stopButton)).setEnabled(true);
 	}
 
 	private void onStopClick() {
 		timer.cancel();
+		onFinish();
 	}
 
 	private void updateTimer(long millis) {
@@ -77,6 +80,12 @@ public class CherryBerryActivity extends Activity {
 		TextView timerTextView = (TextView) findViewById(R.id.timerTextView);
 		timerTextView.setText(String.format("%d:%02d", minutes, seconds));
 	}
+	
+	private void onFinish() {
+		updateTimer(0);
+		((Button) findViewById(R.id.startButton)).setEnabled(true);
+		((Button) findViewById(R.id.stopButton)).setEnabled(false);
+	}
 
 	/* Private inner classes ******************* */
 
@@ -84,7 +93,7 @@ public class CherryBerryActivity extends Activity {
 
 		@Override
 		public void onFinish(PomodoroTimer timer) {
-			updateTimer(0);
+			CherryBerryActivity.this.onFinish();
 		}
 
 		@Override
