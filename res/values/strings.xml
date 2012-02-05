@@ -4,5 +4,7 @@
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="default_pomodoro_timer">0:00</string>
+    <string name="pomodoro_finished_toast">Pomodoro finished</string>
+    <string name="break_finished_toast">Break finished</string>
 
 </resources>

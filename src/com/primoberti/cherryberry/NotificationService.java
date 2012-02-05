@@ -41,13 +41,13 @@ public class NotificationService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent.getAction().equals(CherryBerryActivity.POMODORO_FINISHED)) {
 			Context context = getApplicationContext();
-			Toast.makeText(context, "Pomodoro finished", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(context, R.string.pomodoro_finished_toast,
+					Toast.LENGTH_SHORT).show();
 		}
 		else if (intent.getAction().equals(CherryBerryActivity.BREAK_FINISHED)) {
 			Context context = getApplicationContext();
-			Toast.makeText(context, "Break finished", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(context, R.string.break_finished_toast,
+					Toast.LENGTH_SHORT).show();
 		}
 
 		stopSelf();
