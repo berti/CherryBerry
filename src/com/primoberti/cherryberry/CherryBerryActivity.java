@@ -96,7 +96,7 @@ public class CherryBerryActivity extends Activity {
 
 	private void onStartClick() {
 		if (timerServiceBound) {
-			timerService.startPomodoro(this);
+			timerService.startPomodoro();
 			((Button) findViewById(R.id.startButton)).setEnabled(false);
 			((Button) findViewById(R.id.stopButton)).setEnabled(true);
 		}

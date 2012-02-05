@@ -19,7 +19,6 @@
 
 package com.primoberti.cherryberry;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -78,7 +77,7 @@ public class PomodoroTimerService extends Service {
 	 * 
 	 * @param millis the duration of the pomodoro
 	 */
-	public void startPomodoro(Activity activity, long millis) {
+	public void startPomodoro(long millis) {
 		if (isRunning()) {
 			cancel();
 		}
@@ -89,7 +88,7 @@ public class PomodoroTimerService extends Service {
 		timerStart = System.currentTimeMillis();
 		timerEnd = timerStart + millis;
 
-		setPomodoroAlarm(activity, millis);
+		setPomodoroAlarm(millis);
 	}
 
 	/**
@@ -97,8 +96,8 @@ public class PomodoroTimerService extends Service {
 	 * 
 	 * @see #setPomodoroDuration(long)
 	 */
-	public void startPomodoro(Activity activity) {
-		startPomodoro(activity, pomodoroDuration);
+	public void startPomodoro() {
+		startPomodoro(pomodoroDuration);
 	}
 
 	/**
@@ -106,7 +105,7 @@ public class PomodoroTimerService extends Service {
 	 * 
 	 * @param millis the duration of the break
 	 */
-	public void startBreak(Activity activity, long millis) {
+	public void startBreak(long millis) {
 		if (status != Status.POMODORO_FINISHED) {
 			throw new IllegalStateException("Can't start break in " + status
 					+ " state");
@@ -118,7 +117,7 @@ public class PomodoroTimerService extends Service {
 		timerStart = System.currentTimeMillis();
 		timerEnd = timerStart + millis;
 
-		setBreakAlarm(activity, millis);
+		setBreakAlarm(millis);
 	}
 
 	/**
@@ -126,8 +125,8 @@ public class PomodoroTimerService extends Service {
 	 * 
 	 * @see #setBreakDuration(long)
 	 */
-	public void startBreak(Activity activity) {
-		startBreak(activity, breakDuration);
+	public void startBreak() {
+		startBreak(breakDuration);
 	}
 
 	/**
@@ -199,8 +198,8 @@ public class PomodoroTimerService extends Service {
 	 * 
 	 * @param millis duration of the pomodoro
 	 */
-	private void setPomodoroAlarm(Activity activity, long millis) {
-		setAlarm(activity, millis, PomodoroTimerService.POMODORO_FINISHED);
+	private void setPomodoroAlarm(long millis) {
+		setAlarm(millis, PomodoroTimerService.POMODORO_FINISHED);
 	}
 
 	/**
@@ -208,8 +207,8 @@ public class PomodoroTimerService extends Service {
 	 * 
 	 * @param millis duration of the break
 	 */
-	private void setBreakAlarm(Activity activity, long millis) {
-		setAlarm(activity, millis, PomodoroTimerService.BREAK_FINISHED);
+	private void setBreakAlarm(long millis) {
+		setAlarm(millis, PomodoroTimerService.BREAK_FINISHED);
 	}
 
 	/**
@@ -218,15 +217,15 @@ public class PomodoroTimerService extends Service {
 	 * @param millis duration of the pomodoro
 	 * @param action action to send to NotificationService
 	 */
-	private void setAlarm(Activity activity, long millis, String action) {
+	private void setAlarm(long millis, String action) {
 		long finishTime = System.currentTimeMillis() + millis;
 
-		Intent intent = new Intent(activity, NotificationService.class);
+		Intent intent = new Intent(this, NotificationService.class);
 		intent.setAction(action);
-		PendingIntent pendingIntent = PendingIntent.getService(activity, 0,
-				intent, 0);
+		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent,
+				0);
 
-		AlarmManager alarmManager = (AlarmManager) activity
+		AlarmManager alarmManager = (AlarmManager) this
 				.getSystemService(Context.ALARM_SERVICE);
 		alarmManager.set(AlarmManager.RTC_WAKEUP, finishTime, pendingIntent);
 	}
