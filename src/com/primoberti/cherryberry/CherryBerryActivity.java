@@ -21,13 +21,76 @@ package com.primoberti.cherryberry;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class CherryBerryActivity extends Activity {
+
+	private PomodoroTimer timer;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
+		timer = new PomodoroTimer();
+		timer.setPomodoroDuration(25 * 60 * 1000);
+		timer.setBreakDuration(5 * 60 * 1000);
+		timer.setListener(new MyPomodoroTimerListener());
+
+		Button button = (Button) findViewById(R.id.startButton);
+		button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				onStartClick();
+			}
+		});
+
+		button = (Button) findViewById(R.id.stopButton);
+		button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				onStopClick();
+			}
+		});
+	}
+
+	/* Private methods ************************* */
+
+	private void onStartClick() {
+		timer.startPomodoro();
+	}
+
+	private void onStopClick() {
+		timer.cancel();
+	}
+
+	private void updateTimer(long millis) {
+		long minutes = millis / 1000 / 60;
+		long seconds = millis / 1000 % 60;
+
+		TextView timerTextView = (TextView) findViewById(R.id.timerTextView);
+		timerTextView.setText(String.format("%d:%02d", minutes, seconds));
+	}
+
+	/* Private inner classes ******************* */
+
+	private class MyPomodoroTimerListener implements PomodoroTimerListener {
+
+		@Override
+		public void onFinish(PomodoroTimer timer) {
+			updateTimer(0);
+		}
+
+		@Override
+		public void onTick(PomodoroTimer timer, long millisUntilFinished) {
+			updateTimer(millisUntilFinished);
+		}
+
 	}
 }
