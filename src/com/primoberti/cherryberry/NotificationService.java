@@ -44,6 +44,11 @@ public class NotificationService extends Service {
 			Toast.makeText(context, "Pomodoro finished", Toast.LENGTH_SHORT)
 					.show();
 		}
+		else if (intent.getAction().equals(CherryBerryActivity.BREAK_FINISHED)) {
+			Context context = getApplicationContext();
+			Toast.makeText(context, "Break finished", Toast.LENGTH_SHORT)
+					.show();
+		}
 
 		stopSelf();
 

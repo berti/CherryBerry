@@ -30,6 +30,8 @@ public class CherryBerryActivity extends Activity {
 
 	public static String POMODORO_FINISHED = "com.primoberti.cherryberry.POMODORO_FINISHED";
 
+	public static String BREAK_FINISHED = "com.primoberti.cherryberry.BREAK_FINISHED";
+
 	private PomodoroTimer timer;
 
 	/** Called when the activity is first created. */
