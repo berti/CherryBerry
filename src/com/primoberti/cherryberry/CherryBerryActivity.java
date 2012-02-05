@@ -76,6 +76,22 @@ public class CherryBerryActivity extends Activity {
 		bindService(intent, timerServiceConnection, BIND_AUTO_CREATE);
 	}
 
+	@Override
+	protected void onStop() {
+		timerService.cancel();
+		unbindService(timerServiceConnection);
+
+		super.onStop();
+	}
+
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+
+		Intent intent = new Intent(this, PomodoroTimerService.class);
+		bindService(intent, timerServiceConnection, BIND_AUTO_CREATE);
+	}
+
 	/* Private methods ************************* */
 
 	private void onStartClick() {
