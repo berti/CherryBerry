@@ -89,6 +89,8 @@ public class PomodoroTimer {
 
 		timer = new InternalTimer(millis, 1000, listener);
 		timer.start();
+		
+		setBreakAlarm(activity, millis);
 	}
 
 	/**
