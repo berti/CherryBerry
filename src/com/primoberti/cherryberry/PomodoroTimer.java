@@ -20,6 +20,10 @@
 package com.primoberti.cherryberry;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.CountDownTimer;
 
 /**
@@ -59,6 +63,8 @@ public class PomodoroTimer {
 
 		timer = new InternalTimer(millis, 1000, listener);
 		timer.start();
+
+		setPomodoroAlarm(activity, millis);
 	}
 
 	/**
@@ -138,6 +144,44 @@ public class PomodoroTimer {
 	}
 
 	/* Private methods ************************* */
+
+	/**
+	 * Sets an alarm to notify {@link NotificationService} of a finished
+	 * pomodoro.
+	 * 
+	 * @param millis duration of the pomodoro
+	 */
+	private void setPomodoroAlarm(Activity activity, long millis) {
+		setAlarm(activity, millis, PomodoroTimer.POMODORO_FINISHED);
+	}
+
+	/**
+	 * Sets an alarm to notify {@link NotificationService} of a finished break.
+	 * 
+	 * @param millis duration of the break
+	 */
+	private void setBreakAlarm(Activity activity, long millis) {
+		setAlarm(activity, millis, PomodoroTimer.BREAK_FINISHED);
+	}
+
+	/**
+	 * Sets an alarm to send the given action to {@link NotificationService}.
+	 * 
+	 * @param millis duration of the pomodoro
+	 * @param action action to send to NotificationService
+	 */
+	private void setAlarm(Activity activity, long millis, String action) {
+		long finishTime = System.currentTimeMillis() + millis;
+
+		Intent intent = new Intent(activity, NotificationService.class);
+		intent.setAction(action);
+		PendingIntent pendingIntent = PendingIntent.getService(activity, 0,
+				intent, 0);
+
+		AlarmManager alarmManager = (AlarmManager) activity
+				.getSystemService(Context.ALARM_SERVICE);
+		alarmManager.set(AlarmManager.RTC_WAKEUP, finishTime, pendingIntent);
+	}
 
 	/**
 	 * Returns the time instant in which the period with the given duration will
