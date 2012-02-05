@@ -20,6 +20,10 @@
 package com.primoberti.cherryberry;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -66,8 +70,46 @@ public class CherryBerryActivity extends Activity {
 
 	/* Private methods ************************* */
 
+	/**
+	 * Sets an alarm to notify {@link NotificationService} of a finished
+	 * pomodoro.
+	 * 
+	 * @param millis duration of the pomodoro
+	 */
+	private void setPomodoroAlarm(long millis) {
+		setAlarm(millis, POMODORO_FINISHED);
+	}
+
+	/**
+	 * Sets an alarm to notify {@link NotificationService} of a finished break.
+	 * 
+	 * @param millis duration of the break
+	 */
+	private void setBreakAlarm(long millis) {
+		setAlarm(millis, BREAK_FINISHED);
+	}
+
+	/**
+	 * Sets an alarm to send the given action to {@link NotificationService}.
+	 * 
+	 * @param millis duration of the pomodoro
+	 * @param action action to send to NotificationService
+	 */
+	private void setAlarm(long millis, String action) {
+		long finishTime = System.currentTimeMillis() + millis;
+
+		Intent intent = new Intent(this, NotificationService.class);
+		intent.setAction(action);
+		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent,
+				0);
+
+		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		alarmManager.set(AlarmManager.RTC_WAKEUP, finishTime, pendingIntent);
+	}
+
 	private void onStartClick() {
 		timer.startPomodoro();
+		setPomodoroAlarm(timer.getPomodoroDuration());
 		((Button) findViewById(R.id.startButton)).setEnabled(false);
 		((Button) findViewById(R.id.stopButton)).setEnabled(true);
 	}
