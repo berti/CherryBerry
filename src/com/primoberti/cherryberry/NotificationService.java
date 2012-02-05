@@ -40,19 +40,20 @@ public class NotificationService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent.getAction().equals(CherryBerryActivity.POMODORO_FINISHED)) {
-			Context context = getApplicationContext();
-			Toast.makeText(context, R.string.pomodoro_finished_toast,
-					Toast.LENGTH_SHORT).show();
+			showToast(R.string.pomodoro_finished_toast);
 		}
 		else if (intent.getAction().equals(CherryBerryActivity.BREAK_FINISHED)) {
-			Context context = getApplicationContext();
-			Toast.makeText(context, R.string.break_finished_toast,
-					Toast.LENGTH_SHORT).show();
+			showToast(R.string.break_finished_toast);
 		}
 
 		stopSelf();
 
 		return START_NOT_STICKY;
+	}
+
+	private void showToast(int message) {
+		Context context = getApplicationContext();
+		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 	}
 
 }
