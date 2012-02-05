@@ -39,10 +39,10 @@ public class NotificationService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent.getAction().equals(PomodoroTimer.POMODORO_FINISHED)) {
+		if (intent.getAction().equals(PomodoroTimerService.POMODORO_FINISHED)) {
 			showToast(R.string.pomodoro_finished_toast);
 		}
-		else if (intent.getAction().equals(PomodoroTimer.BREAK_FINISHED)) {
+		else if (intent.getAction().equals(PomodoroTimerService.BREAK_FINISHED)) {
 			showToast(R.string.break_finished_toast);
 		}
 

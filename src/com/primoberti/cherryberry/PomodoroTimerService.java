@@ -22,16 +22,18 @@ package com.primoberti.cherryberry;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.os.IBinder;
 
 /**
  * Timer-related functionality to control a pomodoro.
  * 
  * @author berti
  */
-public class PomodoroTimer {
+public class PomodoroTimerService extends Service {
 
 	public enum Status {
 		IDLE, POMODORO_RUNNING, POMODORO_FINISHED, BREAK_RUNNING, BREAK_FINISHED
@@ -50,6 +52,12 @@ public class PomodoroTimer {
 	private long breakDuration = 5 * 60 * 1000;
 
 	private PomodoroTimerListener listener;
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	/**
 	 * Start a pomodoro count down timer.
@@ -154,7 +162,7 @@ public class PomodoroTimer {
 	 * @param millis duration of the pomodoro
 	 */
 	private void setPomodoroAlarm(Activity activity, long millis) {
-		setAlarm(activity, millis, PomodoroTimer.POMODORO_FINISHED);
+		setAlarm(activity, millis, PomodoroTimerService.POMODORO_FINISHED);
 	}
 
 	/**
@@ -163,7 +171,7 @@ public class PomodoroTimer {
 	 * @param millis duration of the break
 	 */
 	private void setBreakAlarm(Activity activity, long millis) {
-		setAlarm(activity, millis, PomodoroTimer.BREAK_FINISHED);
+		setAlarm(activity, millis, PomodoroTimerService.BREAK_FINISHED);
 	}
 
 	/**
@@ -216,14 +224,14 @@ public class PomodoroTimer {
 			}
 
 			if (listener != null) {
-				listener.onFinish(PomodoroTimer.this);
+				listener.onFinish(PomodoroTimerService.this);
 			}
 		}
 
 		@Override
 		public void onTick(long millisUntilFinished) {
 			if (listener != null) {
-				listener.onTick(PomodoroTimer.this, millisUntilFinished);
+				listener.onTick(PomodoroTimerService.this, millisUntilFinished);
 			}
 		}
 

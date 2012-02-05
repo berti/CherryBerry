@@ -20,14 +20,14 @@
 package com.primoberti.cherryberry;
 
 /**
- * A listener interface for {@link PomodoroTimer} events.
+ * A listener interface for {@link PomodoroTimerService} events.
  * 
  * @author berti
  */
 public interface PomodoroTimerListener {
 
-	public void onFinish(PomodoroTimer timer);
+	public void onFinish(PomodoroTimerService timer);
 
-	public void onTick(PomodoroTimer timer, long millisUntilFinished);
+	public void onTick(PomodoroTimerService timer, long millisUntilFinished);
 
 }

@@ -28,7 +28,7 @@ import android.widget.TextView;
 
 public class CherryBerryActivity extends Activity {
 
-	private PomodoroTimer timer;
+	private PomodoroTimerService timer;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -36,7 +36,7 @@ public class CherryBerryActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		timer = new PomodoroTimer();
+		timer = new PomodoroTimerService();
 		timer.setPomodoroDuration(25 * 60 * 1000);
 		timer.setBreakDuration(5 * 60 * 1000);
 		timer.setListener(new MyPomodoroTimerListener());
@@ -92,12 +92,12 @@ public class CherryBerryActivity extends Activity {
 	private class MyPomodoroTimerListener implements PomodoroTimerListener {
 
 		@Override
-		public void onFinish(PomodoroTimer timer) {
+		public void onFinish(PomodoroTimerService timer) {
 			CherryBerryActivity.this.onFinish();
 		}
 
 		@Override
-		public void onTick(PomodoroTimer timer, long millisUntilFinished) {
+		public void onTick(PomodoroTimerService timer, long millisUntilFinished) {
 			updateTimer(millisUntilFinished);
 		}
 
