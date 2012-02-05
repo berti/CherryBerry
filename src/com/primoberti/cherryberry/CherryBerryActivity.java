@@ -28,6 +28,8 @@ import android.widget.TextView;
 
 public class CherryBerryActivity extends Activity {
 
+	public static String POMODORO_FINISHED = "com.primoberti.cherryberry.POMODORO_FINISHED";
+
 	private PomodoroTimer timer;
 
 	/** Called when the activity is first created. */
@@ -80,7 +82,7 @@ public class CherryBerryActivity extends Activity {
 		TextView timerTextView = (TextView) findViewById(R.id.timerTextView);
 		timerTextView.setText(String.format("%d:%02d", minutes, seconds));
 	}
-	
+
 	private void onFinish() {
 		updateTimer(0);
 		((Button) findViewById(R.id.startButton)).setEnabled(true);
