@@ -80,6 +80,8 @@ public class PomodoroTimerService extends Service {
 	public void startPomodoro(long millis) {
 		startPomodoroTimer(millis);
 		setPomodoroAlarm(millis);
+		setPersistentNotification(millis,
+				PersistentNotificationService.POMODORO_STARTED);
 	}
 
 	/**
@@ -258,6 +260,16 @@ public class PomodoroTimerService extends Service {
 		AlarmManager alarmManager = (AlarmManager) this
 				.getSystemService(Context.ALARM_SERVICE);
 		alarmManager.set(AlarmManager.RTC_WAKEUP, finishTime, pendingIntent);
+	}
+
+	private void setPersistentNotification(long millis, String action) {
+		long finishTime = System.currentTimeMillis() + millis;
+
+		Intent intent = new Intent(this, PersistentNotificationService.class);
+		intent.setAction(action);
+		intent.putExtra(PersistentNotificationService.EXTRA_FINISH_TIME,
+				finishTime);
+		startService(intent);
 	}
 
 	/**
