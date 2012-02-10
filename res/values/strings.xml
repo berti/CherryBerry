@@ -8,5 +8,7 @@
     <string name="break_finished_notification_title">Break finished</string>
     <string name="pomodoro_finished_notification_content">Pomodoro finished, take a break!</string>
     <string name="break_finished_notification_content">Break finished, get back to work!</string>
+    <string name="pomodoro_running_notification_title">Pomodoro started</string>
+    <string name="pomodoro_running_notification_content">Pomodoro running - ends at %1$s</string>
 
 </resources>

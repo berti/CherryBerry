@@ -28,6 +28,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
@@ -269,11 +270,14 @@ public class PomodoroTimerService extends Service {
 	private void showPersistentPomodoroNotification(long millis) {
 		long finishTime = System.currentTimeMillis() + millis;
 
+		Resources resources = getResources();
+
 		String ns = Context.NOTIFICATION_SERVICE;
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
 
 		int icon = R.drawable.ic_notification;
-		CharSequence tickerText = "Pomodoro started";
+		CharSequence tickerText = resources
+				.getString(R.string.pomodoro_running_notification_title);
 		long when = System.currentTimeMillis();
 		Notification notification = new Notification(icon, tickerText, when);
 		notification.flags |= Notification.FLAG_ONGOING_EVENT;
@@ -283,9 +287,10 @@ public class PomodoroTimerService extends Service {
 				.getTimeFormat(getApplicationContext());
 
 		Context context = getApplicationContext();
-		CharSequence contentTitle = "CherryBerry";
-		CharSequence contentText = "Pomodoro running - ends at "
-				+ dateFormat.format(date);
+		CharSequence contentTitle = resources.getString(R.string.app_name);
+		CharSequence contentText = String.format(resources
+				.getString(R.string.pomodoro_running_notification_content),
+				dateFormat.format(date));
 		Intent notificationIntent = new Intent(this, CherryBerryActivity.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				notificationIntent, 0);
