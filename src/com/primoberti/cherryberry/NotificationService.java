@@ -26,7 +26,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.widget.Toast;
 
 /**
  * Service for displaying notifications related to a pomodoro.
@@ -52,7 +51,7 @@ public class NotificationService extends Service {
 			showPomodoroNotification();
 		}
 		else if (intent.getAction().equals(PomodoroTimerService.BREAK_FINISHED)) {
-			showToast(R.string.break_finished_toast);
+			showBreakNotification();
 		}
 
 		stopSelf();
@@ -62,14 +61,14 @@ public class NotificationService extends Service {
 
 	/* Private methods ************************* */
 
-	private void showToast(int message) {
-		Context context = getApplicationContext();
-		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+	private void showPomodoroNotification() {
+		showNotification(NOTIFICATION_ID, "Pomodoro finished", "CherryBerry",
+				"Pomodoro finished, take a break!");
 	}
 
-	private void showPomodoroNotification() {
-		showNotification(NOTIFICATION_ID, "Pomodoro finished",
-				"CherryBerry", "Pomodoro finished, take a break!");
+	private void showBreakNotification() {
+		showNotification(NOTIFICATION_ID, "Break finished", "CherryBerry",
+				"Break finished!");
 	}
 
 	private void showNotification(int id, CharSequence tickerText,
