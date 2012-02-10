@@ -41,15 +41,11 @@ public class CherryBerryActivity extends Activity {
 
 	private ServiceConnection timerServiceConnection;
 
-	private final static String STATE_POMODORO_END = "pomodoroFinish";
-
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
-		restoreInstanceState(savedInstanceState);
 
 		timerServiceConnection = new PomodoroTimerServiceConnector();
 
@@ -96,33 +92,7 @@ public class CherryBerryActivity extends Activity {
 		bindService(intent, timerServiceConnection, BIND_AUTO_CREATE);
 	}
 
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		Log.d("CherryBerry", "onSaveInstanceState");
-		super.onSaveInstanceState(outState);
-
-		outState.putLong(STATE_POMODORO_END, timerService.getTimerEnd());
-	}
-
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		Log.d("CherryBerry", "onRestoreInstanceState");
-		super.onRestoreInstanceState(savedInstanceState);
-
-		restoreInstanceState(savedInstanceState);
-	}
-
 	/* Private methods ************************* */
-
-	private void restoreInstanceState(Bundle savedInstanceState) {
-		if (savedInstanceState != null) {
-			long timerEnd = savedInstanceState.getLong(STATE_POMODORO_END);
-			if (timerEnd != 0L && !timerService.isRunning()) {
-				timerService.continuePomodoro(timerEnd
-						- System.currentTimeMillis());
-			}
-		}
-	}
 
 	private void onStartClick() {
 		if (timerServiceBound) {
