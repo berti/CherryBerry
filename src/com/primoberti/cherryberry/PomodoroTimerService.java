@@ -52,10 +52,6 @@ public class PomodoroTimerService extends Service {
 
 	public final static String POMODORO_FINISHED = "com.primoberti.cherryberry.POMODORO_FINISHED";
 
-	/* Private constants *********************** */
-
-	private final static int NOTIFICATION_POMODORO_STARTED = 1;
-
 	/* Private fields ************************** */
 
 	private Status status;
@@ -296,8 +292,8 @@ public class PomodoroTimerService extends Service {
 		notification.setLatestEventInfo(context, contentTitle, contentText,
 				contentIntent);
 
-		mNotificationManager
-				.notify(NOTIFICATION_POMODORO_STARTED, notification);
+		mNotificationManager.notify(NotificationService.NOTIFICATION_ID,
+				notification);
 	}
 
 	/**

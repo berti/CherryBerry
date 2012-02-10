@@ -19,6 +19,9 @@
 
 package com.primoberti.cherryberry;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +35,12 @@ import android.widget.Toast;
  */
 public class NotificationService extends Service {
 
+	/* Public constants ************************ */
+
+	public final static int NOTIFICATION_ID = 1;
+
+	/* Public methods ************************** */
+
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
@@ -40,7 +49,7 @@ public class NotificationService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent.getAction().equals(PomodoroTimerService.POMODORO_FINISHED)) {
-			showToast(R.string.pomodoro_finished_toast);
+			showPomodoroNotification();
 		}
 		else if (intent.getAction().equals(PomodoroTimerService.BREAK_FINISHED)) {
 			showToast(R.string.break_finished_toast);
@@ -51,9 +60,36 @@ public class NotificationService extends Service {
 		return START_NOT_STICKY;
 	}
 
+	/* Private methods ************************* */
+
 	private void showToast(int message) {
 		Context context = getApplicationContext();
 		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+	}
+
+	private void showPomodoroNotification() {
+		showNotification(NOTIFICATION_ID, "Pomodoro finished",
+				"CherryBerry", "Pomodoro finished, take a break!");
+	}
+
+	private void showNotification(int id, CharSequence tickerText,
+			CharSequence contentTitle, CharSequence contentText) {
+		String ns = Context.NOTIFICATION_SERVICE;
+		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+
+		int icon = R.drawable.ic_notification;
+		long when = System.currentTimeMillis();
+		Notification notification = new Notification(icon, tickerText, when);
+		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+
+		Context context = getApplicationContext();
+		Intent notificationIntent = new Intent(this, CherryBerryActivity.class);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+				notificationIntent, 0);
+		notification.setLatestEventInfo(context, contentTitle, contentText,
+				contentIntent);
+
+		mNotificationManager.notify(id, notification);
 	}
 
 }
