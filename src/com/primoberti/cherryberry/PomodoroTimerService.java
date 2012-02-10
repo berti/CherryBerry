@@ -122,6 +122,7 @@ public class PomodoroTimerService extends Service {
 
 		startBreakTimer(millis);
 		setBreakAlarm(millis);
+		showPersistentBreakNotification(millis);
 	}
 
 	/**
@@ -268,6 +269,21 @@ public class PomodoroTimerService extends Service {
 	}
 
 	private void showPersistentPomodoroNotification(long millis) {
+		showPersistentNotification(NotificationService.NOTIFICATION_ID,
+				R.string.pomodoro_running_notification_title,
+				R.string.app_name,
+				R.string.pomodoro_running_notification_content, millis);
+	}
+
+	private void showPersistentBreakNotification(long millis) {
+		showPersistentNotification(NotificationService.NOTIFICATION_ID,
+				R.string.pomodoro_running_notification_title,
+				R.string.app_name,
+				R.string.pomodoro_running_notification_content, millis);
+	}
+
+	private void showPersistentNotification(int id, int tickerText,
+			int contentTitle, int contentText, long millis) {
 		long finishTime = System.currentTimeMillis() + millis;
 
 		Resources resources = getResources();
@@ -276,29 +292,27 @@ public class PomodoroTimerService extends Service {
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
 
 		int icon = R.drawable.ic_notification;
-		CharSequence tickerText = resources
-				.getString(R.string.pomodoro_running_notification_title);
 		long when = System.currentTimeMillis();
-		Notification notification = new Notification(icon, tickerText, when);
+		Notification notification = new Notification(icon,
+				resources.getString(tickerText), when);
 		notification.flags |= Notification.FLAG_ONGOING_EVENT;
 
 		Date date = new Date(finishTime);
 		java.text.DateFormat dateFormat = DateFormat
 				.getTimeFormat(getApplicationContext());
+		String contentTextFormat = getResources().getString(
+				R.string.pomodoro_running_notification_content);
+		String contentText2 = String.format(contentTextFormat,
+				dateFormat.format(date));
 
 		Context context = getApplicationContext();
-		CharSequence contentTitle = resources.getString(R.string.app_name);
-		CharSequence contentText = String.format(resources
-				.getString(R.string.pomodoro_running_notification_content),
-				dateFormat.format(date));
 		Intent notificationIntent = new Intent(this, CherryBerryActivity.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				notificationIntent, 0);
-		notification.setLatestEventInfo(context, contentTitle, contentText,
-				contentIntent);
+		notification.setLatestEventInfo(context,
+				resources.getString(contentTitle), contentText2, contentIntent);
 
-		mNotificationManager.notify(NotificationService.NOTIFICATION_ID,
-				notification);
+		mNotificationManager.notify(id, notification);
 	}
 
 	/**
