@@ -20,7 +20,6 @@
         </activity>
         <service android:name="NotificationService" android:exported="false"></service>
         <service android:name="PomodoroTimerService" android:exported="false"></service>
-        <service android:name="PersistentNotificationService" android:exported="false"></service>
     </application>
 
 </manifest>

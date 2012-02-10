@@ -19,7 +19,11 @@
 
 package com.primoberti.cherryberry;
 
+import java.util.Date;
+
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -27,6 +31,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.text.format.DateFormat;
 
 /**
  * Timer-related functionality to control a pomodoro.
@@ -46,6 +51,10 @@ public class PomodoroTimerService extends Service {
 	public final static String BREAK_FINISHED = "com.primoberti.cherryberry.BREAK_FINISHED";
 
 	public final static String POMODORO_FINISHED = "com.primoberti.cherryberry.POMODORO_FINISHED";
+
+	/* Private constants *********************** */
+
+	private final static int NOTIFICATION_POMODORO_STARTED = 1;
 
 	/* Private fields ************************** */
 
@@ -80,8 +89,7 @@ public class PomodoroTimerService extends Service {
 	public void startPomodoro(long millis) {
 		startPomodoroTimer(millis);
 		setPomodoroAlarm(millis);
-		setPersistentNotification(millis,
-				PersistentNotificationService.POMODORO_STARTED);
+		showPersistentPomodoroNotification(millis);
 	}
 
 	/**
@@ -262,14 +270,34 @@ public class PomodoroTimerService extends Service {
 		alarmManager.set(AlarmManager.RTC_WAKEUP, finishTime, pendingIntent);
 	}
 
-	private void setPersistentNotification(long millis, String action) {
+	private void showPersistentPomodoroNotification(long millis) {
 		long finishTime = System.currentTimeMillis() + millis;
 
-		Intent intent = new Intent(this, PersistentNotificationService.class);
-		intent.setAction(action);
-		intent.putExtra(PersistentNotificationService.EXTRA_FINISH_TIME,
-				finishTime);
-		startService(intent);
+		String ns = Context.NOTIFICATION_SERVICE;
+		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+
+		int icon = R.drawable.ic_notification;
+		CharSequence tickerText = "Pomodoro started";
+		long when = System.currentTimeMillis();
+		Notification notification = new Notification(icon, tickerText, when);
+		notification.flags |= Notification.FLAG_ONGOING_EVENT;
+
+		Date date = new Date(finishTime);
+		java.text.DateFormat dateFormat = DateFormat
+				.getTimeFormat(getApplicationContext());
+
+		Context context = getApplicationContext();
+		CharSequence contentTitle = "CherryBerry";
+		CharSequence contentText = "Pomodoro running - ends at "
+				+ dateFormat.format(date);
+		Intent notificationIntent = new Intent(this, CherryBerryActivity.class);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+				notificationIntent, 0);
+		notification.setLatestEventInfo(context, contentTitle, contentText,
+				contentIntent);
+
+		mNotificationManager
+				.notify(NOTIFICATION_POMODORO_STARTED, notification);
 	}
 
 	/**

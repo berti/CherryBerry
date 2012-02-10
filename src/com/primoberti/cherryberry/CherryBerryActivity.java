@@ -19,8 +19,6 @@
 
 package com.primoberti.cherryberry;
 
-import com.primoberti.cherryberry.PomodoroTimerService.LocalBinder;
-
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -32,6 +30,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.primoberti.cherryberry.PomodoroTimerService.LocalBinder;
 
 public class CherryBerryActivity extends Activity {
 
