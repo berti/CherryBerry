@@ -25,6 +25,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.IBinder;
 
 /**
@@ -62,31 +63,38 @@ public class NotificationService extends Service {
 	/* Private methods ************************* */
 
 	private void showPomodoroNotification() {
-		showNotification(NOTIFICATION_ID, "Pomodoro finished", "CherryBerry",
-				"Pomodoro finished, take a break!");
+		showNotification(NOTIFICATION_ID,
+				R.string.pomodoro_finished_notification_title,
+				R.string.app_name,
+				R.string.pomodoro_finished_notification_content);
 	}
 
 	private void showBreakNotification() {
-		showNotification(NOTIFICATION_ID, "Break finished", "CherryBerry",
-				"Break finished!");
+		showNotification(NOTIFICATION_ID,
+				R.string.break_finished_notification_title, R.string.app_name,
+				R.string.break_finished_notification_content);
 	}
 
-	private void showNotification(int id, CharSequence tickerText,
-			CharSequence contentTitle, CharSequence contentText) {
+	private void showNotification(int id, int tickerText, int contentTitle,
+			int contentText) {
+		Resources resources = getResources();
+
 		String ns = Context.NOTIFICATION_SERVICE;
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
 
 		int icon = R.drawable.ic_notification;
 		long when = System.currentTimeMillis();
-		Notification notification = new Notification(icon, tickerText, when);
+		Notification notification = new Notification(icon,
+				resources.getString(tickerText), when);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
 		Context context = getApplicationContext();
 		Intent notificationIntent = new Intent(this, CherryBerryActivity.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				notificationIntent, 0);
-		notification.setLatestEventInfo(context, contentTitle, contentText,
-				contentIntent);
+		notification.setLatestEventInfo(context,
+				resources.getString(contentTitle),
+				resources.getString(contentText), contentIntent);
 
 		mNotificationManager.notify(id, notification);
 	}
