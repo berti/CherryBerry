@@ -28,6 +28,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Binder;
 import android.os.CountDownTimer;
@@ -53,6 +54,17 @@ public class PomodoroTimerService extends Service {
 
 	public final static String POMODORO_FINISHED = "com.primoberti.cherryberry.POMODORO_FINISHED";
 
+	/* Private constants *********************** */
+
+	private final static String SHARED_PREFS = PomodoroTimerService.class
+			+ "_SHARED_PREFS";
+
+	private final static String PREF_STATUS = "status";
+
+	private final static String PREF_TIMER_START = "timerStart";
+
+	private final static String PREF_TIMER_END = "timerEnd";
+
 	/* Private fields ************************** */
 
 	private Status status;
@@ -76,6 +88,11 @@ public class PomodoroTimerService extends Service {
 	@Override
 	public IBinder onBind(Intent intent) {
 		return binder;
+	}
+
+	@Override
+	public void onCreate() {
+		restoreState();
 	}
 
 	/**
@@ -208,14 +225,47 @@ public class PomodoroTimerService extends Service {
 
 	/* Private methods ************************* */
 
+	private void saveState() {
+		SharedPreferences preferences = getSharedPreferences(SHARED_PREFS,
+				MODE_PRIVATE);
+		SharedPreferences.Editor editor = preferences.edit();
+
+		editor.putInt(PREF_STATUS, status.ordinal());
+		editor.putLong(PREF_TIMER_START, timerStart);
+		editor.putLong(PREF_TIMER_END, timerEnd);
+
+		editor.commit();
+	}
+
+	private void restoreState() {
+		SharedPreferences preferences = getSharedPreferences(SHARED_PREFS,
+				MODE_PRIVATE);
+
+		status = Status.values()[preferences.getInt(PREF_STATUS,
+				Status.IDLE.ordinal())];
+		timerStart = preferences.getLong(PREF_TIMER_START, 0);
+		timerEnd = preferences.getLong(PREF_TIMER_END, 0);
+
+		if (status == Status.POMODORO_RUNNING) {
+			continuePomodoro(timerEnd - System.currentTimeMillis());
+		}
+		else if (status == Status.BREAK_RUNNING) {
+			continueBreak(timerEnd - System.currentTimeMillis());
+		}
+	}
+
 	private void startPomodoroTimer(long millis) {
 		startTimer(millis);
 		status = Status.POMODORO_RUNNING;
+
+		saveState();
 	}
 
 	private void startBreakTimer(long millis) {
 		startTimer(millis);
 		status = Status.BREAK_RUNNING;
+
+		saveState();
 	}
 
 	private void startTimer(long millis) {
