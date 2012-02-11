@@ -259,17 +259,21 @@ public class PomodoroTimerService extends Service {
 	}
 
 	private void startPomodoroTimer(long millis) {
-		startTimer(millis);
-		status = Status.POMODORO_RUNNING;
+		if (millis > 0) {
+			startTimer(millis);
+			status = Status.POMODORO_RUNNING;
 
-		saveState();
+			saveState();
+		}
 	}
 
 	private void startBreakTimer(long millis) {
-		startTimer(millis);
-		status = Status.BREAK_RUNNING;
+		if (millis > 0) {
+			startTimer(millis);
+			status = Status.BREAK_RUNNING;
 
-		saveState();
+			saveState();
+		}
 	}
 
 	private void startTimer(long millis) {
