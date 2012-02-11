@@ -12,5 +12,9 @@
     <string name="pomodoro_running_notification_content">Pomodoro running - ends at %1$s</string>
     <string name="break_running_notification_title">Break started</string>
     <string name="break_running_notification_content">Break running - ends at %1$s</string>
+    <string name="pomodoro_finished_dialog_title">Pomodoro finished. What now?</string>
+    <string name="start_break_button">Start break</string>
+    <string name="cancel_pomodoro_button">Cancel pomodoro</string>
+    <string name="skip_break_button">Skip break</string>
 
 </resources>

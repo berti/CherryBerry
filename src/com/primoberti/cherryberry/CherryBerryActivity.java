@@ -20,7 +20,10 @@
 package com.primoberti.cherryberry;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -35,11 +38,19 @@ import com.primoberti.cherryberry.PomodoroTimerService.LocalBinder;
 
 public class CherryBerryActivity extends Activity {
 
+	/* Private fields ************************** */
+
 	private PomodoroTimerService timerService;
 
 	private boolean timerServiceBound = false;
 
 	private ServiceConnection timerServiceConnection;
+
+	/* Private constants *********************** */
+
+	private final static int DIALOG_POMODORO_FINISHED = 0;
+
+	/* Public methods ************************** */
 
 	/** Called when the activity is first created. */
 	@Override
@@ -92,6 +103,31 @@ public class CherryBerryActivity extends Activity {
 		bindService(intent, timerServiceConnection, BIND_AUTO_CREATE);
 	}
 
+	/* Protected methods *********************** */
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		Dialog dialog = null;
+
+		switch (id) {
+		case DIALOG_POMODORO_FINISHED:
+			PomodoroFinishedDialogOnClickListener listener = new PomodoroFinishedDialogOnClickListener();
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			
+			builder.setMessage(R.string.pomodoro_finished_dialog_title);
+			builder.setCancelable(false);
+			builder.setPositiveButton(R.string.start_break_button, listener);
+			builder.setNegativeButton(R.string.cancel_pomodoro_button, listener);
+			builder.setNeutralButton(R.string.skip_break_button, listener);
+			
+			dialog = builder.create();
+			break;
+		}
+
+		return dialog;
+	}
+
 	/* Private methods ************************* */
 
 	private void onStartClick() {
@@ -121,6 +157,8 @@ public class CherryBerryActivity extends Activity {
 		updateTimer(0);
 		((Button) findViewById(R.id.startButton)).setEnabled(true);
 		((Button) findViewById(R.id.stopButton)).setEnabled(false);
+		
+		showDialog(DIALOG_POMODORO_FINISHED);
 	}
 
 	/* Private inner classes ******************* */
@@ -165,4 +203,25 @@ public class CherryBerryActivity extends Activity {
 		}
 
 	}
+
+	private class PomodoroFinishedDialogOnClickListener implements
+			DialogInterface.OnClickListener {
+
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			switch (which) {
+			case AlertDialog.BUTTON_POSITIVE:
+				// Start break
+				break;
+			case AlertDialog.BUTTON_NEGATIVE:
+				// Cancel pomodoro
+				break;
+			case AlertDialog.BUTTON_NEUTRAL:
+				// Skip break
+				break;
+			}
+		}
+
+	}
+
 }
