@@ -114,13 +114,13 @@ public class CherryBerryActivity extends Activity {
 			PomodoroFinishedDialogOnClickListener listener = new PomodoroFinishedDialogOnClickListener();
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			
+
 			builder.setMessage(R.string.pomodoro_finished_dialog_title);
 			builder.setCancelable(false);
 			builder.setPositiveButton(R.string.start_break_button, listener);
 			builder.setNegativeButton(R.string.cancel_pomodoro_button, listener);
 			builder.setNeutralButton(R.string.skip_break_button, listener);
-			
+
 			dialog = builder.create();
 			break;
 		}
@@ -157,7 +157,7 @@ public class CherryBerryActivity extends Activity {
 		updateTimer(0);
 		((Button) findViewById(R.id.startButton)).setEnabled(true);
 		((Button) findViewById(R.id.stopButton)).setEnabled(false);
-		
+
 		showDialog(DIALOG_POMODORO_FINISHED);
 	}
 
@@ -173,6 +173,10 @@ public class CherryBerryActivity extends Activity {
 			timerService.setPomodoroDuration(25 * 60 * 1000);
 			timerService.setBreakDuration(5 * 60 * 1000);
 			timerService.setListener(new MyPomodoroTimerListener());
+
+			if (timerService.getStatus() == PomodoroTimerService.Status.POMODORO_FINISHED) {
+				showDialog(CherryBerryActivity.DIALOG_POMODORO_FINISHED);
+			}
 		}
 
 		@Override
@@ -194,7 +198,7 @@ public class CherryBerryActivity extends Activity {
 
 		@Override
 		public void onBreakFinish(PomodoroTimerService timer) {
-			
+
 		}
 
 		@Override
