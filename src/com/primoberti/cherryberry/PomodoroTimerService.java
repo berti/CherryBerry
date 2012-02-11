@@ -213,7 +213,7 @@ public class PomodoroTimerService extends Service {
 		status = Status.POMODORO_RUNNING;
 	}
 
-	public void startBreakTimer(long millis) {
+	private void startBreakTimer(long millis) {
 		startTimer(millis);
 		status = Status.BREAK_RUNNING;
 	}
