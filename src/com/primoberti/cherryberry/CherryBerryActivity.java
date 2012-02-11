@@ -222,6 +222,9 @@ public class CherryBerryActivity extends Activity {
 				break;
 			case AlertDialog.BUTTON_NEGATIVE:
 				// Cancel pomodoro
+				if (timerServiceBound) {
+					timerService.cancel();
+				}
 				break;
 			case AlertDialog.BUTTON_NEUTRAL:
 				// Skip break

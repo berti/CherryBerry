@@ -170,6 +170,8 @@ public class PomodoroTimerService extends Service {
 			timer.cancel();
 			timer = null;
 		}
+		
+		setIdle();
 	}
 
 	public Status getStatus() {
@@ -380,6 +382,14 @@ public class PomodoroTimerService extends Service {
 				contentIntent);
 
 		mNotificationManager.notify(id, notification);
+	}
+
+	private void setIdle() {
+		status = Status.IDLE;
+		timerStart = 0;
+		timerEnd = 0;
+		
+		saveState();
 	}
 
 	/**
