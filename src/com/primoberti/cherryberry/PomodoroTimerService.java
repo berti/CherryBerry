@@ -221,6 +221,10 @@ public class PomodoroTimerService extends Service {
 
 	public void setListener(PomodoroTimerListener listener) {
 		this.listener = listener;
+
+		if (timer != null) {
+			timer.setListener(listener);
+		}
 	}
 
 	/* Private methods ************************* */
@@ -415,6 +419,14 @@ public class PomodoroTimerService extends Service {
 			if (listener != null) {
 				listener.onTick(PomodoroTimerService.this, millisUntilFinished);
 			}
+		}
+
+		public PomodoroTimerListener getListener() {
+			return listener;
+		}
+
+		public void setListener(PomodoroTimerListener listener) {
+			this.listener = listener;
 		}
 
 	}
