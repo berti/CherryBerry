@@ -345,13 +345,12 @@ public class PomodoroTimerService extends Service {
 
 	private void showPersistentBreakNotification(long millis) {
 		showPersistentNotification(NotificationService.NOTIFICATION_ID,
-				R.string.pomodoro_running_notification_title,
-				R.string.app_name,
-				R.string.pomodoro_running_notification_content, millis);
+				R.string.break_running_notification_title, R.string.app_name,
+				R.string.break_running_notification_content, millis);
 	}
 
-	private void showPersistentNotification(int id, int tickerText,
-			int contentTitle, int contentText, long millis) {
+	private void showPersistentNotification(int id, int tickerTextId,
+			int contentTitleId, int contentTextId, long millis) {
 		long finishTime = System.currentTimeMillis() + millis;
 
 		Resources resources = getResources();
@@ -362,14 +361,13 @@ public class PomodoroTimerService extends Service {
 		int icon = R.drawable.ic_notification;
 		long when = System.currentTimeMillis();
 		Notification notification = new Notification(icon,
-				resources.getString(tickerText), when);
+				resources.getString(tickerTextId), when);
 		notification.flags |= Notification.FLAG_ONGOING_EVENT;
 
 		Date date = new Date(finishTime);
 		java.text.DateFormat dateFormat = DateFormat
 				.getTimeFormat(getApplicationContext());
-		String contentTextFormat = getResources().getString(
-				R.string.pomodoro_running_notification_content);
+		String contentTextFormat = getResources().getString(contentTextId);
 		String contentText2 = String.format(contentTextFormat,
 				dateFormat.format(date));
 
@@ -378,7 +376,8 @@ public class PomodoroTimerService extends Service {
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				notificationIntent, 0);
 		notification.setLatestEventInfo(context,
-				resources.getString(contentTitle), contentText2, contentIntent);
+				resources.getString(contentTitleId), contentText2,
+				contentIntent);
 
 		mNotificationManager.notify(id, notification);
 	}
