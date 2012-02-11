@@ -251,10 +251,20 @@ public class PomodoroTimerService extends Service {
 		timerEnd = preferences.getLong(PREF_TIMER_END, 0);
 
 		if (status == Status.POMODORO_RUNNING) {
-			continuePomodoro(timerEnd - System.currentTimeMillis());
+			if (timerEnd > System.currentTimeMillis()) {
+				continuePomodoro(timerEnd - System.currentTimeMillis());
+			}
+			else {
+				status = Status.POMODORO_FINISHED;
+			}
 		}
 		else if (status == Status.BREAK_RUNNING) {
-			continueBreak(timerEnd - System.currentTimeMillis());
+			if (timerEnd > System.currentTimeMillis()) {
+				continueBreak(timerEnd - System.currentTimeMillis());
+			}
+			else {
+				status = Status.BREAK_FINISHED;
+			}
 		}
 	}
 
