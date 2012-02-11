@@ -228,6 +228,9 @@ public class CherryBerryActivity extends Activity {
 				break;
 			case AlertDialog.BUTTON_NEUTRAL:
 				// Skip break
+				if (timerServiceBound) {
+					timerService.skip();
+				}
 				break;
 			}
 		}

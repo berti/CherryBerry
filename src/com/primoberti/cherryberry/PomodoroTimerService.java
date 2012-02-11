@@ -173,6 +173,10 @@ public class PomodoroTimerService extends Service {
 		
 		setIdle();
 	}
+	
+	public void skip() {
+		cancel();
+	}
 
 	public Status getStatus() {
 		return status;
