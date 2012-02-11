@@ -414,7 +414,7 @@ public class PomodoroTimerService extends Service {
 			}
 
 			if (listener != null) {
-				listener.onFinish(PomodoroTimerService.this);
+				listener.onPomodoroFinish(PomodoroTimerService.this);
 			}
 		}
 

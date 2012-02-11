@@ -105,7 +105,7 @@ public class CherryBerryActivity extends Activity {
 	private void onStopClick() {
 		if (timerServiceBound) {
 			timerService.cancel();
-			onFinish();
+			onPomodoroFinish();
 		}
 	}
 
@@ -117,7 +117,7 @@ public class CherryBerryActivity extends Activity {
 		timerTextView.setText(String.format("%d:%02d", minutes, seconds));
 	}
 
-	private void onFinish() {
+	private void onPomodoroFinish() {
 		updateTimer(0);
 		((Button) findViewById(R.id.startButton)).setEnabled(true);
 		((Button) findViewById(R.id.stopButton)).setEnabled(false);
@@ -150,8 +150,13 @@ public class CherryBerryActivity extends Activity {
 	private class MyPomodoroTimerListener implements PomodoroTimerListener {
 
 		@Override
-		public void onFinish(PomodoroTimerService timer) {
-			CherryBerryActivity.this.onFinish();
+		public void onPomodoroFinish(PomodoroTimerService timer) {
+			CherryBerryActivity.this.onPomodoroFinish();
+		}
+
+		@Override
+		public void onBreakFinish(PomodoroTimerService timer) {
+			
 		}
 
 		@Override

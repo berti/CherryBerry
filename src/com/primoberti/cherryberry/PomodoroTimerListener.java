@@ -26,7 +26,9 @@ package com.primoberti.cherryberry;
  */
 public interface PomodoroTimerListener {
 
-	public void onFinish(PomodoroTimerService timer);
+	public void onPomodoroFinish(PomodoroTimerService timer);
+
+	public void onBreakFinish(PomodoroTimerService timer);
 
 	public void onTick(PomodoroTimerService timer, long millisUntilFinished);
 
