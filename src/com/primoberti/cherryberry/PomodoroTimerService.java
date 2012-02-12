@@ -95,6 +95,15 @@ public class PomodoroTimerService extends Service {
 		restoreState();
 	}
 
+	@Override
+	public void onDestroy() {
+		Log.d("PomodoroTimerService", "onDestroy");
+
+		cancelTimer();
+
+		super.onDestroy();
+	}
+
 	/**
 	 * Start a pomodoro count down timer.
 	 * 
@@ -165,17 +174,13 @@ public class PomodoroTimerService extends Service {
 	/**
 	 * Cancels the current count down timer.
 	 */
-	public void cancel() {
-		if (timer != null) {
-			timer.cancel();
-			timer = null;
-		}
-		
+	public void stop() {
+		cancelTimer();
 		setIdle();
 	}
-	
+
 	public void skip() {
-		cancel();
+		stop();
 	}
 
 	public Status getStatus() {
@@ -274,6 +279,13 @@ public class PomodoroTimerService extends Service {
 		}
 	}
 
+	private void cancelTimer() {
+		if (timer != null) {
+			timer.cancel();
+			timer = null;
+		}
+	}
+
 	private void startPomodoroTimer(long millis) {
 		if (millis > 0) {
 			startTimer(millis);
@@ -294,7 +306,7 @@ public class PomodoroTimerService extends Service {
 
 	private void startTimer(long millis) {
 		if (isRunning()) {
-			cancel();
+			cancelTimer();
 		}
 
 		timer = new InternalTimer(millis, 1000, listener);

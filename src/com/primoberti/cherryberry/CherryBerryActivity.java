@@ -153,7 +153,7 @@ public class CherryBerryActivity extends Activity {
 
 	private void onStopClick() {
 		if (timerServiceBound) {
-			timerService.cancel();
+			timerService.stop();
 			onPomodoroFinish();
 		}
 	}
@@ -234,7 +234,7 @@ public class CherryBerryActivity extends Activity {
 			case AlertDialog.BUTTON_NEGATIVE:
 				// Cancel pomodoro
 				if (timerServiceBound) {
-					timerService.cancel();
+					timerService.stop();
 				}
 				break;
 			case AlertDialog.BUTTON_NEUTRAL:
