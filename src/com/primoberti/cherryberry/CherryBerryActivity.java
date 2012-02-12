@@ -154,7 +154,8 @@ public class CherryBerryActivity extends Activity {
 			builder.setMessage(R.string.pomodoro_finished_dialog_title);
 			builder.setCancelable(false);
 			builder.setPositiveButton(R.string.start_break_button, listener);
-			builder.setNegativeButton(R.string.cancel_pomodoro_button, listener);
+			// builder.setNegativeButton(R.string.cancel_pomodoro_button,
+			// listener);
 			builder.setNeutralButton(R.string.skip_break_button, listener);
 
 			dialog = builder.create();
