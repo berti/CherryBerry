@@ -87,6 +87,8 @@ public class NotificationService extends Service {
 		Notification notification = new Notification(icon,
 				resources.getString(tickerText), when);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		notification.defaults |= Notification.DEFAULT_SOUND;
+		notification.defaults |= Notification.DEFAULT_LIGHTS;
 
 		Context context = getApplicationContext();
 		Intent notificationIntent = new Intent(this, CherryBerryActivity.class);
