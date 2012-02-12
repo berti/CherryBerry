@@ -137,6 +137,12 @@ public class CherryBerryActivity extends Activity {
 		return timerServiceBound;
 	}
 
+	private void checkPomodoroTimerServiceStatus() {
+		if (timerService.getStatus() == PomodoroTimerService.Status.POMODORO_FINISHED) {
+			onPomodoroFinish();
+		}
+	}
+
 	private void onStartClick() {
 		if (timerServiceBound) {
 			timerService.startPomodoro();
@@ -181,9 +187,7 @@ public class CherryBerryActivity extends Activity {
 			timerService.setBreakDuration(5 * 60 * 1000);
 			timerService.setListener(new MyPomodoroTimerListener());
 
-			if (timerService.getStatus() == PomodoroTimerService.Status.POMODORO_FINISHED) {
-				onPomodoroFinish();
-			}
+			checkPomodoroTimerServiceStatus();
 		}
 
 		@Override
