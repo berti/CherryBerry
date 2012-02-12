@@ -180,6 +180,9 @@ public class CherryBerryActivity extends Activity {
 		if (timerService.getStatus() == PomodoroTimerService.Status.POMODORO_FINISHED) {
 			onPomodoroFinish();
 		}
+		else if (timerService.getStatus() == PomodoroTimerService.Status.BREAK_FINISHED) {
+			onBreakFinish();
+		}
 		else if (timerService.isRunning()) {
 			disableStartButton();
 		}
@@ -214,7 +217,7 @@ public class CherryBerryActivity extends Activity {
 		showDialog(DIALOG_POMODORO_FINISHED);
 	}
 
-	private void onBreakFinished() {
+	private void onBreakFinish() {
 		updateTimer(0);
 		enableStartButton();
 	}
@@ -267,7 +270,7 @@ public class CherryBerryActivity extends Activity {
 
 		@Override
 		public void onBreakFinish(PomodoroTimerService timer) {
-			CherryBerryActivity.this.onBreakFinished();
+			CherryBerryActivity.this.onBreakFinish();
 		}
 
 		@Override
