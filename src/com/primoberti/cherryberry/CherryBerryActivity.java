@@ -129,10 +129,10 @@ public class CherryBerryActivity extends Activity {
 	/* Private methods ************************* */
 
 	private boolean bindPomodoroTimerService() {
-		if (!timerServiceBound) {
-			Intent intent = new Intent(this, PomodoroTimerService.class);
-			bindService(intent, timerServiceConnection, BIND_AUTO_CREATE);
-		}
+		Log.d("CherryBerryActivity", "bindPomodoroTimerService");
+
+		Intent intent = new Intent(this, PomodoroTimerService.class);
+		bindService(intent, timerServiceConnection, BIND_AUTO_CREATE);
 
 		return timerServiceBound;
 	}
