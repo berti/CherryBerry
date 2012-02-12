@@ -214,6 +214,11 @@ public class CherryBerryActivity extends Activity {
 		showDialog(DIALOG_POMODORO_FINISHED);
 	}
 
+	private void onBreakFinished() {
+		updateTimer(0);
+		enableStartButton();
+	}
+
 	private void enableStartButton() {
 		((Button) findViewById(R.id.startButton)).setEnabled(true);
 		((Button) findViewById(R.id.stopButton)).setEnabled(false);
@@ -262,7 +267,7 @@ public class CherryBerryActivity extends Activity {
 
 		@Override
 		public void onBreakFinish(PomodoroTimerService timer) {
-
+			CherryBerryActivity.this.onBreakFinished();
 		}
 
 		@Override
