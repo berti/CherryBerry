@@ -34,6 +34,7 @@ import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.text.format.DateFormat;
+import android.util.Log;
 
 /**
  * Timer-related functionality to control a pomodoro.
@@ -87,11 +88,15 @@ public class PomodoroTimerService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
+		Log.d("PomodoroTimerService", "onBind");
+
 		return binder;
 	}
 
 	@Override
 	public void onCreate() {
+		Log.d("PomodoroTimerService", "onCreate");
+
 		restoreState();
 	}
 
@@ -241,6 +246,8 @@ public class PomodoroTimerService extends Service {
 	/* Private methods ************************* */
 
 	private void saveState() {
+		Log.d("PomodoroTimerService", "saveState " + status.toString());
+
 		SharedPreferences preferences = getSharedPreferences(SHARED_PREFS,
 				MODE_PRIVATE);
 		SharedPreferences.Editor editor = preferences.edit();
@@ -260,6 +267,8 @@ public class PomodoroTimerService extends Service {
 				Status.IDLE.ordinal())];
 		timerStart = preferences.getLong(PREF_TIMER_START, 0);
 		timerEnd = preferences.getLong(PREF_TIMER_END, 0);
+
+		Log.d("PomodoroTimerService", "restoreState " + status.toString());
 
 		if (status == Status.POMODORO_RUNNING) {
 			if (timerEnd > System.currentTimeMillis()) {
@@ -401,10 +410,12 @@ public class PomodoroTimerService extends Service {
 	}
 
 	private void setIdle() {
+		Log.d("PomodoroTimerService", "setIdle");
+
 		status = Status.IDLE;
 		timerStart = 0;
 		timerEnd = 0;
-		
+
 		saveState();
 	}
 

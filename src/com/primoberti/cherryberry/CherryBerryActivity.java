@@ -55,6 +55,8 @@ public class CherryBerryActivity extends Activity {
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Log.d("CherryBerryActivity", "onCreate");
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
@@ -81,6 +83,8 @@ public class CherryBerryActivity extends Activity {
 
 	@Override
 	protected void onStart() {
+		Log.d("CherryBerryActivity", "onStart");
+
 		super.onStart();
 
 		bindPomodoroTimerService();
@@ -88,17 +92,51 @@ public class CherryBerryActivity extends Activity {
 
 	@Override
 	protected void onStop() {
-		timerService.cancel();
+		Log.d("CherryBerryActivity", "onStop");
+
+		// TODO cancel timer?
 		unbindService(timerServiceConnection);
+		timerService = null;
+		timerServiceBound = false;
 
 		super.onStop();
 	}
 
 	@Override
 	protected void onRestart() {
+		Log.d("CherryBerryActivity", "onRestart");
+
 		super.onRestart();
 
 		bindPomodoroTimerService();
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		Log.d("CherryBerryActivity", "onNewIntent");
+
+		super.onNewIntent(intent);
+	}
+
+	@Override
+	protected void onDestroy() {
+		Log.d("CherryBerryActivity", "onDestroy");
+
+		super.onDestroy();
+	}
+
+	@Override
+	protected void onPause() {
+		Log.d("CherryBerryActivity", "onPause");
+
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		Log.d("CherryBerryActivity", "onResume");
+
+		super.onResume();
 	}
 
 	/* Protected methods *********************** */
@@ -180,6 +218,9 @@ public class CherryBerryActivity extends Activity {
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
+			Log.d("CherryBerryActivity.PomodoroTimerServiceConnector",
+					"onServiceConnected");
+
 			timerService = ((LocalBinder) service).getService();
 			timerServiceBound = true;
 
