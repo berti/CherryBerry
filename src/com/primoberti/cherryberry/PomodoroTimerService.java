@@ -454,13 +454,15 @@ public class PomodoroTimerService extends Service {
 		public void onFinish() {
 			if (status == Status.POMODORO_RUNNING) {
 				status = Status.POMODORO_FINISHED;
+				if (listener != null) {
+					listener.onPomodoroFinish(PomodoroTimerService.this);
+				}
 			}
 			else if (status == Status.BREAK_RUNNING) {
 				status = Status.BREAK_FINISHED;
-			}
-
-			if (listener != null) {
-				listener.onPomodoroFinish(PomodoroTimerService.this);
+				if (listener != null) {
+					listener.onBreakFinish(PomodoroTimerService.this);
+				}
 			}
 		}
 
