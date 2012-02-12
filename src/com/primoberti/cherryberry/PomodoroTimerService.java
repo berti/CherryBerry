@@ -181,6 +181,9 @@ public class PomodoroTimerService extends Service {
 	 */
 	public void stop() {
 		cancelTimer();
+		cancelAlarms();
+		hidePersistentNotification();
+		
 		setIdle();
 	}
 
@@ -363,6 +366,22 @@ public class PomodoroTimerService extends Service {
 		alarmManager.set(AlarmManager.RTC_WAKEUP, finishTime, pendingIntent);
 	}
 
+	private void cancelAlarms() {
+		cancelAlarm(POMODORO_FINISHED);
+		cancelAlarm(BREAK_FINISHED);
+	}
+
+	private void cancelAlarm(String action) {
+		Intent intent = new Intent(this, NotificationService.class);
+		intent.setAction(action);
+		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent,
+				0);
+
+		AlarmManager alarmManager = (AlarmManager) this
+				.getSystemService(Context.ALARM_SERVICE);
+		alarmManager.cancel(pendingIntent);
+	}
+
 	private void showPersistentPomodoroNotification(long millis) {
 		showPersistentNotification(NotificationService.NOTIFICATION_ID,
 				R.string.pomodoro_running_notification_title,
@@ -407,6 +426,13 @@ public class PomodoroTimerService extends Service {
 				contentIntent);
 
 		mNotificationManager.notify(id, notification);
+	}
+
+	private void hidePersistentNotification() {
+		String ns = Context.NOTIFICATION_SERVICE;
+		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+
+		mNotificationManager.cancel(NotificationService.NOTIFICATION_ID);
 	}
 
 	private void setIdle() {
