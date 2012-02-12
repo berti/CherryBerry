@@ -175,7 +175,7 @@ public class CherryBerryActivity extends Activity {
 			timerService.setListener(new MyPomodoroTimerListener());
 
 			if (timerService.getStatus() == PomodoroTimerService.Status.POMODORO_FINISHED) {
-				showDialog(CherryBerryActivity.DIALOG_POMODORO_FINISHED);
+				onPomodoroFinish();
 			}
 		}
 
