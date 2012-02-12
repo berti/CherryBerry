@@ -83,8 +83,7 @@ public class CherryBerryActivity extends Activity {
 	protected void onStart() {
 		super.onStart();
 
-		Intent intent = new Intent(this, PomodoroTimerService.class);
-		bindService(intent, timerServiceConnection, BIND_AUTO_CREATE);
+		bindPomodoroTimerService();
 	}
 
 	@Override
@@ -99,8 +98,7 @@ public class CherryBerryActivity extends Activity {
 	protected void onRestart() {
 		super.onRestart();
 
-		Intent intent = new Intent(this, PomodoroTimerService.class);
-		bindService(intent, timerServiceConnection, BIND_AUTO_CREATE);
+		bindPomodoroTimerService();
 	}
 
 	/* Protected methods *********************** */
@@ -129,6 +127,15 @@ public class CherryBerryActivity extends Activity {
 	}
 
 	/* Private methods ************************* */
+
+	private boolean bindPomodoroTimerService() {
+		if (!timerServiceBound) {
+			Intent intent = new Intent(this, PomodoroTimerService.class);
+			bindService(intent, timerServiceConnection, BIND_AUTO_CREATE);
+		}
+
+		return timerServiceBound;
+	}
 
 	private void onStartClick() {
 		if (timerServiceBound) {
