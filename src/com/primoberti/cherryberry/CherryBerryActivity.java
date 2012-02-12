@@ -210,6 +210,8 @@ public class CherryBerryActivity extends Activity {
 
 	private void onPomodoroFinish() {
 		updateTimer(0);
+
+		showDialog(DIALOG_POMODORO_FINISHED);
 	}
 
 	private void enableStartButton() {
