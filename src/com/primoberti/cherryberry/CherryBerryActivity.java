@@ -180,21 +180,24 @@ public class CherryBerryActivity extends Activity {
 		if (timerService.getStatus() == PomodoroTimerService.Status.POMODORO_FINISHED) {
 			onPomodoroFinish();
 		}
+		else if (timerService.isRunning()) {
+			disableStartButton();
+		}
 	}
 
 	private void onStartClick() {
 		if (timerServiceBound) {
 			timerService.startPomodoro();
-			((Button) findViewById(R.id.startButton)).setEnabled(false);
-			((Button) findViewById(R.id.stopButton)).setEnabled(true);
+			disableStartButton();
 		}
 	}
 
 	private void onStopClick() {
 		if (timerServiceBound) {
 			timerService.stop();
-			onPomodoroFinish();
 		}
+		updateTimer(0);
+		enableStartButton();
 	}
 
 	private void updateTimer(long millis) {
@@ -207,10 +210,16 @@ public class CherryBerryActivity extends Activity {
 
 	private void onPomodoroFinish() {
 		updateTimer(0);
+	}
+
+	private void enableStartButton() {
 		((Button) findViewById(R.id.startButton)).setEnabled(true);
 		((Button) findViewById(R.id.stopButton)).setEnabled(false);
+	}
 
-		showDialog(DIALOG_POMODORO_FINISHED);
+	private void disableStartButton() {
+		((Button) findViewById(R.id.startButton)).setEnabled(false);
+		((Button) findViewById(R.id.stopButton)).setEnabled(true);
 	}
 
 	/* Private inner classes ******************* */
@@ -277,12 +286,14 @@ public class CherryBerryActivity extends Activity {
 				// Cancel pomodoro
 				if (timerServiceBound) {
 					timerService.stop();
+					enableStartButton();
 				}
 				break;
 			case AlertDialog.BUTTON_NEUTRAL:
 				// Skip break
 				if (timerServiceBound) {
 					timerService.skip();
+					enableStartButton();
 				}
 				break;
 			}
