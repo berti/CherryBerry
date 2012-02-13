@@ -20,5 +20,6 @@
     <string name="status_pomodoro_running">On a pomodoro. Focus on your work!</string>
     <string name="status_pomodoro_finished">Time to get a break</string>
     <string name="status_break_running">On a break. Relax!</string>
+    <string name="menu_about">About</string>
 
 </resources>
