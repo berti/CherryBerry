@@ -149,6 +149,17 @@ public class CherryBerryActivity extends Activity {
 		return true;
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.about:
+			showAboutDialog();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
 	/* Protected methods *********************** */
 
 	@Override
@@ -224,7 +235,7 @@ public class CherryBerryActivity extends Activity {
 		}
 		updateTimer(0);
 		enableStartButton();
-		
+
 		TextView statusTextView = (TextView) findViewById(R.id.statusTextView);
 		statusTextView.setText(R.string.status_idle);
 	}
@@ -262,6 +273,23 @@ public class CherryBerryActivity extends Activity {
 	private void disableStartButton() {
 		((Button) findViewById(R.id.startButton)).setEnabled(false);
 		((Button) findViewById(R.id.stopButton)).setEnabled(true);
+	}
+
+	private void showAboutDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.about_dialog_title);
+		builder.setMessage(R.string.about_dialog_content);
+		builder.setPositiveButton(android.R.string.ok,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+
+		AlertDialog dialog = builder.create();
+		dialog.show();
 	}
 
 	/* Private inner classes ******************* */
