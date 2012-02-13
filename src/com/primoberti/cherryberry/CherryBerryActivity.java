@@ -177,14 +177,24 @@ public class CherryBerryActivity extends Activity {
 	}
 
 	private void checkPomodoroTimerServiceStatus() {
-		if (timerService.getStatus() == PomodoroTimerService.Status.POMODORO_FINISHED) {
-			onPomodoroFinish();
-		}
-		else if (timerService.getStatus() == PomodoroTimerService.Status.BREAK_FINISHED) {
-			onBreakFinish();
-		}
-		else if (timerService.isRunning()) {
+		PomodoroTimerService.Status status = timerService.getStatus();
+		switch (status) {
+		case POMODORO_RUNNING:
 			disableStartButton();
+			TextView statusTextView = (TextView) findViewById(R.id.statusTextView);
+			statusTextView.setText(R.string.status_pomodoro_running);
+			break;
+		case POMODORO_FINISHED:
+			onPomodoroFinish();
+			break;
+		case BREAK_RUNNING:
+			disableStartButton();
+			statusTextView = (TextView) findViewById(R.id.statusTextView);
+			statusTextView.setText(R.string.status_break_running);
+			break;
+		case BREAK_FINISHED:
+			onBreakFinish();
+			break;
 		}
 	}
 
@@ -192,6 +202,9 @@ public class CherryBerryActivity extends Activity {
 		if (timerServiceBound) {
 			timerService.startPomodoro();
 			disableStartButton();
+
+			TextView statusTextView = (TextView) findViewById(R.id.statusTextView);
+			statusTextView.setText(R.string.status_pomodoro_running);
 		}
 	}
 
@@ -201,6 +214,9 @@ public class CherryBerryActivity extends Activity {
 		}
 		updateTimer(0);
 		enableStartButton();
+		
+		TextView statusTextView = (TextView) findViewById(R.id.statusTextView);
+		statusTextView.setText(R.string.status_idle);
 	}
 
 	private void updateTimer(long millis) {
@@ -214,12 +230,18 @@ public class CherryBerryActivity extends Activity {
 	private void onPomodoroFinish() {
 		updateTimer(0);
 
+		TextView statusTextView = (TextView) findViewById(R.id.statusTextView);
+		statusTextView.setText(R.string.status_pomodoro_finished);
+
 		showDialog(DIALOG_POMODORO_FINISHED);
 	}
 
 	private void onBreakFinish() {
 		updateTimer(0);
 		enableStartButton();
+
+		TextView statusTextView = (TextView) findViewById(R.id.statusTextView);
+		statusTextView.setText(R.string.status_idle);
 	}
 
 	private void enableStartButton() {
@@ -290,6 +312,9 @@ public class CherryBerryActivity extends Activity {
 				// Start break
 				if (timerServiceBound) {
 					timerService.startBreak();
+
+					TextView statusTextView = (TextView) findViewById(R.id.statusTextView);
+					statusTextView.setText(R.string.status_break_running);
 				}
 				break;
 			case AlertDialog.BUTTON_NEGATIVE:
@@ -304,6 +329,9 @@ public class CherryBerryActivity extends Activity {
 				if (timerServiceBound) {
 					timerService.skip();
 					enableStartButton();
+
+					TextView statusTextView = (TextView) findViewById(R.id.statusTextView);
+					statusTextView.setText(R.string.status_idle);
 				}
 				break;
 			}

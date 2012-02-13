@@ -16,5 +16,9 @@
     <string name="start_break_button">Start break</string>
     <string name="cancel_pomodoro_button">Cancel pomodoro</string>
     <string name="skip_break_button">Skip break</string>
+    <string name="status_idle">Ready to start the next pomodoro?</string>
+    <string name="status_pomodoro_running">On a pomodoro. Focus on your work!</string>
+    <string name="status_pomodoro_finished">Time to get a break</string>
+    <string name="status_break_running">On a break. Relax!</string>
 
 </resources>
