@@ -155,6 +155,9 @@ public class CherryBerryActivity extends Activity {
 		case R.id.about:
 			showAboutDialog();
 			return true;
+		case R.id.settings:
+			showSettings();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -290,6 +293,11 @@ public class CherryBerryActivity extends Activity {
 
 		AlertDialog dialog = builder.create();
 		dialog.show();
+	}
+	
+	private void showSettings() {
+		Intent intent = new Intent(this, SettingsActivity.class);
+		startActivity(intent);
 	}
 
 	/* Private inner classes ******************* */
