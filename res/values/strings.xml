@@ -29,5 +29,25 @@
     <string name="settings_notification_vibration">Vibrate</string>
     <string name="settings_notification_ringtone">Sound</string>
     <string name="menu_settings">Settings</string>
+    <string name="settings_pomodoro_duration">Pomodoro duration</string>
+    <string name="settings_break_duration">Break duration</string>
+    <string name="in_minutes">In minutes</string>
+    <string name="settings_long_break_duration">Long break duration</string>
+    <string name="settings_long_break_interval">Long break interval</string>
+    <string name="settings_long_break_interval_dialog_message">Long break after</string>
+    <string-array name="settings_long_break_interval_entries">
+        <item >1 pomodoro</item>
+        <item >2 pomodoros</item>
+        <item >3 pomodoros</item>
+        <item >4 pomodoros</item>
+        <item >5 pomodoros</item>
+    </string-array>
+    <string-array name="settings_long_break_interval_values">
+        <item >1</item>
+        <item >2</item>
+        <item >3</item>
+        <item >4</item>
+        <item >5</item>
+    </string-array>
 
 </resources>
