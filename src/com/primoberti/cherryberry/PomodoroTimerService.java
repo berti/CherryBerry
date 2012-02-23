@@ -33,6 +33,7 @@ import android.content.res.Resources;
 import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 import android.util.Log;
 
@@ -156,7 +157,7 @@ public class PomodoroTimerService extends Service {
 		cancelTimer();
 		cancelAlarms();
 		hidePersistentNotification();
-		
+
 		setIdle();
 	}
 
@@ -192,7 +193,12 @@ public class PomodoroTimerService extends Service {
 	}
 
 	public long getPomodoroDuration() {
-		return pomodoroDuration;
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		String key = getResources().getString(
+				R.string.settings_key_pomodoro_duration);
+		int secs = preferences.getInt(key, 25);
+		return secs * 1000;
 	}
 
 	public void setPomodoroDuration(long pomodoroDuration) {
@@ -200,7 +206,12 @@ public class PomodoroTimerService extends Service {
 	}
 
 	public long getBreakDuration() {
-		return breakDuration;
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		String key = getResources().getString(
+				R.string.settings_key_break_duration);
+		int secs = preferences.getInt(key, 5);
+		return secs * 1000;
 	}
 
 	public void setBreakDuration(long breakDuration) {
