@@ -110,17 +110,6 @@ public class PomodoroTimerService extends Service {
 	}
 
 	/**
-	 * Start a pomodoro count down timer.
-	 * 
-	 * @param millis the duration of the pomodoro
-	 */
-	public void startPomodoro(long millis) {
-		startPomodoroTimer(millis);
-		setPomodoroAlarm(millis);
-		showPersistentPomodoroNotification(millis);
-	}
-
-	/**
 	 * Start a pomodoro with the default pomodoro duration.
 	 * 
 	 * @see #setPomodoroDuration(long)
@@ -138,22 +127,6 @@ public class PomodoroTimerService extends Service {
 	 */
 	public void continuePomodoro(long millis) {
 		startPomodoroTimer(millis);
-	}
-
-	/**
-	 * Start a break countdown timer.
-	 * 
-	 * @param millis the duration of the break
-	 */
-	public void startBreak(long millis) {
-		if (status != Status.POMODORO_FINISHED) {
-			throw new IllegalStateException("Can't start break in " + status
-					+ " state");
-		}
-
-		startBreakTimer(millis);
-		setBreakAlarm(millis);
-		showPersistentBreakNotification(millis);
 	}
 
 	/**
@@ -247,6 +220,33 @@ public class PomodoroTimerService extends Service {
 	}
 
 	/* Private methods ************************* */
+
+	/**
+	 * Start a pomodoro count down timer.
+	 * 
+	 * @param millis the duration of the pomodoro
+	 */
+	private void startPomodoro(long millis) {
+		startPomodoroTimer(millis);
+		setPomodoroAlarm(millis);
+		showPersistentPomodoroNotification(millis);
+	}
+
+	/**
+	 * Start a break countdown timer.
+	 * 
+	 * @param millis the duration of the break
+	 */
+	private void startBreak(long millis) {
+		if (status != Status.POMODORO_FINISHED) {
+			throw new IllegalStateException("Can't start break in " + status
+					+ " state");
+		}
+
+		startBreakTimer(millis);
+		setBreakAlarm(millis);
+		showPersistentBreakNotification(millis);
+	}
 
 	private void saveState() {
 		Log.d("PomodoroTimerService", "saveState " + status.toString());
