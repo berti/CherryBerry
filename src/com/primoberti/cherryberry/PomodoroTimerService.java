@@ -192,26 +192,8 @@ public class PomodoroTimerService extends Service {
 		return timerEnd;
 	}
 
-	public long getPomodoroDuration() {
-		SharedPreferences preferences = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		String key = getResources().getString(
-				R.string.settings_key_pomodoro_duration);
-		int secs = preferences.getInt(key, 25);
-		return secs * 1000;
-	}
-
 	public void setPomodoroDuration(long pomodoroDuration) {
 		this.pomodoroDuration = pomodoroDuration;
-	}
-
-	public long getBreakDuration() {
-		SharedPreferences preferences = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		String key = getResources().getString(
-				R.string.settings_key_break_duration);
-		int secs = preferences.getInt(key, 5);
-		return secs * 1000;
 	}
 
 	public void setBreakDuration(long breakDuration) {
@@ -257,6 +239,24 @@ public class PomodoroTimerService extends Service {
 		startBreakTimer(millis);
 		setBreakAlarm(millis);
 		showPersistentBreakNotification(millis);
+	}
+
+	private long getPomodoroDuration() {
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		String key = getResources().getString(
+				R.string.settings_key_pomodoro_duration);
+		int secs = preferences.getInt(key, 25);
+		return secs * 1000;
+	}
+
+	private long getBreakDuration() {
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		String key = getResources().getString(
+				R.string.settings_key_break_duration);
+		int secs = preferences.getInt(key, 5);
+		return secs * 1000;
 	}
 
 	private void saveState() {
