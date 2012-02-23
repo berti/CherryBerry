@@ -77,10 +77,6 @@ public class PomodoroTimerService extends Service {
 
 	private long timerEnd;
 
-	private long pomodoroDuration = 25 * 60 * 1000;
-
-	private long breakDuration = 5 * 60 * 1000;
-
 	private PomodoroTimerListener listener;
 
 	private IBinder binder = new LocalBinder();
@@ -190,14 +186,6 @@ public class PomodoroTimerService extends Service {
 	 */
 	public long getTimerEnd() {
 		return timerEnd;
-	}
-
-	public void setPomodoroDuration(long pomodoroDuration) {
-		this.pomodoroDuration = pomodoroDuration;
-	}
-
-	public void setBreakDuration(long breakDuration) {
-		this.breakDuration = breakDuration;
 	}
 
 	public PomodoroTimerListener getListener() {

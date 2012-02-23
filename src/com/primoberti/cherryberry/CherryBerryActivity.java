@@ -294,7 +294,7 @@ public class CherryBerryActivity extends Activity {
 		AlertDialog dialog = builder.create();
 		dialog.show();
 	}
-	
+
 	private void showSettings() {
 		Intent intent = new Intent(this, SettingsActivity.class);
 		startActivity(intent);
@@ -312,8 +312,6 @@ public class CherryBerryActivity extends Activity {
 			timerService = ((LocalBinder) service).getService();
 			timerServiceBound = true;
 
-			timerService.setPomodoroDuration(25 * 60 * 1000);
-			timerService.setBreakDuration(5 * 60 * 1000);
 			timerService.setListener(new MyPomodoroTimerListener());
 
 			checkPomodoroTimerServiceStatus();
