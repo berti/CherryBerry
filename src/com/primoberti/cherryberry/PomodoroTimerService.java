@@ -115,7 +115,7 @@ public class PomodoroTimerService extends Service {
 	 * @see #setPomodoroDuration(long)
 	 */
 	public void startPomodoro() {
-		startPomodoro(pomodoroDuration);
+		startPomodoro(getPomodoroDuration());
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class PomodoroTimerService extends Service {
 	 * @see #setBreakDuration(long)
 	 */
 	public void startBreak() {
-		startBreak(breakDuration);
+		startBreak(getBreakDuration());
 	}
 
 	/**
