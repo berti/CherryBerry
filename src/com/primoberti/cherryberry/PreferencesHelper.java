@@ -33,19 +33,21 @@ public abstract class PreferencesHelper {
 	/* Public static methods ******************* */
 
 	public static long getPomodoroDuration(Context context) {
-		int secs = getInt(context, R.string.settings_key_pomodoro_duration, 25);
-		return secs * 1000;
+		int mins = getIntFromString(context,
+				R.string.settings_key_pomodoro_duration, 25);
+		return mins * 60 * 1000;
 	}
 
 	public static long getBreakDuration(Context context) {
-		int secs = getInt(context, R.string.settings_key_break_duration, 5);
-		return secs * 1000;
+		int mins = getIntFromString(context,
+				R.string.settings_key_break_duration, 5);
+		return mins * 60 * 1000;
 	}
 
 	public static long getLongBreakDuration(Context context) {
-		int secs = getInt(context, R.string.settings_key_long_break_duration,
-				15);
-		return secs * 1000;
+		int mins = getIntFromString(context,
+				R.string.settings_key_long_break_duration, 15);
+		return mins * 60 * 1000;
 	}
 
 	/* Private static methods ****************** */
@@ -55,6 +57,14 @@ public abstract class PreferencesHelper {
 				.getDefaultSharedPreferences(context);
 		return preferences.getInt(context.getResources().getString(key),
 				defValue);
+	}
+
+	private static int getIntFromString(Context context, int key, int defValue) {
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+		String stringKey = context.getResources().getString(key);
+		String stringValue = preferences.getString(stringKey, null);
+		return stringValue != null ? Integer.parseInt(stringValue) : defValue;
 	}
 
 }
