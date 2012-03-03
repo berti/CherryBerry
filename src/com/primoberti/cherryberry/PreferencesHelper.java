@@ -50,6 +50,11 @@ public abstract class PreferencesHelper {
 		return mins * 60 * 1000;
 	}
 
+	public static boolean isNotificationLight(Context context) {
+		return getBoolean(context, R.string.settings_key_notification_light,
+				true);
+	}
+
 	/* Private static methods ****************** */
 
 	private static int getInt(Context context, int key, int defValue) {
@@ -65,6 +70,13 @@ public abstract class PreferencesHelper {
 		String stringKey = context.getResources().getString(key);
 		String stringValue = preferences.getString(stringKey, null);
 		return stringValue != null ? Integer.parseInt(stringValue) : defValue;
+	}
+
+	private static boolean getBoolean(Context context, int key, boolean defValue) {
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+		return preferences.getBoolean(context.getResources().getString(key),
+				defValue);
 	}
 
 }
