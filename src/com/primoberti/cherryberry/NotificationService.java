@@ -87,7 +87,10 @@ public class NotificationService extends Service {
 		Notification notification = new Notification(icon,
 				resources.getString(tickerText), when);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		notification.defaults |= Notification.DEFAULT_SOUND;
+
+		if (PreferencesHelper.isNotificationVibration(this)) {
+			notification.defaults |= Notification.DEFAULT_VIBRATE;
+		}
 
 		if (PreferencesHelper.isNotificationLight(this)) {
 			notification.defaults |= Notification.DEFAULT_LIGHTS;

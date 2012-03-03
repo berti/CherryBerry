@@ -55,6 +55,11 @@ public abstract class PreferencesHelper {
 				true);
 	}
 
+	public static boolean isNotificationVibration(Context context) {
+		return getBoolean(context,
+				R.string.settings_key_notification_vibration, true);
+	}
+
 	/* Private static methods ****************** */
 
 	private static int getInt(Context context, int key, int defValue) {
