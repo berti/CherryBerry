@@ -35,22 +35,31 @@ public abstract class PreferencesHelper {
 
 	/* Public static methods ******************* */
 
-	public static long getPomodoroDuration(Context context) {
-		int mins = getIntFromString(context,
+	public static int getPomodoroDurationMins(Context context) {
+		return getIntFromString(context,
 				R.string.settings_key_pomodoro_duration, 25);
-		return mins * 60 * 1000;
+	}
+
+	public static int getBreakDurationMins(Context context) {
+		return getIntFromString(context, R.string.settings_key_break_duration,
+				5);
+	}
+
+	public static int getLongBreakDurationMins(Context context) {
+		return getIntFromString(context,
+				R.string.settings_key_long_break_duration, 15);
+	}
+
+	public static long getPomodoroDuration(Context context) {
+		return getPomodoroDurationMins(context) * 60 * 1000;
 	}
 
 	public static long getBreakDuration(Context context) {
-		int mins = getIntFromString(context,
-				R.string.settings_key_break_duration, 5);
-		return mins * 60 * 1000;
+		return getBreakDurationMins(context) * 60 * 1000;
 	}
 
 	public static long getLongBreakDuration(Context context) {
-		int mins = getIntFromString(context,
-				R.string.settings_key_long_break_duration, 15);
-		return mins * 60 * 1000;
+		return getLongBreakDurationMins(context) * 60 * 1000;
 	}
 
 	public static boolean isNotificationLight(Context context) {
