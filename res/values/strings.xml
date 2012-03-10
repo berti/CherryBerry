@@ -56,5 +56,6 @@
         <item >4</item>
         <item >5</item>
     </string-array>
+    <string name="settings_summary_duration">%d minutes</string>
 
 </resources>

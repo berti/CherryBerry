@@ -20,6 +20,7 @@
 package com.primoberti.cherryberry;
 
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
 /**
@@ -29,11 +30,47 @@ import android.preference.PreferenceActivity;
  */
 public class SettingsActivity extends PreferenceActivity {
 
+	private Preference pomodoroDurationPreference;
+	private Preference breakDurationPreference;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		addPreferencesFromResource(R.xml.settings);
+
+		pomodoroDurationPreference = findPreference(R.string.settings_key_pomodoro_duration);
+		breakDurationPreference = findPreference(R.string.settings_key_break_duration);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		updatePomodoroDurationSummary();
+		updateBreakDurationSummary();
+	}
+
+	/* Private methods ************************* */
+
+	private Preference findPreference(int keyId) {
+		return getPreferenceScreen().findPreference(getString(keyId));
+	}
+
+	private void updateBreakDurationSummary() {
+		setSummary(breakDurationPreference, R.string.settings_summary_duration,
+				PreferencesHelper.getBreakDurationMins(this));
+	}
+
+	private void updatePomodoroDurationSummary() {
+		setSummary(pomodoroDurationPreference,
+				R.string.settings_summary_duration,
+				PreferencesHelper.getPomodoroDurationMins(this));
+	}
+
+	private void setSummary(Preference preference, int summaryId,
+			Object... args) {
+		preference.setSummary(getString(summaryId, args));
 	}
 
 }
