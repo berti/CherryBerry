@@ -2,9 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <PreferenceCategory android:title="@string/settings_category_pomodoro">
         <EditTextPreference android:key="@string/settings_key_pomodoro_duration" android:dialogMessage="@string/in_minutes" android:title="@string/settings_pomodoro_duration" android:numeric="" />
-        <EditTextPreference android:key="@string/settings_key_break_duration" android:title="@string/settings_break_duration" android:numeric="" android:dialogMessage="@string/in_minutes"/>        
-        <EditTextPreference android:key="@string/settings_key_long_break_duration" android:dialogMessage="@string/in_minutes" android:title="@string/settings_long_break_duration"/>
-        <ListPreference android:dialogMessage="@string/settings_long_break_interval_dialog_message" android:title="@string/settings_long_break_interval" android:key="@string/settings_long_break_interval" android:entries="@array/settings_long_break_interval_entries" android:entryValues="@array/settings_long_break_interval_values"/>
+        <EditTextPreference android:key="@string/settings_key_break_duration" android:title="@string/settings_break_duration" android:numeric="" android:dialogMessage="@string/in_minutes"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/settings_category_notifications">
         <CheckBoxPreference android:title="@string/settings_notification_light" android:key="@string/settings_key_notification_light"/>

@@ -37,25 +37,8 @@
     <string name="settings_break_duration">Break duration</string>
     <string name="settings_key_break_duration">break_duration</string>
     <string name="in_minutes">In minutes</string>
-    <string name="settings_long_break_duration">Long break duration</string>
     <string name="settings_key_long_break_duration">long_break_duration</string>
-    <string name="settings_long_break_interval">Long break interval</string>
     <string name="settings_key_long_break_interval">long_break_interval</string>
-    <string name="settings_long_break_interval_dialog_message">Long break after</string>
-    <string-array name="settings_long_break_interval_entries">
-        <item >1 pomodoro</item>
-        <item >2 pomodoros</item>
-        <item >3 pomodoros</item>
-        <item >4 pomodoros</item>
-        <item >5 pomodoros</item>
-    </string-array>
-    <string-array name="settings_long_break_interval_values">
-        <item >1</item>
-        <item >2</item>
-        <item >3</item>
-        <item >4</item>
-        <item >5</item>
-    </string-array>
     <string name="settings_summary_duration">%d minutes</string>
 
 </resources>
