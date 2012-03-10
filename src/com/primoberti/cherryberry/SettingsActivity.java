@@ -19,16 +19,20 @@
 
 package com.primoberti.cherryberry;
 
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 
 /**
  * Activity for modifying user settings.
  * 
  * @author berti
  */
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends PreferenceActivity implements
+		OnSharedPreferenceChangeListener {
 
 	private Preference pomodoroDurationPreference;
 	private Preference breakDurationPreference;
@@ -47,8 +51,30 @@ public class SettingsActivity extends PreferenceActivity {
 	protected void onResume() {
 		super.onResume();
 
+		PreferenceManager.getDefaultSharedPreferences(this)
+				.registerOnSharedPreferenceChangeListener(this);
+
 		updatePomodoroDurationSummary();
 		updateBreakDurationSummary();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		PreferenceManager.getDefaultSharedPreferences(this)
+				.unregisterOnSharedPreferenceChangeListener(this);
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
+		if (key.equals(getString(R.string.settings_key_pomodoro_duration))) {
+			updatePomodoroDurationSummary();
+		}
+		else if (key.equals(getString(R.string.settings_key_break_duration))) {
+			updateBreakDurationSummary();
+		}
 	}
 
 	/* Private methods ************************* */
