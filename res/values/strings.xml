@@ -29,8 +29,8 @@
     <string name="settings_key_notification_light">notification_light</string>
     <string name="settings_notification_vibration">Vibrate</string>
     <string name="settings_key_notification_vibration">notification_vibration</string>
-    <string name="settings_notification_ringtone">Sound</string>
-    <string name="settings_key_notification_ringtone">notification_sound</string>
+    <string name="settings_notification_sound">Sound</string>
+    <string name="settings_key_notification_sound">notification_sound</string>
     <string name="menu_settings">Settings</string>
     <string name="settings_pomodoro_duration">Pomodoro duration</string>
     <string name="settings_key_pomodoro_duration">pomodoro_duration</string>

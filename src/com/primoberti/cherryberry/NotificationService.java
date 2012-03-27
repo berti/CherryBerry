@@ -26,7 +26,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.IBinder;
 
 /**
@@ -92,10 +91,9 @@ public class NotificationService extends Service {
 		if (PreferencesHelper.isNotificationVibration(this)) {
 			notification.defaults |= Notification.DEFAULT_VIBRATE;
 		}
-
-		Uri ringtoneUri = PreferencesHelper.getNotificationRingtoneUri(this);
-		if (ringtoneUri != null) {
-			notification.sound = ringtoneUri;
+		
+		if (PreferencesHelper.isNotificationSound(this)) {
+			notification.defaults |= Notification.DEFAULT_SOUND;
 		}
 
 		if (PreferencesHelper.isNotificationLight(this)) {

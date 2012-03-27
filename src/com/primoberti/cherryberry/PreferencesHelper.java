@@ -21,9 +21,6 @@ package com.primoberti.cherryberry;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.preference.PreferenceManager;
 
 /**
@@ -72,27 +69,9 @@ public abstract class PreferencesHelper {
 				R.string.settings_key_notification_vibration, true);
 	}
 
-	public static Ringtone getNotificationRingtone(Context context) {
-		Ringtone ringtone = null;
-
-		Uri ringtoneUri = getNotificationRingtoneUri(context);
-		if (ringtoneUri != null) {
-			ringtone = RingtoneManager.getRingtone(context, ringtoneUri);
-		}
-
-		return ringtone;
-	}
-
-	public static Uri getNotificationRingtoneUri(Context context) {
-		Uri ringtoneUri = null;
-
-		String ringtoneString = getString(context,
-				R.string.settings_key_notification_ringtone, null);
-		if (ringtoneString != null) {
-			ringtoneUri = Uri.parse(ringtoneString);
-		}
-
-		return ringtoneUri;
+	public static boolean isNotificationSound(Context context) {
+		return getBoolean(context,
+				R.string.settings_key_notification_sound, true);
 	}
 
 	/* Private static methods ****************** */
