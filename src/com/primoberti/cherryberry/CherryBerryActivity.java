@@ -207,6 +207,7 @@ public class CherryBerryActivity extends Activity {
 			disableStartButton();
 			TextView statusTextView = (TextView) findViewById(R.id.statusTextView);
 			statusTextView.setText(R.string.status_pomodoro_running);
+			updateTimer(timerService.getTimerEnd() - System.currentTimeMillis());
 			break;
 		case POMODORO_FINISHED:
 			onPomodoroFinish();
@@ -215,6 +216,7 @@ public class CherryBerryActivity extends Activity {
 			disableStartButton();
 			statusTextView = (TextView) findViewById(R.id.statusTextView);
 			statusTextView.setText(R.string.status_break_running);
+			updateTimer(timerService.getTimerEnd() - System.currentTimeMillis());
 			break;
 		case BREAK_FINISHED:
 			onBreakFinish();
