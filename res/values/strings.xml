@@ -22,7 +22,7 @@
     <string name="status_break_running">On a break. Relax!</string>
     <string name="menu_about">About</string>
     <string name="about_dialog_title">About CherryBerry</string>
-    <string name="about_dialog_content">CherryBerry is a really simple Pomodoro timer.\n\nBy Alberto Salmerón Moreno</string>
+    <string name="about_dialog_content">CherryBerry is a really simple Pomodoro timer.\n\nLicensed under GPLv3. See https://github.com/berti/CherryBerry.\n\nBy Alberto Salmerón Moreno</string>
     <string name="settings_category_pomodoro">Pomodoro</string>
     <string name="settings_category_notifications">Notifications</string>
     <string name="settings_notification_light">Show light</string>
