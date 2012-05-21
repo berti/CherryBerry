@@ -91,13 +91,16 @@ public class NotificationService extends Service {
 		if (PreferencesHelper.isNotificationVibration(this)) {
 			notification.defaults |= Notification.DEFAULT_VIBRATE;
 		}
-		
+
 		if (PreferencesHelper.isNotificationSound(this)) {
 			notification.defaults |= Notification.DEFAULT_SOUND;
 		}
 
 		if (PreferencesHelper.isNotificationLight(this)) {
-			notification.defaults |= Notification.DEFAULT_LIGHTS;
+			notification.ledARGB = 0xffd60707;
+			notification.ledOnMS = 300;
+			notification.ledOffMS = 3000;
+			notification.flags |= Notification.FLAG_SHOW_LIGHTS;
 		}
 
 		Context context = getApplicationContext();
