@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -62,6 +63,9 @@ public class CherryBerryActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		
+		// Load the default values for the user settings
+		PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 
 		timerServiceConnection = new PomodoroTimerServiceConnector();
 
