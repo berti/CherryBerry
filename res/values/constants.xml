@@ -3,5 +3,6 @@
 
     <item name="settings_default_pomodoro_duration" format="integer" type="integer">25</item>
     <item name="settings_default_break_duration" format="integer" type="integer">5</item>
+    <string name="settings_default_notification_light">true</string><string name="settings_default_notification_vibration">true</string><string name="settings_default_notification_sound">true</string>
 
 </resources>
