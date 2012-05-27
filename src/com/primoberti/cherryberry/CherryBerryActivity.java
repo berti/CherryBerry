@@ -50,6 +50,8 @@ public class CherryBerryActivity extends Activity {
 
 	private ServiceConnection timerServiceConnection;
 
+	private TextView statusTextView;
+
 	/* Private constants *********************** */
 
 	private final static int DIALOG_POMODORO_FINISHED = 0;
@@ -63,11 +65,13 @@ public class CherryBerryActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		
+
 		// Load the default values for the user settings
 		PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 
 		timerServiceConnection = new PomodoroTimerServiceConnector();
+
+		statusTextView = (TextView) findViewById(R.id.statusTextView);
 
 		Button button = (Button) findViewById(R.id.startButton);
 		button.setOnClickListener(new OnClickListener() {
@@ -209,7 +213,6 @@ public class CherryBerryActivity extends Activity {
 		switch (status) {
 		case POMODORO_RUNNING:
 			disableStartButton();
-			TextView statusTextView = (TextView) findViewById(R.id.statusTextView);
 			statusTextView.setText(R.string.status_pomodoro_running);
 			updateTimer(timerService.getTimerEnd() - System.currentTimeMillis());
 			break;
@@ -218,7 +221,6 @@ public class CherryBerryActivity extends Activity {
 			break;
 		case BREAK_RUNNING:
 			disableStartButton();
-			statusTextView = (TextView) findViewById(R.id.statusTextView);
 			statusTextView.setText(R.string.status_break_running);
 			updateTimer(timerService.getTimerEnd() - System.currentTimeMillis());
 			break;
@@ -233,7 +235,6 @@ public class CherryBerryActivity extends Activity {
 			timerService.startPomodoro();
 			disableStartButton();
 
-			TextView statusTextView = (TextView) findViewById(R.id.statusTextView);
 			statusTextView.setText(R.string.status_pomodoro_running);
 		}
 	}
@@ -245,7 +246,6 @@ public class CherryBerryActivity extends Activity {
 		updateTimer(0);
 		enableStartButton();
 
-		TextView statusTextView = (TextView) findViewById(R.id.statusTextView);
 		statusTextView.setText(R.string.status_idle);
 	}
 
@@ -260,7 +260,6 @@ public class CherryBerryActivity extends Activity {
 	private void onPomodoroFinish() {
 		updateTimer(0);
 
-		TextView statusTextView = (TextView) findViewById(R.id.statusTextView);
 		statusTextView.setText(R.string.status_pomodoro_finished);
 
 		showDialog(DIALOG_POMODORO_FINISHED);
@@ -270,7 +269,6 @@ public class CherryBerryActivity extends Activity {
 		updateTimer(0);
 		enableStartButton();
 
-		TextView statusTextView = (TextView) findViewById(R.id.statusTextView);
 		statusTextView.setText(R.string.status_idle);
 	}
 
@@ -363,7 +361,6 @@ public class CherryBerryActivity extends Activity {
 				if (timerServiceBound) {
 					timerService.startBreak();
 
-					TextView statusTextView = (TextView) findViewById(R.id.statusTextView);
 					statusTextView.setText(R.string.status_break_running);
 				}
 				break;
@@ -380,7 +377,6 @@ public class CherryBerryActivity extends Activity {
 					timerService.skip();
 					enableStartButton();
 
-					TextView statusTextView = (TextView) findViewById(R.id.statusTextView);
 					statusTextView.setText(R.string.status_idle);
 				}
 				break;
