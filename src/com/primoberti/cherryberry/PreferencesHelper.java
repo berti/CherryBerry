@@ -30,16 +30,19 @@ import android.preference.PreferenceManager;
  */
 public abstract class PreferencesHelper {
 
+	private final static String TAG = "PreferencesHelper";
+
 	/* Public static methods ******************* */
 
 	public static int getPomodoroDurationMins(Context context) {
 		return getIntFromString(context,
-				R.string.settings_key_pomodoro_duration, 25);
+				R.string.settings_key_pomodoro_duration,
+				R.integer.settings_default_pomodoro_duration);
 	}
 
 	public static int getBreakDurationMins(Context context) {
 		return getIntFromString(context, R.string.settings_key_break_duration,
-				5);
+				R.integer.settings_default_break_duration);
 	}
 
 	public static int getLongBreakDurationMins(Context context) {
@@ -60,18 +63,24 @@ public abstract class PreferencesHelper {
 	}
 
 	public static boolean isNotificationLight(Context context) {
+		boolean defValue = Boolean.parseBoolean(context
+				.getString(R.string.settings_default_notification_light));
 		return getBoolean(context, R.string.settings_key_notification_light,
-				true);
+				defValue);
 	}
 
 	public static boolean isNotificationVibration(Context context) {
+		boolean defValue = Boolean.parseBoolean(context
+				.getString(R.string.settings_default_notification_vibration));
 		return getBoolean(context,
-				R.string.settings_key_notification_vibration, true);
+				R.string.settings_key_notification_vibration, defValue);
 	}
 
 	public static boolean isNotificationSound(Context context) {
-		return getBoolean(context,
-				R.string.settings_key_notification_sound, true);
+		boolean defValue = Boolean.parseBoolean(context
+				.getString(R.string.settings_default_notification_sound));
+		return getBoolean(context, R.string.settings_key_notification_sound,
+				defValue);
 	}
 
 	/* Private static methods ****************** */
