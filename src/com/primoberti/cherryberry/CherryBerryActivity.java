@@ -76,6 +76,9 @@ public class CherryBerryActivity extends Activity {
 		statusTextView = (TextView) findViewById(R.id.statusTextView);
 		timerTextView = (TextView) findViewById(R.id.timerTextView);
 
+		// Show current pomodoro duration preference by default
+		updateTimer(PreferencesHelper.getPomodoroDuration(this));
+
 		Button button = (Button) findViewById(R.id.startButton);
 		button.setOnClickListener(new OnClickListener() {
 
