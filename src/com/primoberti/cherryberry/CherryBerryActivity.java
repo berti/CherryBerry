@@ -52,6 +52,8 @@ public class CherryBerryActivity extends Activity {
 
 	private TextView statusTextView;
 
+	private TextView timerTextView;
+
 	/* Private constants *********************** */
 
 	private final static int DIALOG_POMODORO_FINISHED = 0;
@@ -72,6 +74,7 @@ public class CherryBerryActivity extends Activity {
 		timerServiceConnection = new PomodoroTimerServiceConnector();
 
 		statusTextView = (TextView) findViewById(R.id.statusTextView);
+		timerTextView = (TextView) findViewById(R.id.timerTextView);
 
 		Button button = (Button) findViewById(R.id.startButton);
 		button.setOnClickListener(new OnClickListener() {
@@ -253,7 +256,6 @@ public class CherryBerryActivity extends Activity {
 		long minutes = millis / 1000 / 60;
 		long seconds = millis / 1000 % 60;
 
-		TextView timerTextView = (TextView) findViewById(R.id.timerTextView);
 		timerTextView.setText(String.format("%d:%02d", minutes, seconds));
 	}
 
