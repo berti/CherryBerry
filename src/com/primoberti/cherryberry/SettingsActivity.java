@@ -23,8 +23,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 /**
  * Activity for modifying user settings.
@@ -33,6 +35,8 @@ import android.preference.PreferenceManager;
  */
 public class SettingsActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
+
+	private final static String TAG = "SettingsActivity";
 
 	private Preference pomodoroDurationPreference;
 	private Preference breakDurationPreference;
@@ -45,6 +49,10 @@ public class SettingsActivity extends PreferenceActivity implements
 
 		pomodoroDurationPreference = findPreference(R.string.settings_key_pomodoro_duration);
 		breakDurationPreference = findPreference(R.string.settings_key_break_duration);
+
+		OnPreferenceChangeListener listener = new CheckNumberOnPreferenceChangeListener();
+		pomodoroDurationPreference.setOnPreferenceChangeListener(listener);
+		breakDurationPreference.setOnPreferenceChangeListener(listener);
 	}
 
 	@Override
@@ -97,6 +105,26 @@ public class SettingsActivity extends PreferenceActivity implements
 	private void setSummary(Preference preference, int summaryId,
 			Object... args) {
 		preference.setSummary(getString(summaryId, args));
+	}
+
+	/* Private inner classes ******************* */
+
+	private class CheckNumberOnPreferenceChangeListener implements
+			OnPreferenceChangeListener {
+
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			boolean valid = true;
+			try {
+				Integer.parseInt(newValue.toString());
+			}
+			catch (NumberFormatException e) {
+				Log.w(TAG, preference.getTitle() + ": " + newValue
+						+ " is not a number");
+				valid = false;
+			}
+			return valid;
+		}
 	}
 
 }
