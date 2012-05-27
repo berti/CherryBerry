@@ -58,6 +58,8 @@ public class CherryBerryActivity extends Activity {
 
 	private final static int DIALOG_POMODORO_FINISHED = 0;
 
+	private final static int SHOW_SETTINGS = 0;
+
 	/* Public methods ************************** */
 
 	/** Called when the activity is first created. */
@@ -203,6 +205,17 @@ public class CherryBerryActivity extends Activity {
 		return dialog;
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == SHOW_SETTINGS) {
+			if (timerService == null || !timerService.isRunning()) {
+				updateTimer(PreferencesHelper.getPomodoroDuration(this));
+			}
+		}
+	}
+
 	/* Private methods ************************* */
 
 	private boolean bindPomodoroTimerService() {
@@ -306,7 +319,7 @@ public class CherryBerryActivity extends Activity {
 
 	private void showSettings() {
 		Intent intent = new Intent(this, SettingsActivity.class);
-		startActivity(intent);
+		startActivityForResult(intent, SHOW_SETTINGS);
 	}
 
 	/* Private inner classes ******************* */
