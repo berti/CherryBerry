@@ -22,6 +22,7 @@ package com.primoberti.cherryberry;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 /**
  * Abstract helper class for accessing shared preferences across CherryBerry.
@@ -97,7 +98,16 @@ public abstract class PreferencesHelper {
 				.getDefaultSharedPreferences(context);
 		String stringKey = context.getResources().getString(key);
 		String stringValue = preferences.getString(stringKey, null);
-		return stringValue != null ? Integer.parseInt(stringValue) : defValue;
+		int value = defValue;
+		if (stringValue != null) {
+			try {
+				value = Integer.parseInt(stringValue);
+			}
+			catch (NumberFormatException e) {
+				Log.e(PreferencesHelper.TAG, e.toString());
+			}
+		}
+		return value;
 	}
 
 	private static boolean getBoolean(Context context, int key, boolean defValue) {
