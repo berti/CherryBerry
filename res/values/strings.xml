@@ -26,11 +26,11 @@
     <string name="status_break_running">On a break. Relax!</string>
     <string name="settings_category_pomodoro">Pomodoro</string>
     <string name="settings_category_notifications">Notifications</string>
-    <string name="settings_notification_light">Show light</string>
-    <string name="settings_notification_vibration">Vibrate</string>
-    <string name="settings_notification_sound">Sound</string>
-    <string name="settings_pomodoro_duration">Pomodoro duration</string>
-    <string name="settings_break_duration">Break duration</string>
+    <string name="settings_title_notification_light">Show light</string>
+    <string name="settings_title_notification_vibration">Vibrate</string>
+    <string name="settings_title_notification_sound">Sound</string>
+    <string name="settings_title_pomodoro_duration">Pomodoro duration</string>
+    <string name="settings_title_break_duration">Break duration</string>
     <string name="settings_key_notification_light">notification_light</string>
     <string name="settings_key_notification_vibration">notification_vibration</string>
     <string name="settings_key_notification_sound">notification_sound</string>
