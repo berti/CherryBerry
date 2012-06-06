@@ -47,6 +47,8 @@ public class SettingsActivity extends PreferenceActivity implements
 
 		addPreferencesFromResource(R.xml.settings);
 
+		setTitle(R.string.activity_title_settings);
+
 		pomodoroDurationPreference = findPreference(R.string.settings_key_pomodoro_duration);
 		breakDurationPreference = findPreference(R.string.settings_key_break_duration);
 

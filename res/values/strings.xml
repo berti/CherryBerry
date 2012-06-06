@@ -24,6 +24,7 @@
     <string name="status_pomodoro_running">On a pomodoro. Focus on your work!</string>
     <string name="status_pomodoro_finished">Time to get a break</string>
     <string name="status_break_running">On a break. Relax!</string>
+    <string name="activity_title_settings">Settings</string>
     <string name="settings_category_pomodoro">Pomodoro</string>
     <string name="settings_category_notifications">Notifications</string>
     <string name="settings_title_notification_light">Show light</string>
