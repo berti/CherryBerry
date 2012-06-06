@@ -364,15 +364,15 @@ public class PomodoroTimerService extends Service {
 
 	private void showPersistentPomodoroNotification(long millis) {
 		showPersistentNotification(NotificationService.NOTIFICATION_ID,
-				R.string.pomodoro_running_notification_title,
+				R.string.notification_title_pomodoro_running,
 				R.string.app_name,
-				R.string.pomodoro_running_notification_content, millis);
+				R.string.notification_text_pomodoro_running, millis);
 	}
 
 	private void showPersistentBreakNotification(long millis) {
 		showPersistentNotification(NotificationService.NOTIFICATION_ID,
-				R.string.break_running_notification_title, R.string.app_name,
-				R.string.break_running_notification_content, millis);
+				R.string.notification_title_break_running, R.string.app_name,
+				R.string.notification_text_break_running, millis);
 	}
 
 	private void showPersistentNotification(int id, int tickerTextId,

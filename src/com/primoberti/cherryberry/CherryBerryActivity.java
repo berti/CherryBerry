@@ -193,12 +193,12 @@ public class CherryBerryActivity extends Activity {
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-			builder.setMessage(R.string.pomodoro_finished_dialog_title);
+			builder.setMessage(R.string.dialog_title_pomodoro_finished);
 			builder.setCancelable(false);
-			builder.setPositiveButton(R.string.start_break_button, listener);
+			builder.setPositiveButton(R.string.button_start_break, listener);
 			// builder.setNegativeButton(R.string.cancel_pomodoro_button,
 			// listener);
-			builder.setNeutralButton(R.string.skip_break_button, listener);
+			builder.setNeutralButton(R.string.button_skip_break, listener);
 
 			dialog = builder.create();
 			break;
@@ -304,8 +304,8 @@ public class CherryBerryActivity extends Activity {
 
 	private void showAboutDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(R.string.about_dialog_title);
-		builder.setMessage(R.string.about_dialog_content);
+		builder.setTitle(R.string.dialog_title_about);
+		builder.setMessage(R.string.dialog_message_about);
 		builder.setPositiveButton(android.R.string.ok,
 				new DialogInterface.OnClickListener() {
 

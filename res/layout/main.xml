@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/start"
+            android:text="@string/button_start"
             android:textSize="30sp" />
 
         <Button
@@ -44,7 +44,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:enabled="false"
-            android:text="@string/stop"
+            android:text="@string/button_stop"
             android:textSize="30sp" />
 
     </LinearLayout>

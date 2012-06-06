@@ -64,15 +64,15 @@ public class NotificationService extends Service {
 
 	private void showPomodoroNotification() {
 		showNotification(NOTIFICATION_ID,
-				R.string.pomodoro_finished_notification_title,
+				R.string.notification_title_pomodoro_finished,
 				R.string.app_name,
-				R.string.pomodoro_finished_notification_content);
+				R.string.notification_text_pomodoro_finished);
 	}
 
 	private void showBreakNotification() {
 		showNotification(NOTIFICATION_ID,
-				R.string.break_finished_notification_title, R.string.app_name,
-				R.string.break_finished_notification_content);
+				R.string.notification_title_break_finished, R.string.app_name,
+				R.string.notification_text_break_finished);
 	}
 
 	private void showNotification(int id, int tickerText, int contentTitle,
