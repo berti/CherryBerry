@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CherryBerry</string>
+    <string name="button_start">Iniciar</string>
+    <string name="button_stop">Parar</string>
+    <string name="default_pomodoro_timer">0:00</string>
+    <string name="menu_item_settings">Ajustes</string>
+    <string name="menu_item_about">Acerca de</string>
+    <string name="notification_title_pomodoro_finished">Pomodoro terminado</string>
+    <string name="notification_title_break_finished">Descanso terminado</string>
+    <string name="notification_text_pomodoro_finished">Pomodoro terminado, ¡tómate un descanso!</string>
+    <string name="notification_text_break_finished">Descanso terminado, ¡vuelve al trabajo!</string>
+    <string name="notification_title_pomodoro_running">Pomodoro comenzado</string>
+    <string name="notification_text_pomodoro_running">En un pomodoro - termina a las %1$s</string>
+    <string name="notification_title_break_running">Descanso comenzado</string>
+    <string name="notification_text_break_running">En un descanso - termina a las %1$s</string>
+    <string name="dialog_title_pomodoro_finished">Pomodoro terminado. ¿Y ahora qué?</string>
+    <string name="dialog_title_about">Acerca de CherryBerry</string>
+    <string name="dialog_message_about">CherryBerry is un temporizador de Pomodoro realmente sencillo.\n\nLicenciado bajo GPLv3. Ver https://github.com/berti/CherryBerry.\n\nPor Alberto Salmerón Moreno</string>
+    <string name="button_start_break">Comenzar descanso</string>
+    <string name="button_cancel_pomodoro">Cancelar pomodoro</string>
+    <string name="button_skip_break">Saltar descanso</string>
+    <string name="status_idle">¿Listo para empezar el siguiente pomodoro?</string>
+    <string name="status_pomodoro_running">En un pomodoro. ¡Concéntrate en tu trabajo!</string>
+    <string name="status_pomodoro_finished">Hora de tomarse un descanso</string>
+    <string name="status_break_running">En un descanso. ¡Relájate!</string>
+    <string name="settings_category_pomodoro">Pomodoro</string>
+    <string name="settings_category_notifications">Notificaciones</string>
+    <string name="settings_title_notification_light">Luz</string>
+    <string name="settings_title_notification_vibration">Vibración</string>
+    <string name="settings_title_notification_sound">Sonido</string>
+    <string name="settings_title_pomodoro_duration">Duración de un pomodoro</string>
+    <string name="settings_title_break_duration">Duración de un descanso</string>
+    <string name="settings_message_in_minutes">En minutos</string>
+    <string name="settings_summary_duration">%d minutos</string>
+
+</resources>
