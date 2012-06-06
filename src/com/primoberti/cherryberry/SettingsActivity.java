@@ -19,6 +19,8 @@
 
 package com.primoberti.cherryberry;
 
+import android.app.ActionBar;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MenuItem;
 
 /**
  * Activity for modifying user settings.
@@ -48,6 +51,11 @@ public class SettingsActivity extends PreferenceActivity implements
 		addPreferencesFromResource(R.xml.settings);
 
 		setTitle(R.string.activity_title_settings);
+
+		if (android.os.Build.VERSION.SDK_INT >= 11) {
+			ActionBar actionBar = getActionBar();
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
 
 		pomodoroDurationPreference = findPreference(R.string.settings_key_pomodoro_duration);
 		breakDurationPreference = findPreference(R.string.settings_key_break_duration);
@@ -84,6 +92,20 @@ public class SettingsActivity extends PreferenceActivity implements
 		}
 		else if (key.equals(getString(R.string.settings_key_break_duration))) {
 			updateBreakDurationSummary();
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// Go up, i.e. to CherryBerrryActivity
+			Intent intent = new Intent(this, CherryBerryActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
