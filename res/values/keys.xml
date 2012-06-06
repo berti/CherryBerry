@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="settings_key_notification_light">notification_light</string>
+    <string name="settings_key_notification_vibration">notification_vibration</string>
+    <string name="settings_key_notification_sound">notification_sound</string>
+    <string name="settings_key_pomodoro_duration">pomodoro_duration</string>
+    <string name="settings_key_break_duration">break_duration</string>
+    <string name="settings_key_long_break_duration">long_break_duration</string>
+    <string name="settings_key_long_break_interval">long_break_interval</string>
+
+</resources>
