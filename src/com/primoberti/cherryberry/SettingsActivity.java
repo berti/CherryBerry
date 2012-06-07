@@ -19,6 +19,7 @@
 
 package com.primoberti.cherryberry;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,6 +46,7 @@ public class SettingsActivity extends PreferenceActivity implements
 	private Preference breakDurationPreference;
 
 	@Override
+	@TargetApi(11)
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
