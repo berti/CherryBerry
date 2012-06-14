@@ -5,9 +5,9 @@
         <EditTextPreference android:key="@string/settings_key_break_duration" android:title="@string/settings_title_break_duration" android:numeric="" android:dialogMessage="@string/settings_message_in_minutes" android:defaultValue="@integer/settings_default_break_duration"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/settings_category_notifications">
-        <CheckBoxPreference android:title="@string/settings_title_notification_light" android:key="@string/settings_key_notification_light" android:defaultValue="@string/settings_default_notification_light"/>
-        <CheckBoxPreference android:title="@string/settings_title_notification_sound" android:key="@string/settings_key_notification_sound" android:defaultValue="@string/settings_default_notification_sound"/>
-        <CheckBoxPreference android:title="@string/settings_title_notification_vibration" android:key="@string/settings_key_notification_vibration" android:defaultValue="@string/settings_default_notification_vibration"/>
+        <CheckBoxPreference android:title="@string/settings_title_notification_light" android:key="@string/settings_key_notification_light" android:defaultValue="@bool/settings_default_notification_light"/>
+        <CheckBoxPreference android:title="@string/settings_title_notification_sound" android:key="@string/settings_key_notification_sound" android:defaultValue="@bool/settings_default_notification_sound"/>
+        <CheckBoxPreference android:title="@string/settings_title_notification_vibration" android:key="@string/settings_key_notification_vibration" android:defaultValue="@bool/settings_default_notification_vibration"/>
     </PreferenceCategory>
     
 </PreferenceScreen>

@@ -64,24 +64,19 @@ public abstract class PreferencesHelper {
 	}
 
 	public static boolean isNotificationLight(Context context) {
-		boolean defValue = Boolean.parseBoolean(context
-				.getString(R.string.settings_default_notification_light));
 		return getBoolean(context, R.string.settings_key_notification_light,
-				defValue);
+				R.bool.settings_default_notification_light);
 	}
 
 	public static boolean isNotificationVibration(Context context) {
-		boolean defValue = Boolean.parseBoolean(context
-				.getString(R.string.settings_default_notification_vibration));
 		return getBoolean(context,
-				R.string.settings_key_notification_vibration, defValue);
+				R.string.settings_key_notification_vibration,
+				R.bool.settings_default_notification_vibration);
 	}
 
 	public static boolean isNotificationSound(Context context) {
-		boolean defValue = Boolean.parseBoolean(context
-				.getString(R.string.settings_default_notification_sound));
 		return getBoolean(context, R.string.settings_key_notification_sound,
-				defValue);
+				R.bool.settings_default_notification_sound);
 	}
 
 	/* Private static methods ****************** */
@@ -108,6 +103,12 @@ public abstract class PreferencesHelper {
 			}
 		}
 		return value;
+	}
+
+	private static boolean getBoolean(Context context, int key, int defValueKey) {
+		boolean defValue = context.getResources().getBoolean(defValueKey);
+		return getBoolean(context,
+				R.string.settings_key_notification_vibration, defValue);
 	}
 
 	private static boolean getBoolean(Context context, int key, boolean defValue) {
