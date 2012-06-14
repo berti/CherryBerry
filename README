@@ -1,7 +1,8 @@
 CherryBerry
 ===========
 
-CherryBerry is a simple Pomodoro app for Android, with Google Tasks integration.
+CherryBerry is a simple Pomodoro app for Android, with planned Google Tasks
+integration.
 
 The Pomodoro Technique
 ----------------------
