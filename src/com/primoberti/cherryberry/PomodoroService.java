@@ -45,7 +45,7 @@ import android.util.Log;
  * 
  * @author berti
  */
-public class PomodoroTimerService extends Service {
+public class PomodoroService extends Service {
 
 	/* Public enumerations ********************* */
 
@@ -63,7 +63,7 @@ public class PomodoroTimerService extends Service {
 
 	/* Private constants *********************** */
 
-	private final static String SHARED_PREFS = PomodoroTimerService.class
+	private final static String SHARED_PREFS = PomodoroService.class
 			+ "_SHARED_PREFS";
 
 	private final static String PREF_STATUS = "status";
@@ -97,10 +97,10 @@ public class PomodoroTimerService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent.getAction().equals(PomodoroTimerService.POMODORO_FINISHED)) {
+		if (intent.getAction().equals(PomodoroService.POMODORO_FINISHED)) {
 			showPomodoroNotification();
 		}
-		else if (intent.getAction().equals(PomodoroTimerService.BREAK_FINISHED)) {
+		else if (intent.getAction().equals(PomodoroService.BREAK_FINISHED)) {
 			showBreakNotification();
 		}
 
@@ -334,7 +334,7 @@ public class PomodoroTimerService extends Service {
 	 * @param millis duration of the pomodoro
 	 */
 	private void setPomodoroAlarm(long millis) {
-		setAlarm(millis, PomodoroTimerService.POMODORO_FINISHED);
+		setAlarm(millis, PomodoroService.POMODORO_FINISHED);
 	}
 
 	/**
@@ -343,7 +343,7 @@ public class PomodoroTimerService extends Service {
 	 * @param millis duration of the break
 	 */
 	private void setBreakAlarm(long millis) {
-		setAlarm(millis, PomodoroTimerService.BREAK_FINISHED);
+		setAlarm(millis, PomodoroService.BREAK_FINISHED);
 	}
 
 	/**
@@ -355,7 +355,7 @@ public class PomodoroTimerService extends Service {
 	private void setAlarm(long millis, String action) {
 		long finishTime = System.currentTimeMillis() + millis;
 
-		Intent intent = new Intent(this, PomodoroTimerService.class);
+		Intent intent = new Intent(this, PomodoroService.class);
 		intent.setAction(action);
 		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent,
 				0);
@@ -371,7 +371,7 @@ public class PomodoroTimerService extends Service {
 	}
 
 	private void cancelAlarm(String action) {
-		Intent intent = new Intent(this, PomodoroTimerService.class);
+		Intent intent = new Intent(this, PomodoroService.class);
 		intent.setAction(action);
 		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent,
 				0);
@@ -382,14 +382,14 @@ public class PomodoroTimerService extends Service {
 	}
 
 	private void showPersistentPomodoroNotification(long millis) {
-		showPersistentNotification(PomodoroTimerService.NOTIFICATION_ID,
+		showPersistentNotification(PomodoroService.NOTIFICATION_ID,
 				R.string.notification_title_pomodoro_running,
 				R.string.app_name,
 				R.string.notification_text_pomodoro_running, millis);
 	}
 
 	private void showPersistentBreakNotification(long millis) {
-		showPersistentNotification(PomodoroTimerService.NOTIFICATION_ID,
+		showPersistentNotification(PomodoroService.NOTIFICATION_ID,
 				R.string.notification_title_break_running, R.string.app_name,
 				R.string.notification_text_break_running, millis);
 	}
@@ -431,7 +431,7 @@ public class PomodoroTimerService extends Service {
 		String ns = Context.NOTIFICATION_SERVICE;
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
 
-		mNotificationManager.cancel(PomodoroTimerService.NOTIFICATION_ID);
+		mNotificationManager.cancel(PomodoroService.NOTIFICATION_ID);
 	}
 
 	private void setIdle() {
@@ -508,8 +508,8 @@ public class PomodoroTimerService extends Service {
 
 	public class LocalBinder extends Binder {
 
-		PomodoroTimerService getService() {
-			return PomodoroTimerService.this;
+		PomodoroService getService() {
+			return PomodoroService.this;
 		}
 
 	}
@@ -532,13 +532,13 @@ public class PomodoroTimerService extends Service {
 			if (status == Status.POMODORO_RUNNING) {
 				status = Status.POMODORO_FINISHED;
 				if (listener != null) {
-					listener.onPomodoroFinish(PomodoroTimerService.this);
+					listener.onPomodoroFinish(PomodoroService.this);
 				}
 			}
 			else if (status == Status.BREAK_RUNNING) {
 				status = Status.BREAK_FINISHED;
 				if (listener != null) {
-					listener.onBreakFinish(PomodoroTimerService.this);
+					listener.onBreakFinish(PomodoroService.this);
 				}
 			}
 		}
@@ -546,7 +546,7 @@ public class PomodoroTimerService extends Service {
 		@Override
 		public void onTick(long millisUntilFinished) {
 			if (listener != null) {
-				listener.onTick(PomodoroTimerService.this, millisUntilFinished);
+				listener.onTick(PomodoroService.this, millisUntilFinished);
 			}
 		}
 

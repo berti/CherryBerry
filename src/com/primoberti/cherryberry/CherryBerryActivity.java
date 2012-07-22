@@ -42,13 +42,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.primoberti.cherryberry.PomodoroTimerService.LocalBinder;
+import com.primoberti.cherryberry.PomodoroService.LocalBinder;
 
 public class CherryBerryActivity extends Activity {
 
 	/* Private fields ************************** */
 
-	private PomodoroTimerService timerService;
+	private PomodoroService timerService;
 
 	private boolean timerServiceBound = false;
 
@@ -227,14 +227,14 @@ public class CherryBerryActivity extends Activity {
 	private boolean bindPomodoroTimerService() {
 		Log.d(TAG, "bindPomodoroTimerService");
 
-		Intent intent = new Intent(this, PomodoroTimerService.class);
+		Intent intent = new Intent(this, PomodoroService.class);
 		bindService(intent, timerServiceConnection, BIND_AUTO_CREATE);
 
 		return timerServiceBound;
 	}
 
 	private void checkPomodoroTimerServiceStatus() {
-		PomodoroTimerService.Status status = timerService.getStatus();
+		PomodoroService.Status status = timerService.getStatus();
 		switch (status) {
 		case POMODORO_RUNNING:
 			disableStartButton();
@@ -357,17 +357,17 @@ public class CherryBerryActivity extends Activity {
 	private class MyPomodoroTimerListener implements PomodoroTimerListener {
 
 		@Override
-		public void onPomodoroFinish(PomodoroTimerService timer) {
+		public void onPomodoroFinish(PomodoroService timer) {
 			CherryBerryActivity.this.onPomodoroFinish();
 		}
 
 		@Override
-		public void onBreakFinish(PomodoroTimerService timer) {
+		public void onBreakFinish(PomodoroService timer) {
 			CherryBerryActivity.this.onBreakFinish();
 		}
 
 		@Override
-		public void onTick(PomodoroTimerService timer, long millisUntilFinished) {
+		public void onTick(PomodoroService timer, long millisUntilFinished) {
 			updateTimer(millisUntilFinished);
 		}
 
