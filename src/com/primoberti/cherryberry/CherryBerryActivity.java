@@ -354,20 +354,20 @@ public class CherryBerryActivity extends Activity {
 
 	}
 
-	private class MyPomodoroTimerListener implements PomodoroTimerListener {
+	private class MyPomodoroTimerListener implements PomodoroListener {
 
 		@Override
-		public void onPomodoroFinish(PomodoroService timer) {
+		public void onPomodoroFinish(PomodoroService service) {
 			CherryBerryActivity.this.onPomodoroFinish();
 		}
 
 		@Override
-		public void onBreakFinish(PomodoroService timer) {
+		public void onBreakFinish(PomodoroService service) {
 			CherryBerryActivity.this.onBreakFinish();
 		}
 
 		@Override
-		public void onTick(PomodoroService timer, long millisUntilFinished) {
+		public void onTick(PomodoroService service, long millisUntilFinished) {
 			updateTimer(millisUntilFinished);
 		}
 

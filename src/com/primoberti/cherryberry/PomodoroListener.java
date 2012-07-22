@@ -28,12 +28,12 @@ package com.primoberti.cherryberry;
  * 
  * @author berti
  */
-public interface PomodoroTimerListener {
+public interface PomodoroListener {
 
-	public void onPomodoroFinish(PomodoroService timer);
+	public void onPomodoroFinish(PomodoroService service);
 
-	public void onBreakFinish(PomodoroService timer);
+	public void onBreakFinish(PomodoroService service);
 
-	public void onTick(PomodoroService timer, long millisUntilFinished);
+	public void onTick(PomodoroService service, long millisUntilFinished);
 
 }

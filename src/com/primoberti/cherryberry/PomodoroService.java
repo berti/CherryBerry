@@ -82,7 +82,7 @@ public class PomodoroService extends Service {
 
 	private long timerEnd;
 
-	private PomodoroTimerListener listener;
+	private PomodoroListener listener;
 
 	private IBinder binder = new LocalBinder();
 
@@ -207,11 +207,11 @@ public class PomodoroService extends Service {
 		return timerEnd;
 	}
 
-	public PomodoroTimerListener getListener() {
+	public PomodoroListener getListener() {
 		return listener;
 	}
 
-	public void setListener(PomodoroTimerListener listener) {
+	public void setListener(PomodoroListener listener) {
 		this.listener = listener;
 
 		if (timer != null) {
@@ -518,10 +518,10 @@ public class PomodoroService extends Service {
 
 	private class InternalTimer extends CountDownTimer {
 
-		private PomodoroTimerListener listener;
+		private PomodoroListener listener;
 
 		public InternalTimer(long millisInFuture, long countDownInterval,
-				PomodoroTimerListener listener) {
+				PomodoroListener listener) {
 			super(millisInFuture, countDownInterval);
 
 			this.listener = listener;
@@ -550,11 +550,11 @@ public class PomodoroService extends Service {
 			}
 		}
 
-		public PomodoroTimerListener getListener() {
+		public PomodoroListener getListener() {
 			return listener;
 		}
 
-		public void setListener(PomodoroTimerListener listener) {
+		public void setListener(PomodoroListener listener) {
 			this.listener = listener;
 		}
 
