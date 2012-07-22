@@ -59,6 +59,8 @@ public class PomodoroTimerService extends Service {
 
 	public final static String POMODORO_FINISHED = "com.primoberti.cherryberry.POMODORO_FINISHED";
 
+	public final static int NOTIFICATION_ID = 1;
+
 	/* Private constants *********************** */
 
 	private final static String SHARED_PREFS = PomodoroTimerService.class
@@ -91,6 +93,20 @@ public class PomodoroTimerService extends Service {
 		Log.d("PomodoroTimerService", "onBind");
 
 		return binder;
+	}
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		if (intent.getAction().equals(PomodoroTimerService.POMODORO_FINISHED)) {
+			showPomodoroNotification();
+		}
+		else if (intent.getAction().equals(PomodoroTimerService.BREAK_FINISHED)) {
+			showBreakNotification();
+		}
+
+		stopSelf();
+
+		return START_NOT_STICKY;
 	}
 
 	@Override
@@ -313,8 +329,7 @@ public class PomodoroTimerService extends Service {
 	}
 
 	/**
-	 * Sets an alarm to notify {@link NotificationService} of a finished
-	 * pomodoro.
+	 * Sets an alarm to be notified of a finished pomodoro.
 	 * 
 	 * @param millis duration of the pomodoro
 	 */
@@ -323,7 +338,7 @@ public class PomodoroTimerService extends Service {
 	}
 
 	/**
-	 * Sets an alarm to notify {@link NotificationService} of a finished break.
+	 * Sets an alarm to be notified of a finished break.
 	 * 
 	 * @param millis duration of the break
 	 */
@@ -332,15 +347,15 @@ public class PomodoroTimerService extends Service {
 	}
 
 	/**
-	 * Sets an alarm to send the given action to {@link NotificationService}.
+	 * Sets an alarm to send the given action to this service.
 	 * 
 	 * @param millis duration of the pomodoro
-	 * @param action action to send to NotificationService
+	 * @param action action to send
 	 */
 	private void setAlarm(long millis, String action) {
 		long finishTime = System.currentTimeMillis() + millis;
 
-		Intent intent = new Intent(this, NotificationService.class);
+		Intent intent = new Intent(this, PomodoroTimerService.class);
 		intent.setAction(action);
 		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent,
 				0);
@@ -356,7 +371,7 @@ public class PomodoroTimerService extends Service {
 	}
 
 	private void cancelAlarm(String action) {
-		Intent intent = new Intent(this, NotificationService.class);
+		Intent intent = new Intent(this, PomodoroTimerService.class);
 		intent.setAction(action);
 		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent,
 				0);
@@ -367,14 +382,14 @@ public class PomodoroTimerService extends Service {
 	}
 
 	private void showPersistentPomodoroNotification(long millis) {
-		showPersistentNotification(NotificationService.NOTIFICATION_ID,
+		showPersistentNotification(PomodoroTimerService.NOTIFICATION_ID,
 				R.string.notification_title_pomodoro_running,
 				R.string.app_name,
 				R.string.notification_text_pomodoro_running, millis);
 	}
 
 	private void showPersistentBreakNotification(long millis) {
-		showPersistentNotification(NotificationService.NOTIFICATION_ID,
+		showPersistentNotification(PomodoroTimerService.NOTIFICATION_ID,
 				R.string.notification_title_break_running, R.string.app_name,
 				R.string.notification_text_break_running, millis);
 	}
@@ -416,7 +431,7 @@ public class PomodoroTimerService extends Service {
 		String ns = Context.NOTIFICATION_SERVICE;
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
 
-		mNotificationManager.cancel(NotificationService.NOTIFICATION_ID);
+		mNotificationManager.cancel(PomodoroTimerService.NOTIFICATION_ID);
 	}
 
 	private void setIdle() {
@@ -427,6 +442,58 @@ public class PomodoroTimerService extends Service {
 		timerEnd = 0;
 
 		saveState();
+	}
+
+	private void showPomodoroNotification() {
+		showNotification(NOTIFICATION_ID,
+				R.string.notification_title_pomodoro_finished,
+				R.string.app_name,
+				R.string.notification_text_pomodoro_finished);
+	}
+
+	private void showBreakNotification() {
+		showNotification(NOTIFICATION_ID,
+				R.string.notification_title_break_finished, R.string.app_name,
+				R.string.notification_text_break_finished);
+	}
+
+	private void showNotification(int id, int tickerText, int contentTitle,
+			int contentText) {
+		Resources resources = getResources();
+
+		String ns = Context.NOTIFICATION_SERVICE;
+		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+
+		int icon = R.drawable.ic_stat_generic;
+		long when = System.currentTimeMillis();
+		Notification notification = new Notification(icon,
+				resources.getString(tickerText), when);
+		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+
+		if (PreferencesHelper.isNotificationVibration(this)) {
+			notification.defaults |= Notification.DEFAULT_VIBRATE;
+		}
+
+		if (PreferencesHelper.isNotificationSound(this)) {
+			notification.defaults |= Notification.DEFAULT_SOUND;
+		}
+
+		if (PreferencesHelper.isNotificationLight(this)) {
+			notification.ledARGB = 0xffd60707;
+			notification.ledOnMS = 300;
+			notification.ledOffMS = 3000;
+			notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+		}
+
+		Context context = getApplicationContext();
+		Intent notificationIntent = new Intent(this, CherryBerryActivity.class);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+				notificationIntent, 0);
+		notification.setLatestEventInfo(context,
+				resources.getString(contentTitle),
+				resources.getString(contentText), contentIntent);
+
+		mNotificationManager.notify(id, notification);
 	}
 
 	/**
