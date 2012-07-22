@@ -35,7 +35,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Binder;
-import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -75,8 +74,6 @@ public class PomodoroService extends Service {
 	/* Private fields ************************** */
 
 	private Status status;
-
-	private InternalTimer timer;
 
 	private long timerStart;
 
@@ -119,8 +116,6 @@ public class PomodoroService extends Service {
 	@Override
 	public void onDestroy() {
 		Log.d("PomodoroTimerService", "onDestroy");
-
-		cancelTimer();
 
 		super.onDestroy();
 	}
@@ -171,7 +166,6 @@ public class PomodoroService extends Service {
 	public void stop() {
 		Status oldStatus = status;
 
-		cancelTimer();
 		cancelAlarms();
 		hidePersistentNotification();
 
@@ -224,10 +218,6 @@ public class PomodoroService extends Service {
 
 	public void setListener(PomodoroListener listener) {
 		this.listener = listener;
-
-		if (timer != null) {
-			timer.setListener(listener);
-		}
 	}
 
 	/* Private methods ************************* */
@@ -310,13 +300,6 @@ public class PomodoroService extends Service {
 		}
 	}
 
-	private void cancelTimer() {
-		if (timer != null) {
-			timer.cancel();
-			timer = null;
-		}
-	}
-
 	private void startPomodoroTimer(long millis) {
 		if (millis > 0) {
 			startTimer(millis);
@@ -336,13 +319,6 @@ public class PomodoroService extends Service {
 	}
 
 	private void startTimer(long millis) {
-		if (isRunning()) {
-			cancelTimer();
-		}
-
-		timer = new InternalTimer(millis, 1000, listener);
-		timer.start();
-
 		timerStart = System.currentTimeMillis();
 		timerEnd = timerStart + millis;
 	}
@@ -528,52 +504,6 @@ public class PomodoroService extends Service {
 
 		PomodoroService getService() {
 			return PomodoroService.this;
-		}
-
-	}
-
-	/* Private inner classes ******************* */
-
-	private class InternalTimer extends CountDownTimer {
-
-		private PomodoroListener listener;
-
-		public InternalTimer(long millisInFuture, long countDownInterval,
-				PomodoroListener listener) {
-			super(millisInFuture, countDownInterval);
-
-			this.listener = listener;
-		}
-
-		@Override
-		public void onFinish() {
-			if (status == Status.POMODORO_RUNNING) {
-				status = Status.POMODORO_FINISHED;
-				if (listener != null) {
-					listener.onPomodoroFinish(PomodoroService.this);
-				}
-			}
-			else if (status == Status.BREAK_RUNNING) {
-				status = Status.BREAK_FINISHED;
-				if (listener != null) {
-					listener.onBreakFinish(PomodoroService.this);
-				}
-			}
-		}
-
-		@Override
-		public void onTick(long millisUntilFinished) {
-			if (listener != null) {
-				listener.onTick(PomodoroService.this, millisUntilFinished);
-			}
-		}
-
-		public PomodoroListener getListener() {
-			return listener;
-		}
-
-		public void setListener(PomodoroListener listener) {
-			this.listener = listener;
 		}
 
 	}

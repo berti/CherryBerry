@@ -31,6 +31,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -43,6 +44,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.primoberti.cherryberry.PomodoroService.LocalBinder;
+import com.primoberti.cherryberry.PomodoroService.Status;
 
 public class CherryBerryActivity extends Activity {
 
@@ -53,6 +55,10 @@ public class CherryBerryActivity extends Activity {
 	private boolean timerServiceBound = false;
 
 	private ServiceConnection timerServiceConnection;
+
+	private MyPomodoroListener listener;
+
+	private InternalTimer timer;
 
 	private TextView statusTextView;
 
@@ -75,6 +81,8 @@ public class CherryBerryActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
+		listener = new MyPomodoroListener();
 
 		// Load the default values for the user settings
 		PreferenceManager.setDefaultValues(this, R.xml.settings, false);
@@ -237,17 +245,13 @@ public class CherryBerryActivity extends Activity {
 		PomodoroService.Status status = timerService.getStatus();
 		switch (status) {
 		case POMODORO_RUNNING:
-			disableStartButton();
-			statusTextView.setText(R.string.status_pomodoro_running);
-			updateTimer(timerService.getTimerEnd() - System.currentTimeMillis());
+			onPomodoroStart();
 			break;
 		case POMODORO_FINISHED:
 			onPomodoroFinish();
 			break;
 		case BREAK_RUNNING:
-			disableStartButton();
-			statusTextView.setText(R.string.status_break_running);
-			updateTimer(timerService.getTimerEnd() - System.currentTimeMillis());
+			onBreakStart();
 			break;
 		case BREAK_FINISHED:
 			onBreakFinish();
@@ -273,10 +277,12 @@ public class CherryBerryActivity extends Activity {
 
 		timerTextView.setText(String.format("%d:%02d", minutes, seconds));
 	}
-	
+
 	private void onPomodoroStart() {
 		disableStartButton();
 		statusTextView.setText(R.string.status_pomodoro_running);
+
+		startTimer();
 	}
 
 	private void onPomodoroFinish() {
@@ -285,12 +291,16 @@ public class CherryBerryActivity extends Activity {
 
 		statusTextView.setText(R.string.status_pomodoro_finished);
 
+		cancelTimer();
+
 		showDialog(DIALOG_POMODORO_FINISHED);
 	}
-	
+
 	private void onBreakStart() {
 		disableStartButton();
 		statusTextView.setText(R.string.status_break_running);
+
+		startTimer();
 	}
 
 	private void onBreakFinish() {
@@ -298,13 +308,38 @@ public class CherryBerryActivity extends Activity {
 		enableStartButton();
 
 		statusTextView.setText(R.string.status_idle);
+
+		cancelTimer();
 	}
-	
+
 	private void onCancel() {
 		updateTimer(0);
 		enableStartButton();
 
 		statusTextView.setText(R.string.status_idle);
+
+		cancelTimer();
+	}
+
+	private void startTimer() {
+		Log.d(TAG, "startTimer()");
+
+		if (timer != null) {
+			cancelTimer();
+		}
+
+		long millis = timerService.getTimerEnd() - System.currentTimeMillis();
+		timer = new InternalTimer(millis, 1000, listener);
+		timer.start();
+	}
+
+	private void cancelTimer() {
+		Log.d(TAG, "cancelTimer()");
+
+		if (timer != null) {
+			timer.cancel();
+			timer = null;
+		}
 	}
 
 	private void enableStartButton() {
@@ -349,8 +384,8 @@ public class CherryBerryActivity extends Activity {
 
 			timerService = ((LocalBinder) service).getService();
 			timerServiceBound = true;
-
-			timerService.setListener(new MyPomodoroListener());
+			
+			timerService.setListener(listener);
 
 			checkPomodoroTimerServiceStatus();
 		}
@@ -393,8 +428,15 @@ public class CherryBerryActivity extends Activity {
 		}
 
 		@Override
-		public void onTick(PomodoroService service, long millisUntilFinished) {
-			updateTimer(millisUntilFinished);
+		public void onTick(PomodoroService service,
+				final long millisUntilFinished) {
+			runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					CherryBerryActivity.this.updateTimer(millisUntilFinished);
+				}
+			});
 		}
 
 		@Override
@@ -429,6 +471,41 @@ public class CherryBerryActivity extends Activity {
 				}
 				break;
 			}
+		}
+
+	}
+
+	private class InternalTimer extends CountDownTimer {
+
+		private PomodoroListener listener;
+
+		public InternalTimer(long millisInFuture, long countDownInterval,
+				PomodoroListener listener) {
+			super(millisInFuture, countDownInterval);
+
+			this.listener = listener;
+		}
+
+		@Override
+		public void onFinish() {
+			Log.d(TAG, "onFinish()");
+		}
+
+		@Override
+		public void onTick(long millisUntilFinished) {
+			Log.d(TAG, "onTick( " + millisUntilFinished + " )");
+			
+			if (listener != null) {
+				listener.onTick(null, millisUntilFinished);
+			}
+		}
+
+		public PomodoroListener getListener() {
+			return listener;
+		}
+
+		public void setListener(PomodoroListener listener) {
+			this.listener = listener;
 		}
 
 	}
