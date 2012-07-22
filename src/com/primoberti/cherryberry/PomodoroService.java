@@ -95,10 +95,10 @@ public class PomodoroService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent.getAction().equals(PomodoroService.POMODORO_FINISHED)) {
-			showPomodoroNotification();
+			onPomodoroFinished();
 		}
 		else if (intent.getAction().equals(PomodoroService.BREAK_FINISHED)) {
-			showBreakNotification();
+			onBreakFinished();
 		}
 
 		stopSelf();
@@ -255,6 +255,18 @@ public class PomodoroService extends Service {
 		if (listener != null) {
 			listener.onBreakStart(this);
 		}
+	}
+	
+	private void onPomodoroFinished() {
+		status = Status.POMODORO_FINISHED;
+		showPomodoroNotification();
+		listener.onPomodoroFinish(this);
+	}
+	
+	private void onBreakFinished() {
+		status = Status.BREAK_FINISHED;
+		showBreakNotification();
+		listener.onBreakFinish(this);
 	}
 
 	private void saveState() {

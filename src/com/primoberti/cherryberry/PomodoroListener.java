@@ -42,6 +42,4 @@ public interface PomodoroListener {
 	
 	public void onBreakCancel(PomodoroService service);
 
-	public void onTick(PomodoroService service, long millisUntilFinished);
-
 }

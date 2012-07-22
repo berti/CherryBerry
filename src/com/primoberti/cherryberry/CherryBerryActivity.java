@@ -428,18 +428,6 @@ public class CherryBerryActivity extends Activity {
 		}
 
 		@Override
-		public void onTick(PomodoroService service,
-				final long millisUntilFinished) {
-			runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					CherryBerryActivity.this.updateTimer(millisUntilFinished);
-				}
-			});
-		}
-
-		@Override
 		public void onBreakCancel(PomodoroService service) {
 			CherryBerryActivity.this.onCancel();
 		}
@@ -494,10 +482,8 @@ public class CherryBerryActivity extends Activity {
 		@Override
 		public void onTick(long millisUntilFinished) {
 			Log.d(TAG, "onTick( " + millisUntilFinished + " )");
-			
-			if (listener != null) {
-				listener.onTick(null, millisUntilFinished);
-			}
+
+			CherryBerryActivity.this.updateTimer(millisUntilFinished);
 		}
 
 		public PomodoroListener getListener() {
