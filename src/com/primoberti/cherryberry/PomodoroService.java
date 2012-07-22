@@ -169,11 +169,22 @@ public class PomodoroService extends Service {
 	 * Cancels the current count down timer.
 	 */
 	public void stop() {
+		Status oldStatus = status;
+
 		cancelTimer();
 		cancelAlarms();
 		hidePersistentNotification();
 
 		setIdle();
+
+		if (listener != null) {
+			if (oldStatus == Status.POMODORO_RUNNING) {
+				listener.onPomodoroCancel(this);
+			}
+			else if (oldStatus == Status.BREAK_RUNNING) {
+				listener.onBreakCancel(this);
+			}
+		}
 	}
 
 	public void skip() {
@@ -230,6 +241,10 @@ public class PomodoroService extends Service {
 		startPomodoroTimer(millis);
 		setPomodoroAlarm(millis);
 		showPersistentPomodoroNotification(millis);
+
+		if (listener != null) {
+			listener.onPomodoroStart(this);
+		}
 	}
 
 	/**
@@ -246,6 +261,10 @@ public class PomodoroService extends Service {
 		startBreakTimer(millis);
 		setBreakAlarm(millis);
 		showPersistentBreakNotification(millis);
+
+		if (listener != null) {
+			listener.onBreakStart(this);
+		}
 	}
 
 	private void saveState() {
@@ -384,8 +403,8 @@ public class PomodoroService extends Service {
 	private void showPersistentPomodoroNotification(long millis) {
 		showPersistentNotification(PomodoroService.NOTIFICATION_ID,
 				R.string.notification_title_pomodoro_running,
-				R.string.app_name,
-				R.string.notification_text_pomodoro_running, millis);
+				R.string.app_name, R.string.notification_text_pomodoro_running,
+				millis);
 	}
 
 	private void showPersistentBreakNotification(long millis) {
@@ -447,8 +466,7 @@ public class PomodoroService extends Service {
 	private void showPomodoroNotification() {
 		showNotification(NOTIFICATION_ID,
 				R.string.notification_title_pomodoro_finished,
-				R.string.app_name,
-				R.string.notification_text_pomodoro_finished);
+				R.string.app_name, R.string.notification_text_pomodoro_finished);
 	}
 
 	private void showBreakNotification() {

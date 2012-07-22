@@ -29,10 +29,18 @@ package com.primoberti.cherryberry;
  * @author berti
  */
 public interface PomodoroListener {
+	
+	public void onPomodoroStart(PomodoroService service);
 
 	public void onPomodoroFinish(PomodoroService service);
+	
+	public void onPomodoroCancel(PomodoroService service);
+	
+	public void onBreakStart(PomodoroService service);
 
 	public void onBreakFinish(PomodoroService service);
+	
+	public void onBreakCancel(PomodoroService service);
 
 	public void onTick(PomodoroService service, long millisUntilFinished);
 
