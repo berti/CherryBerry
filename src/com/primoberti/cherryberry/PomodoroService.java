@@ -128,34 +128,12 @@ public class PomodoroService extends Service {
 	}
 
 	/**
-	 * Start a pomodoro count down timer with the remaining time, but don't set
-	 * any alarm. Use this to continue an existing count down after the timer
-	 * was shutdown.
-	 * 
-	 * @param millis the remaining duration of the pomodoro
-	 */
-	public void continuePomodoro(long millis) {
-		startPomodoroTimer(millis);
-	}
-
-	/**
 	 * Start a break with the default break duration.
 	 * 
 	 * @see #setBreakDuration(long)
 	 */
 	public void startBreak() {
 		startBreak(PreferencesHelper.getBreakDuration(this));
-	}
-
-	/**
-	 * Start a break count down timer with the remaining time, but don't set any
-	 * alarm. Use this to continue an existing count down after the timer was
-	 * shutdown.
-	 * 
-	 * @param millis the remaining duration of the break
-	 */
-	public void continueBreak(long millis) {
-		startBreakTimer(millis);
 	}
 
 	/**
@@ -271,20 +249,12 @@ public class PomodoroService extends Service {
 		Log.d("PomodoroTimerService", "restoreState " + session.getStatus());
 
 		if (session.getStatus() == Status.POMODORO_RUNNING) {
-			if (session.getFinishTime() > System.currentTimeMillis()) {
-				continuePomodoro(session.getFinishTime()
-						- System.currentTimeMillis());
-			}
-			else {
+			if (session.getFinishTime() <= System.currentTimeMillis()) {
 				session.setStatus(Status.POMODORO_FINISHED);
 			}
 		}
 		else if (session.getStatus() == Status.BREAK_RUNNING) {
-			if (session.getFinishTime() > System.currentTimeMillis()) {
-				continueBreak(session.getFinishTime()
-						- System.currentTimeMillis());
-			}
-			else {
+			if (session.getFinishTime() <= System.currentTimeMillis()) {
 				session.setStatus(Status.BREAK_FINISHED);
 			}
 		}
