@@ -182,7 +182,7 @@ public class PomodoroService extends Service {
 	 * @param millis the duration of the pomodoro
 	 */
 	private void startPomodoro(long millis) {
-		startPomodoroTimer(millis);
+		updateSession(Status.POMODORO_RUNNING, millis);
 		setPomodoroAlarm(millis);
 		showPersistentPomodoroNotification(millis);
 
@@ -202,13 +202,29 @@ public class PomodoroService extends Service {
 					+ session.getStatus() + " state");
 		}
 
-		startBreakTimer(millis);
+		updateSession(Status.BREAK_RUNNING, millis);
 		setBreakAlarm(millis);
 		showPersistentBreakNotification(millis);
 
 		if (listener != null) {
 			listener.onBreakStart(this);
 		}
+	}
+
+	/**
+	 * Update the status, start and finish times of the current session. Start
+	 * time is set to the current time, while finish time is computed from that
+	 * and the given duration. In addition, save the state.
+	 * 
+	 * @param newStatus the new status of the session
+	 * @param millis the duration of this new status
+	 */
+	private void updateSession(Status newStatus, long millis) {
+		session.setStatus(newStatus);
+		session.setStartTime(System.currentTimeMillis());
+		session.setFinishTime(session.getStartTime() + millis);
+
+		saveState();
 	}
 
 	private void onPomodoroFinished() {
@@ -258,29 +274,6 @@ public class PomodoroService extends Service {
 				session.setStatus(Status.BREAK_FINISHED);
 			}
 		}
-	}
-
-	private void startPomodoroTimer(long millis) {
-		if (millis > 0) {
-			startTimer(millis);
-			session.setStatus(Status.POMODORO_RUNNING);
-
-			saveState();
-		}
-	}
-
-	private void startBreakTimer(long millis) {
-		if (millis > 0) {
-			startTimer(millis);
-			session.setStatus(Status.BREAK_RUNNING);
-
-			saveState();
-		}
-	}
-
-	private void startTimer(long millis) {
-		session.setStartTime(System.currentTimeMillis());
-		session.setFinishTime(session.getStartTime() + millis);
 	}
 
 	/**
