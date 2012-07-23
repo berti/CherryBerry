@@ -113,6 +113,10 @@ public class PomodoroService extends Service {
 
 		super.onDestroy();
 	}
+	
+	public Session getSession() {
+		return session;
+	}
 
 	/**
 	 * Start a pomodoro with the default pomodoro duration.
