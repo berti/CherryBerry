@@ -329,7 +329,7 @@ public class CherryBerryActivity extends Activity {
 		}
 
 		long millis = timerService.getTimerEnd() - System.currentTimeMillis();
-		timer = new InternalTimer(millis, 1000, listener);
+		timer = new InternalTimer(millis, 1000);
 		timer.start();
 	}
 
@@ -465,13 +465,8 @@ public class CherryBerryActivity extends Activity {
 
 	private class InternalTimer extends CountDownTimer {
 
-		private PomodoroListener listener;
-
-		public InternalTimer(long millisInFuture, long countDownInterval,
-				PomodoroListener listener) {
+		public InternalTimer(long millisInFuture, long countDownInterval) {
 			super(millisInFuture, countDownInterval);
-
-			this.listener = listener;
 		}
 
 		@Override
@@ -484,14 +479,6 @@ public class CherryBerryActivity extends Activity {
 			Log.d(TAG, "onTick( " + millisUntilFinished + " )");
 
 			CherryBerryActivity.this.updateTimer(millisUntilFinished);
-		}
-
-		public PomodoroListener getListener() {
-			return listener;
-		}
-
-		public void setListener(PomodoroListener listener) {
-			this.listener = listener;
 		}
 
 	}
