@@ -188,24 +188,6 @@ public class PomodoroService extends Service {
 				|| session.getStatus() == Status.BREAK_RUNNING;
 	}
 
-	/**
-	 * Returns the start time of the current count down timer.
-	 * 
-	 * @return start time of the current count down timer
-	 */
-	public long getTimerStart() {
-		return session.getStartTime();
-	}
-
-	/**
-	 * Returns the end time of the current count down timer.
-	 * 
-	 * @return start time of the current count down timer
-	 */
-	public long getTimerEnd() {
-		return session.getFinishTime();
-	}
-
 	public PomodoroListener getListener() {
 		return listener;
 	}
@@ -271,8 +253,8 @@ public class PomodoroService extends Service {
 		SharedPreferences.Editor editor = preferences.edit();
 
 		editor.putInt(PREF_STATUS, session.getStatus().ordinal());
-		editor.putLong(PREF_TIMER_START, getTimerStart());
-		editor.putLong(PREF_TIMER_END, getTimerEnd());
+		editor.putLong(PREF_TIMER_START, session.getStartTime());
+		editor.putLong(PREF_TIMER_END, session.getFinishTime());
 
 		editor.commit();
 	}
@@ -289,16 +271,18 @@ public class PomodoroService extends Service {
 		Log.d("PomodoroTimerService", "restoreState " + session.getStatus());
 
 		if (session.getStatus() == Status.POMODORO_RUNNING) {
-			if (getTimerEnd() > System.currentTimeMillis()) {
-				continuePomodoro(getTimerEnd() - System.currentTimeMillis());
+			if (session.getFinishTime() > System.currentTimeMillis()) {
+				continuePomodoro(session.getFinishTime()
+						- System.currentTimeMillis());
 			}
 			else {
 				session.setStatus(Status.POMODORO_FINISHED);
 			}
 		}
 		else if (session.getStatus() == Status.BREAK_RUNNING) {
-			if (getTimerEnd() > System.currentTimeMillis()) {
-				continueBreak(getTimerEnd() - System.currentTimeMillis());
+			if (session.getFinishTime() > System.currentTimeMillis()) {
+				continueBreak(session.getFinishTime()
+						- System.currentTimeMillis());
 			}
 			else {
 				session.setStatus(Status.BREAK_FINISHED);
@@ -326,7 +310,7 @@ public class PomodoroService extends Service {
 
 	private void startTimer(long millis) {
 		session.setStartTime(System.currentTimeMillis());
-		session.setFinishTime(getTimerStart() + millis);
+		session.setFinishTime(session.getStartTime() + millis);
 	}
 
 	/**
