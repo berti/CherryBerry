@@ -44,7 +44,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.primoberti.cherryberry.PomodoroService.LocalBinder;
-import com.primoberti.cherryberry.PomodoroService.Status;
 
 public class CherryBerryActivity extends Activity {
 
@@ -242,7 +241,7 @@ public class CherryBerryActivity extends Activity {
 	}
 
 	private void checkPomodoroTimerServiceStatus() {
-		PomodoroService.Status status = timerService.getStatus();
+		Session.Status status = timerService.getStatus();
 		switch (status) {
 		case POMODORO_RUNNING:
 			onPomodoroStart();
@@ -384,7 +383,7 @@ public class CherryBerryActivity extends Activity {
 
 			timerService = ((LocalBinder) service).getService();
 			timerServiceBound = true;
-			
+
 			timerService.setListener(listener);
 
 			checkPomodoroTimerServiceStatus();

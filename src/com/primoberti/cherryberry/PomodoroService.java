@@ -39,18 +39,14 @@ import android.os.IBinder;
 import android.text.format.DateFormat;
 import android.util.Log;
 
+import com.primoberti.cherryberry.Session.Status;
+
 /**
  * Timer-related functionality to control a pomodoro.
  * 
  * @author berti
  */
 public class PomodoroService extends Service {
-
-	/* Public enumerations ********************* */
-
-	public enum Status {
-		IDLE, POMODORO_RUNNING, POMODORO_FINISHED, BREAK_RUNNING, BREAK_FINISHED
-	};
 
 	/* Public constants ************************ */
 
@@ -73,11 +69,7 @@ public class PomodoroService extends Service {
 
 	/* Private fields ************************** */
 
-	private Status status;
-
-	private long timerStart;
-
-	private long timerEnd;
+	private SessionImpl session;
 
 	private PomodoroListener listener;
 
@@ -109,6 +101,8 @@ public class PomodoroService extends Service {
 	@Override
 	public void onCreate() {
 		Log.d("PomodoroTimerService", "onCreate");
+
+		session = new SessionImpl();
 
 		restoreState();
 	}
@@ -164,7 +158,7 @@ public class PomodoroService extends Service {
 	 * Cancels the current count down timer.
 	 */
 	public void stop() {
-		Status oldStatus = status;
+		Status oldStatus = session.getStatus();
 
 		cancelAlarms();
 		hidePersistentNotification();
@@ -186,12 +180,12 @@ public class PomodoroService extends Service {
 	}
 
 	public Status getStatus() {
-		return status;
+		return session.getStatus();
 	}
 
 	public boolean isRunning() {
-		return status == Status.POMODORO_RUNNING
-				|| status == Status.BREAK_RUNNING;
+		return getStatus() == Status.POMODORO_RUNNING
+				|| getStatus() == Status.BREAK_RUNNING;
 	}
 
 	/**
@@ -200,7 +194,7 @@ public class PomodoroService extends Service {
 	 * @return start time of the current count down timer
 	 */
 	public long getTimerStart() {
-		return timerStart;
+		return session.getStartTime();
 	}
 
 	/**
@@ -209,7 +203,7 @@ public class PomodoroService extends Service {
 	 * @return start time of the current count down timer
 	 */
 	public long getTimerEnd() {
-		return timerEnd;
+		return session.getFinishTime();
 	}
 
 	public PomodoroListener getListener() {
@@ -243,9 +237,9 @@ public class PomodoroService extends Service {
 	 * @param millis the duration of the break
 	 */
 	private void startBreak(long millis) {
-		if (status != Status.POMODORO_FINISHED) {
-			throw new IllegalStateException("Can't start break in " + status
-					+ " state");
+		if (getStatus() != Status.POMODORO_FINISHED) {
+			throw new IllegalStateException("Can't start break in "
+					+ getStatus() + " state");
 		}
 
 		startBreakTimer(millis);
@@ -256,29 +250,29 @@ public class PomodoroService extends Service {
 			listener.onBreakStart(this);
 		}
 	}
-	
+
 	private void onPomodoroFinished() {
-		status = Status.POMODORO_FINISHED;
+		session.setStatus(Status.POMODORO_FINISHED);
 		showPomodoroNotification();
 		listener.onPomodoroFinish(this);
 	}
-	
+
 	private void onBreakFinished() {
-		status = Status.BREAK_FINISHED;
+		session.setStatus(Status.BREAK_FINISHED);
 		showBreakNotification();
 		listener.onBreakFinish(this);
 	}
 
 	private void saveState() {
-		Log.d("PomodoroTimerService", "saveState " + status.toString());
+		Log.d("PomodoroTimerService", "saveState " + getStatus());
 
 		SharedPreferences preferences = getSharedPreferences(SHARED_PREFS,
 				MODE_PRIVATE);
 		SharedPreferences.Editor editor = preferences.edit();
 
-		editor.putInt(PREF_STATUS, status.ordinal());
-		editor.putLong(PREF_TIMER_START, timerStart);
-		editor.putLong(PREF_TIMER_END, timerEnd);
+		editor.putInt(PREF_STATUS, getStatus().ordinal());
+		editor.putLong(PREF_TIMER_START, getTimerStart());
+		editor.putLong(PREF_TIMER_END, getTimerEnd());
 
 		editor.commit();
 	}
@@ -287,27 +281,27 @@ public class PomodoroService extends Service {
 		SharedPreferences preferences = getSharedPreferences(SHARED_PREFS,
 				MODE_PRIVATE);
 
-		status = Status.values()[preferences.getInt(PREF_STATUS,
-				Status.IDLE.ordinal())];
-		timerStart = preferences.getLong(PREF_TIMER_START, 0);
-		timerEnd = preferences.getLong(PREF_TIMER_END, 0);
+		session.setStatus(Status.values()[preferences.getInt(PREF_STATUS,
+				Status.IDLE.ordinal())]);
+		session.setStartTime(preferences.getLong(PREF_TIMER_START, 0));
+		session.setFinishTime(preferences.getLong(PREF_TIMER_END, 0));
 
-		Log.d("PomodoroTimerService", "restoreState " + status.toString());
+		Log.d("PomodoroTimerService", "restoreState " + getStatus());
 
-		if (status == Status.POMODORO_RUNNING) {
-			if (timerEnd > System.currentTimeMillis()) {
-				continuePomodoro(timerEnd - System.currentTimeMillis());
+		if (getStatus() == Status.POMODORO_RUNNING) {
+			if (getTimerEnd() > System.currentTimeMillis()) {
+				continuePomodoro(getTimerEnd() - System.currentTimeMillis());
 			}
 			else {
-				status = Status.POMODORO_FINISHED;
+				session.setStatus(Status.POMODORO_FINISHED);
 			}
 		}
-		else if (status == Status.BREAK_RUNNING) {
-			if (timerEnd > System.currentTimeMillis()) {
-				continueBreak(timerEnd - System.currentTimeMillis());
+		else if (getStatus() == Status.BREAK_RUNNING) {
+			if (getTimerEnd() > System.currentTimeMillis()) {
+				continueBreak(getTimerEnd() - System.currentTimeMillis());
 			}
 			else {
-				status = Status.BREAK_FINISHED;
+				session.setStatus(Status.BREAK_FINISHED);
 			}
 		}
 	}
@@ -315,7 +309,7 @@ public class PomodoroService extends Service {
 	private void startPomodoroTimer(long millis) {
 		if (millis > 0) {
 			startTimer(millis);
-			status = Status.POMODORO_RUNNING;
+			session.setStatus(Status.POMODORO_RUNNING);
 
 			saveState();
 		}
@@ -324,15 +318,15 @@ public class PomodoroService extends Service {
 	private void startBreakTimer(long millis) {
 		if (millis > 0) {
 			startTimer(millis);
-			status = Status.BREAK_RUNNING;
+			session.setStatus(Status.BREAK_RUNNING);
 
 			saveState();
 		}
 	}
 
 	private void startTimer(long millis) {
-		timerStart = System.currentTimeMillis();
-		timerEnd = timerStart + millis;
+		session.setStartTime(System.currentTimeMillis());
+		session.setFinishTime(getTimerStart() + millis);
 	}
 
 	/**
@@ -444,9 +438,9 @@ public class PomodoroService extends Service {
 	private void setIdle() {
 		Log.d("PomodoroTimerService", "setIdle");
 
-		status = Status.IDLE;
-		timerStart = 0;
-		timerEnd = 0;
+		session.setStatus(Status.IDLE);
+		session.setStartTime(0);
+		session.setFinishTime(0);
 
 		saveState();
 	}
