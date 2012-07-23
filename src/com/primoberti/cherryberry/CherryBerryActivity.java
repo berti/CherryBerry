@@ -241,7 +241,7 @@ public class CherryBerryActivity extends Activity {
 	}
 
 	private void checkPomodoroTimerServiceStatus() {
-		Session.Status status = timerService.getStatus();
+		Session.Status status = timerService.getSession().getStatus();
 		switch (status) {
 		case POMODORO_RUNNING:
 			onPomodoroStart();
@@ -327,7 +327,7 @@ public class CherryBerryActivity extends Activity {
 			cancelTimer();
 		}
 
-		long millis = timerService.getTimerEnd() - System.currentTimeMillis();
+		long millis = timerService.getSession().getFinishTime() - System.currentTimeMillis();
 		timer = new InternalTimer(millis, 1000);
 		timer.start();
 	}
