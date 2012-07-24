@@ -186,11 +186,6 @@ public class PomodoroService extends Service implements
 		stop();
 	}
 
-	public boolean isRunning() {
-		return session.getStatus() == Status.POMODORO_RUNNING
-				|| session.getStatus() == Status.BREAK_RUNNING;
-	}
-
 	public PomodoroListener getListener() {
 		return listener;
 	}
