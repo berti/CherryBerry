@@ -249,13 +249,19 @@ public class PomodoroService extends Service implements
 	private void onPomodoroFinished() {
 		session.setStatus(Status.POMODORO_FINISHED);
 		showPomodoroNotification();
-		listener.onPomodoroFinish(this);
+
+		if (listener != null) {
+			listener.onPomodoroFinish(this);
+		}
 	}
 
 	private void onBreakFinished() {
 		session.setStatus(Status.BREAK_FINISHED);
 		showBreakNotification();
-		listener.onBreakFinish(this);
+
+		if (listener != null) {
+			listener.onBreakFinish(this);
+		}
 	}
 
 	/* Private state saving/restoring methods ** */
