@@ -50,7 +50,7 @@ public class CherryBerryActivity extends Activity {
 
 	/* Private fields ************************** */
 
-	private PomodoroServiceInterface timerService;
+	private PomodoroServiceInterface service;
 
 	private boolean timerServiceBound = false;
 
@@ -129,7 +129,7 @@ public class CherryBerryActivity extends Activity {
 
 		// TODO cancel timer?
 		unbindService(timerServiceConnection);
-		timerService = null;
+		service = null;
 		timerServiceBound = false;
 
 		super.onStop();
@@ -224,8 +224,8 @@ public class CherryBerryActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == SHOW_SETTINGS) {
-			if (timerService == null
-					|| !timerService.getSession().getStatus().isRunning()) {
+			if (service == null
+					|| !service.getSession().getStatus().isRunning()) {
 				updateTimer(PreferencesHelper.getPomodoroDuration(this));
 			}
 		}
@@ -243,7 +243,7 @@ public class CherryBerryActivity extends Activity {
 	}
 
 	private void checkPomodoroTimerServiceStatus() {
-		Session.Status status = timerService.getSession().getStatus();
+		Session.Status status = service.getSession().getStatus();
 		switch (status) {
 		case POMODORO_RUNNING:
 			onPomodoroStart();
@@ -262,17 +262,17 @@ public class CherryBerryActivity extends Activity {
 
 	private void onStartClick() {
 		if (timerServiceBound) {
-			timerService.startPomodoro();
+			service.startPomodoro();
 		}
 	}
 
 	private void onStopClick() {
 		if (timerServiceBound) {
-			if (timerService.getSession().getStatus() == Status.POMODORO_RUNNING) {
-				timerService.cancelPomodoro();
+			if (service.getSession().getStatus() == Status.POMODORO_RUNNING) {
+				service.cancelPomodoro();
 			}
 			else {
-				timerService.cancelBreak();
+				service.cancelBreak();
 			}
 		}
 	}
@@ -334,7 +334,7 @@ public class CherryBerryActivity extends Activity {
 			cancelTimer();
 		}
 
-		long millis = timerService.getSession().getFinishTime()
+		long millis = service.getSession().getFinishTime()
 				- System.currentTimeMillis();
 		timer = new InternalTimer(millis, 1000);
 		timer.start();
@@ -389,10 +389,11 @@ public class CherryBerryActivity extends Activity {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			Log.d(TAG, "onServiceConnected");
 
-			timerService = ((LocalBinder) service).getService();
+			CherryBerryActivity.this.service = ((LocalBinder) service)
+					.getService();
 			timerServiceBound = true;
 
-			timerService.setListener(listener);
+			CherryBerryActivity.this.service.setListener(listener);
 
 			checkPomodoroTimerServiceStatus();
 		}
@@ -401,7 +402,7 @@ public class CherryBerryActivity extends Activity {
 		public void onServiceDisconnected(ComponentName name) {
 			Log.e(CherryBerryActivity.class.getName(), "onServiceConnected");
 
-			timerService = null;
+			service = null;
 			timerServiceBound = false;
 		}
 
@@ -450,20 +451,20 @@ public class CherryBerryActivity extends Activity {
 			case AlertDialog.BUTTON_POSITIVE:
 				// Start break
 				if (timerServiceBound) {
-					timerService.startBreak();
+					service.startBreak();
 				}
 				break;
 			case AlertDialog.BUTTON_NEGATIVE:
 				// Cancel pomodoro
 				// FIXME should the user be able to cancel a finished pomodoro?
 				if (timerServiceBound) {
-					timerService.skipBreak();
+					service.skipBreak();
 				}
 				break;
 			case AlertDialog.BUTTON_NEUTRAL:
 				// Skip break
 				if (timerServiceBound) {
-					timerService.skipBreak();
+					service.skipBreak();
 				}
 				break;
 			}
