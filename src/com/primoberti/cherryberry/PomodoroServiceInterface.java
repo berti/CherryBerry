@@ -63,5 +63,12 @@ public interface PomodoroServiceInterface {
 	 * cancel the session, as the pomodoro phase has already finished.
 	 */
 	public void cancelBreak();
+	
+	/**
+	 * Sets the listener that will be notified of events from this service.
+	 * 
+	 * @param listener the listener that will be notified of events from this service
+	 */
+	public void setListener(PomodoroListener listener);
 
 }
