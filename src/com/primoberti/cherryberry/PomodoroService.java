@@ -46,7 +46,8 @@ import com.primoberti.cherryberry.Session.Status;
  * 
  * @author berti
  */
-public class PomodoroService extends Service {
+public class PomodoroService extends Service implements
+		PomodoroServiceInterface {
 
 	/* Public constants ************************ */
 
@@ -119,21 +120,45 @@ public class PomodoroService extends Service {
 	}
 
 	/**
-	 * Start a pomodoro with the default pomodoro duration.
-	 * 
-	 * @see #setPomodoroDuration(long)
+	 * Start a new pomodoro from idle.
 	 */
+	@Override
 	public void startPomodoro() {
 		startPomodoro(PreferencesHelper.getPomodoroDuration(this));
 	}
 
 	/**
-	 * Start a break with the default break duration.
-	 * 
-	 * @see #setBreakDuration(long)
+	 * Cancels the current pomodoro and returns to idle.
 	 */
+	@Override
+	public void cancelPomodoro() {
+		stop();
+	}
+
+	/**
+	 * Starts a new break, after a pomodoro has finished.
+	 */
+	@Override
 	public void startBreak() {
 		startBreak(PreferencesHelper.getBreakDuration(this));
+	}
+
+	/**
+	 * Skips the next scheduled break and returns to idle. Skipping a break does
+	 * not cancel the session, as the pomodoro phase has already finished.
+	 */
+	@Override
+	public void skipBreak() {
+		skip();
+	}
+
+	/**
+	 * Cancels the current break and return to idle. Cancelling a break does not
+	 * cancel the session, as the pomodoro phase has already finished.
+	 */
+	@Override
+	public void cancelBreak() {
+		stop();
 	}
 
 	/**
@@ -170,6 +195,7 @@ public class PomodoroService extends Service {
 		return listener;
 	}
 
+	@Override
 	public void setListener(PomodoroListener listener) {
 		this.listener = listener;
 	}
