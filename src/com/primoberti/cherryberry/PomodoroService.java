@@ -190,7 +190,7 @@ public class PomodoroService extends Service implements
 	 */
 	private void startPomodoro(long millis) {
 		updateSession(Status.POMODORO_RUNNING, millis);
-		setPomodoroAlarm(millis);
+		AlarmHelper.setPomodoroAlarm(this, millis);
 		showPersistentPomodoroNotification(millis);
 
 		if (listener != null) {
@@ -211,7 +211,7 @@ public class PomodoroService extends Service implements
 		}
 
 		updateSession(Status.BREAK_RUNNING, millis);
-		setBreakAlarm(millis);
+		AlarmHelper.setBreakAlarm(this, millis);
 		showPersistentBreakNotification(millis);
 
 		if (listener != null) {
@@ -224,7 +224,7 @@ public class PomodoroService extends Service implements
 	 * back to the idle state.
 	 */
 	private void cancel() {
-		cancelAlarms();
+		AlarmHelper.cancelAlarms(this);
 		hidePersistentNotification();
 
 		updateSession(Status.IDLE, 0);
@@ -301,61 +301,6 @@ public class PomodoroService extends Service implements
 				session.setStatus(Status.BREAK_FINISHED);
 			}
 		}
-	}
-
-	/* Private methods for alarm handling ****** */
-
-	/**
-	 * Sets an alarm to be notified of a finished pomodoro.
-	 * 
-	 * @param millis duration of the pomodoro
-	 */
-	private void setPomodoroAlarm(long millis) {
-		setAlarm(millis, PomodoroService.POMODORO_FINISHED);
-	}
-
-	/**
-	 * Sets an alarm to be notified of a finished break.
-	 * 
-	 * @param millis duration of the break
-	 */
-	private void setBreakAlarm(long millis) {
-		setAlarm(millis, PomodoroService.BREAK_FINISHED);
-	}
-
-	/**
-	 * Sets an alarm to send the given action to this service.
-	 * 
-	 * @param millis duration of the pomodoro
-	 * @param action action to send
-	 */
-	private void setAlarm(long millis, String action) {
-		long finishTime = System.currentTimeMillis() + millis;
-
-		Intent intent = new Intent(this, PomodoroService.class);
-		intent.setAction(action);
-		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent,
-				0);
-
-		AlarmManager alarmManager = (AlarmManager) this
-				.getSystemService(Context.ALARM_SERVICE);
-		alarmManager.set(AlarmManager.RTC_WAKEUP, finishTime, pendingIntent);
-	}
-
-	private void cancelAlarms() {
-		cancelAlarm(POMODORO_FINISHED);
-		cancelAlarm(BREAK_FINISHED);
-	}
-
-	private void cancelAlarm(String action) {
-		Intent intent = new Intent(this, PomodoroService.class);
-		intent.setAction(action);
-		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent,
-				0);
-
-		AlarmManager alarmManager = (AlarmManager) this
-				.getSystemService(Context.ALARM_SERVICE);
-		alarmManager.cancel(pendingIntent);
 	}
 
 	/* Private methods for notification handling */
