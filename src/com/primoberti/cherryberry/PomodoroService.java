@@ -115,6 +115,12 @@ public class PomodoroService extends Service implements
 		super.onDestroy();
 	}
 
+	public PomodoroListener getListener() {
+		return listener;
+	}
+
+	/* PomodoroServiceInterface methods ******** */
+
 	public Session getSession() {
 		return session;
 	}
@@ -169,20 +175,6 @@ public class PomodoroService extends Service implements
 		}
 	}
 
-	/**
-	 * Cancels the current count down timer.
-	 */
-	public void cancel() {
-		cancelAlarms();
-		hidePersistentNotification();
-
-		setIdle();
-	}
-
-	public PomodoroListener getListener() {
-		return listener;
-	}
-
 	@Override
 	public void setListener(PomodoroListener listener) {
 		this.listener = listener;
@@ -191,7 +183,8 @@ public class PomodoroService extends Service implements
 	/* Private methods ************************* */
 
 	/**
-	 * Start a pomodoro count down timer.
+	 * Start a pomodoro by updating the session info, setting an alarm and
+	 * showing a persistent notification.
 	 * 
 	 * @param millis the duration of the pomodoro
 	 */
@@ -206,7 +199,8 @@ public class PomodoroService extends Service implements
 	}
 
 	/**
-	 * Start a break countdown timer.
+	 * Start a break by updating the session info, setting an alarm and showing
+	 * a persistent notification.
 	 * 
 	 * @param millis the duration of the break
 	 */
@@ -223,6 +217,29 @@ public class PomodoroService extends Service implements
 		if (listener != null) {
 			listener.onBreakStart(this);
 		}
+	}
+
+	/**
+	 * Cancels the current count down timer.
+	 */
+	private void cancel() {
+		cancelAlarms();
+		hidePersistentNotification();
+
+		setIdle();
+	}
+
+	/**
+	 * Goes back to the idle state.
+	 */
+	private void setIdle() {
+		Log.d("PomodoroTimerService", "setIdle");
+
+		session.setStatus(Status.IDLE);
+		session.setStartTime(0);
+		session.setFinishTime(0);
+
+		saveState();
 	}
 
 	/**
@@ -252,6 +269,8 @@ public class PomodoroService extends Service implements
 		showBreakNotification();
 		listener.onBreakFinish(this);
 	}
+
+	/* Private state saving/restoring methods ** */
 
 	private void saveState() {
 		Log.d("PomodoroTimerService", "saveState " + session.getStatus());
@@ -289,6 +308,8 @@ public class PomodoroService extends Service implements
 			}
 		}
 	}
+
+	/* Private methods for alarm handling ****** */
 
 	/**
 	 * Sets an alarm to be notified of a finished pomodoro.
@@ -343,6 +364,8 @@ public class PomodoroService extends Service implements
 		alarmManager.cancel(pendingIntent);
 	}
 
+	/* Private methods for notification handling */
+
 	private void showPersistentPomodoroNotification(long millis) {
 		showPersistentNotification(PomodoroService.NOTIFICATION_ID,
 				R.string.notification_title_pomodoro_running,
@@ -394,16 +417,6 @@ public class PomodoroService extends Service implements
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
 
 		mNotificationManager.cancel(PomodoroService.NOTIFICATION_ID);
-	}
-
-	private void setIdle() {
-		Log.d("PomodoroTimerService", "setIdle");
-
-		session.setStatus(Status.IDLE);
-		session.setStartTime(0);
-		session.setFinishTime(0);
-
-		saveState();
 	}
 
 	private void showPomodoroNotification() {
