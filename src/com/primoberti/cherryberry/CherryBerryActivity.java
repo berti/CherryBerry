@@ -44,12 +44,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.primoberti.cherryberry.PomodoroService.LocalBinder;
+import com.primoberti.cherryberry.Session.Status;
 
 public class CherryBerryActivity extends Activity {
 
 	/* Private fields ************************** */
 
-	private PomodoroService timerService;
+	private PomodoroServiceInterface timerService;
 
 	private boolean timerServiceBound = false;
 
@@ -223,7 +224,8 @@ public class CherryBerryActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == SHOW_SETTINGS) {
-			if (timerService == null || !timerService.isRunning()) {
+			if (timerService == null
+					|| !timerService.getSession().getStatus().isRunning()) {
 				updateTimer(PreferencesHelper.getPomodoroDuration(this));
 			}
 		}
@@ -266,7 +268,12 @@ public class CherryBerryActivity extends Activity {
 
 	private void onStopClick() {
 		if (timerServiceBound) {
-			timerService.stop();
+			if (timerService.getSession().getStatus() == Status.POMODORO_RUNNING) {
+				timerService.cancelPomodoro();
+			}
+			else {
+				timerService.cancelBreak();
+			}
 		}
 	}
 
@@ -327,7 +334,8 @@ public class CherryBerryActivity extends Activity {
 			cancelTimer();
 		}
 
-		long millis = timerService.getSession().getFinishTime() - System.currentTimeMillis();
+		long millis = timerService.getSession().getFinishTime()
+				- System.currentTimeMillis();
 		timer = new InternalTimer(millis, 1000);
 		timer.start();
 	}
@@ -447,14 +455,15 @@ public class CherryBerryActivity extends Activity {
 				break;
 			case AlertDialog.BUTTON_NEGATIVE:
 				// Cancel pomodoro
+				// FIXME should the user be able to cancel a finished pomodoro?
 				if (timerServiceBound) {
-					timerService.stop();
+					timerService.skipBreak();
 				}
 				break;
 			case AlertDialog.BUTTON_NEUTRAL:
 				// Skip break
 				if (timerServiceBound) {
-					timerService.skip();
+					timerService.skipBreak();
 				}
 				break;
 			}

@@ -481,7 +481,7 @@ public class PomodoroService extends Service implements
 
 	public class LocalBinder extends Binder {
 
-		PomodoroService getService() {
+		PomodoroServiceInterface getService() {
 			return PomodoroService.this;
 		}
 
