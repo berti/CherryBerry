@@ -230,22 +230,6 @@ public class PomodoroService extends Service implements
 		updateSession(Status.IDLE, 0);
 	}
 
-	/**
-	 * Update the status, start and finish times of the current session. Start
-	 * time is set to the current time, while finish time is computed from that
-	 * and the given duration. In addition, save the state.
-	 * 
-	 * @param newStatus the new status of the session
-	 * @param millis the duration of this new status
-	 */
-	private void updateSession(Status newStatus, long millis) {
-		session.setStatus(newStatus);
-		session.setStartTime(System.currentTimeMillis());
-		session.setFinishTime(session.getStartTime() + millis);
-
-		saveState();
-	}
-
 	private void onPomodoroFinished() {
 		updateSession(Status.POMODORO_FINISHED, 0);
 		showPomodoroNotification();
@@ -262,6 +246,22 @@ public class PomodoroService extends Service implements
 		if (listener != null) {
 			listener.onBreakFinish(this);
 		}
+	}
+
+	/**
+	 * Update the status, start and finish times of the current session. Start
+	 * time is set to the current time, while finish time is computed from that
+	 * and the given duration. In addition, save the state.
+	 * 
+	 * @param newStatus the new status of the session
+	 * @param millis the duration of this new status
+	 */
+	private void updateSession(Status newStatus, long millis) {
+		session.setStatus(newStatus);
+		session.setStartTime(System.currentTimeMillis());
+		session.setFinishTime(session.getStartTime() + millis);
+
+		saveState();
 	}
 
 	/* Private state saving/restoring methods ** */
