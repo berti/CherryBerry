@@ -191,7 +191,7 @@ public class PomodoroService extends Service implements
 	private void startPomodoro(long millis) {
 		updateSession(Status.POMODORO_RUNNING, millis);
 		AlarmHelper.setPomodoroAlarm(this, millis);
-		showPersistentPomodoroNotification(millis);
+		NotificationHelper.showPersistentPomodoroNotification(this, millis);
 
 		if (listener != null) {
 			listener.onPomodoroStart(this);
@@ -212,7 +212,7 @@ public class PomodoroService extends Service implements
 
 		updateSession(Status.BREAK_RUNNING, millis);
 		AlarmHelper.setBreakAlarm(this, millis);
-		showPersistentBreakNotification(millis);
+		NotificationHelper.showPersistentBreakNotification(this, millis);
 
 		if (listener != null) {
 			listener.onBreakStart(this);
@@ -225,14 +225,14 @@ public class PomodoroService extends Service implements
 	 */
 	private void cancel() {
 		AlarmHelper.cancelAlarms(this);
-		hidePersistentNotification();
+		NotificationHelper.hidePersistentNotification(this);
 
 		updateSession(Status.IDLE, 0);
 	}
 
 	private void onPomodoroFinished() {
 		updateSession(Status.POMODORO_FINISHED, 0);
-		showPomodoroNotification();
+		NotificationHelper.showPomodoroNotification(this);
 
 		if (listener != null) {
 			listener.onPomodoroFinish(this);
@@ -241,7 +241,7 @@ public class PomodoroService extends Service implements
 
 	private void onBreakFinished() {
 		updateSession(Status.BREAK_FINISHED, 0);
-		showBreakNotification();
+		NotificationHelper.showBreakNotification(this);
 
 		if (listener != null) {
 			listener.onBreakFinish(this);
@@ -301,112 +301,6 @@ public class PomodoroService extends Service implements
 				session.setStatus(Status.BREAK_FINISHED);
 			}
 		}
-	}
-
-	/* Private methods for notification handling */
-
-	private void showPersistentPomodoroNotification(long millis) {
-		showPersistentNotification(PomodoroService.NOTIFICATION_ID,
-				R.string.notification_title_pomodoro_running,
-				R.string.app_name, R.string.notification_text_pomodoro_running,
-				millis);
-	}
-
-	private void showPersistentBreakNotification(long millis) {
-		showPersistentNotification(PomodoroService.NOTIFICATION_ID,
-				R.string.notification_title_break_running, R.string.app_name,
-				R.string.notification_text_break_running, millis);
-	}
-
-	private void showPersistentNotification(int id, int tickerTextId,
-			int contentTitleId, int contentTextId, long millis) {
-		long finishTime = System.currentTimeMillis() + millis;
-
-		Resources resources = getResources();
-
-		String ns = Context.NOTIFICATION_SERVICE;
-		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
-
-		int icon = R.drawable.ic_stat_generic;
-		long when = System.currentTimeMillis();
-		Notification notification = new Notification(icon,
-				resources.getString(tickerTextId), when);
-		notification.flags |= Notification.FLAG_ONGOING_EVENT;
-
-		Date date = new Date(finishTime);
-		java.text.DateFormat dateFormat = DateFormat
-				.getTimeFormat(getApplicationContext());
-		String contentTextFormat = getResources().getString(contentTextId);
-		String contentText2 = String.format(contentTextFormat,
-				dateFormat.format(date));
-
-		Context context = getApplicationContext();
-		Intent notificationIntent = new Intent(this, CherryBerryActivity.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-				notificationIntent, 0);
-		notification.setLatestEventInfo(context,
-				resources.getString(contentTitleId), contentText2,
-				contentIntent);
-
-		mNotificationManager.notify(id, notification);
-	}
-
-	private void hidePersistentNotification() {
-		String ns = Context.NOTIFICATION_SERVICE;
-		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
-
-		mNotificationManager.cancel(PomodoroService.NOTIFICATION_ID);
-	}
-
-	private void showPomodoroNotification() {
-		showNotification(NOTIFICATION_ID,
-				R.string.notification_title_pomodoro_finished,
-				R.string.app_name, R.string.notification_text_pomodoro_finished);
-	}
-
-	private void showBreakNotification() {
-		showNotification(NOTIFICATION_ID,
-				R.string.notification_title_break_finished, R.string.app_name,
-				R.string.notification_text_break_finished);
-	}
-
-	private void showNotification(int id, int tickerText, int contentTitle,
-			int contentText) {
-		Resources resources = getResources();
-
-		String ns = Context.NOTIFICATION_SERVICE;
-		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
-
-		int icon = R.drawable.ic_stat_generic;
-		long when = System.currentTimeMillis();
-		Notification notification = new Notification(icon,
-				resources.getString(tickerText), when);
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-
-		if (PreferencesHelper.isNotificationVibration(this)) {
-			notification.defaults |= Notification.DEFAULT_VIBRATE;
-		}
-
-		if (PreferencesHelper.isNotificationSound(this)) {
-			notification.defaults |= Notification.DEFAULT_SOUND;
-		}
-
-		if (PreferencesHelper.isNotificationLight(this)) {
-			notification.ledARGB = 0xffd60707;
-			notification.ledOnMS = 300;
-			notification.ledOffMS = 3000;
-			notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-		}
-
-		Context context = getApplicationContext();
-		Intent notificationIntent = new Intent(this, CherryBerryActivity.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-				notificationIntent, 0);
-		notification.setLatestEventInfo(context,
-				resources.getString(contentTitle),
-				resources.getString(contentText), contentIntent);
-
-		mNotificationManager.notify(id, notification);
 	}
 
 	/* Public inner classes ******************** */
