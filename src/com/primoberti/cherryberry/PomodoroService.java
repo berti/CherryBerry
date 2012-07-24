@@ -470,14 +470,6 @@ public class PomodoroService extends Service implements
 		mNotificationManager.notify(id, notification);
 	}
 
-	/**
-	 * Returns the time instant in which the period with the given duration will
-	 * end. Usefull for setting the timer expire time based on its duration.
-	 */
-	private long finishTime(long duration) {
-		return System.currentTimeMillis() + duration;
-	}
-
 	/* Public inner classes ******************** */
 
 	public class LocalBinder extends Binder {
