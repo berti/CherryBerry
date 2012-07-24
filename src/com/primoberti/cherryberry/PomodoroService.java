@@ -220,7 +220,8 @@ public class PomodoroService extends Service implements
 	}
 
 	/**
-	 * Cancels the current count down timer.
+	 * Cancels the current pomodoro or break alarms and notifications, and goes
+	 * back to the idle state.
 	 */
 	private void cancel() {
 		cancelAlarms();
