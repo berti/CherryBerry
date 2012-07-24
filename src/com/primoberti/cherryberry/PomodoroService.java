@@ -247,7 +247,7 @@ public class PomodoroService extends Service implements
 	}
 
 	private void onPomodoroFinished() {
-		session.setStatus(Status.POMODORO_FINISHED);
+		updateSession(Status.POMODORO_FINISHED, 0);
 		showPomodoroNotification();
 
 		if (listener != null) {
@@ -256,7 +256,7 @@ public class PomodoroService extends Service implements
 	}
 
 	private void onBreakFinished() {
-		session.setStatus(Status.BREAK_FINISHED);
+		updateSession(Status.BREAK_FINISHED, 0);
 		showBreakNotification();
 
 		if (listener != null) {
