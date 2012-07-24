@@ -36,7 +36,11 @@ public interface Session {
 	}
 
 	public enum Status {
-		IDLE, POMODORO_RUNNING, POMODORO_FINISHED, BREAK_RUNNING, BREAK_FINISHED
+		IDLE, POMODORO_RUNNING, POMODORO_FINISHED, BREAK_RUNNING, BREAK_FINISHED;
+
+		public boolean isRunning() {
+			return this == POMODORO_RUNNING || this == BREAK_RUNNING;
+		}
 	};
 
 	/* Public methods ************************** */
