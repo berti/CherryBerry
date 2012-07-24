@@ -132,7 +132,11 @@ public class PomodoroService extends Service implements
 	 */
 	@Override
 	public void cancelPomodoro() {
-		stop();
+		cancel();
+
+		if (listener != null) {
+			listener.onPomodoroCancel(this);
+		}
 	}
 
 	/**
@@ -149,7 +153,7 @@ public class PomodoroService extends Service implements
 	 */
 	@Override
 	public void skipBreak() {
-		skip();
+		cancelBreak();
 	}
 
 	/**
@@ -158,32 +162,21 @@ public class PomodoroService extends Service implements
 	 */
 	@Override
 	public void cancelBreak() {
-		stop();
+		cancel();
+
+		if (listener != null) {
+			listener.onBreakCancel(this);
+		}
 	}
 
 	/**
 	 * Cancels the current count down timer.
 	 */
-	public void stop() {
-		Status oldStatus = session.getStatus();
-
+	public void cancel() {
 		cancelAlarms();
 		hidePersistentNotification();
 
 		setIdle();
-
-		if (listener != null) {
-			if (oldStatus == Status.POMODORO_RUNNING) {
-				listener.onPomodoroCancel(this);
-			}
-			else if (oldStatus == Status.BREAK_RUNNING) {
-				listener.onBreakCancel(this);
-			}
-		}
-	}
-
-	public void skip() {
-		stop();
 	}
 
 	public PomodoroListener getListener() {
