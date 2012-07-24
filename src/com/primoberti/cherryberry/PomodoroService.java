@@ -227,20 +227,7 @@ public class PomodoroService extends Service implements
 		cancelAlarms();
 		hidePersistentNotification();
 
-		setIdle();
-	}
-
-	/**
-	 * Goes back to the idle state.
-	 */
-	private void setIdle() {
-		Log.d("PomodoroTimerService", "setIdle");
-
-		session.setStatus(Status.IDLE);
-		session.setStartTime(0);
-		session.setFinishTime(0);
-
-		saveState();
+		updateSession(Status.IDLE, 0);
 	}
 
 	/**
