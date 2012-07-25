@@ -48,6 +48,8 @@ public class SettingsActivity extends PreferenceActivity implements
 
 	private Preference pomodoroDurationPreference;
 	private Preference breakDurationPreference;
+	private Preference longBreakDurationPreference;
+	private Preference longBreakIntervalPreference;
 
 	@Override
 	@TargetApi(11)
@@ -65,10 +67,14 @@ public class SettingsActivity extends PreferenceActivity implements
 
 		pomodoroDurationPreference = findPreference(R.string.settings_key_pomodoro_duration);
 		breakDurationPreference = findPreference(R.string.settings_key_break_duration);
+		longBreakDurationPreference = findPreference(R.string.settings_key_long_break_duration);
+		longBreakIntervalPreference = findPreference(R.string.settings_key_long_break_interval);
 
 		OnPreferenceChangeListener listener = new CheckNumberOnPreferenceChangeListener();
 		pomodoroDurationPreference.setOnPreferenceChangeListener(listener);
 		breakDurationPreference.setOnPreferenceChangeListener(listener);
+		longBreakDurationPreference.setOnPreferenceChangeListener(listener);
+		longBreakIntervalPreference.setOnPreferenceChangeListener(listener);
 	}
 
 	@Override
@@ -80,6 +86,8 @@ public class SettingsActivity extends PreferenceActivity implements
 
 		updatePomodoroDurationSummary();
 		updateBreakDurationSummary();
+		updateLongBreakDurationSummary();
+		updateLongBreakIntervalSummary();
 	}
 
 	@Override
@@ -98,6 +106,14 @@ public class SettingsActivity extends PreferenceActivity implements
 		}
 		else if (key.equals(getString(R.string.settings_key_break_duration))) {
 			updateBreakDurationSummary();
+		}
+		else if (key
+				.equals(getString(R.string.settings_key_long_break_duration))) {
+			updateLongBreakDurationSummary();
+		}
+		else if (key
+				.equals(getString(R.string.settings_key_long_break_interval))) {
+			updateLongBreakIntervalSummary();
 		}
 	}
 
@@ -126,10 +142,22 @@ public class SettingsActivity extends PreferenceActivity implements
 				PreferencesHelper.getBreakDurationMins(this));
 	}
 
+	private void updateLongBreakDurationSummary() {
+		setSummary(longBreakDurationPreference,
+				R.string.settings_summary_duration,
+				PreferencesHelper.getLongBreakDurationMins(this));
+	}
+
 	private void updatePomodoroDurationSummary() {
 		setSummary(pomodoroDurationPreference,
 				R.string.settings_summary_duration,
 				PreferencesHelper.getPomodoroDurationMins(this));
+	}
+
+	private void updateLongBreakIntervalSummary() {
+		setSummary(longBreakIntervalPreference,
+				R.string.settings_summary_long_break_interval,
+				PreferencesHelper.getLongBreakInterval(this));
 	}
 
 	private void setSummary(Preference preference, int summaryId,
