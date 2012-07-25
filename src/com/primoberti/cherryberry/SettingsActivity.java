@@ -28,6 +28,7 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -138,31 +139,47 @@ public class SettingsActivity extends PreferenceActivity implements
 	}
 
 	private void updatePomodoroDurationSummary() {
-		setSummary(pomodoroDurationPreference,
-				R.string.settings_summary_duration,
-				PreferencesHelper.getPomodoroDurationMins(this));
+		int duration = PreferencesHelper.getPomodoroDurationMins(this);
+		setQuantitySummary(pomodoroDurationPreference,
+				R.plurals.settings_summary_duration, duration, duration);
 	}
 
 	private void updateBreakDurationSummary() {
-		setSummary(breakDurationPreference, R.string.settings_summary_duration,
-				PreferencesHelper.getBreakDurationMins(this));
+		int duration = PreferencesHelper.getBreakDurationMins(this);
+		setQuantitySummary(breakDurationPreference,
+				R.plurals.settings_summary_duration, duration, duration);
 	}
 
 	private void updateLongBreakDurationSummary() {
-		setSummary(longBreakDurationPreference,
-				R.string.settings_summary_duration,
-				PreferencesHelper.getLongBreakDurationMins(this));
+		int duration = PreferencesHelper.getLongBreakDurationMins(this);
+		setQuantitySummary(longBreakDurationPreference,
+				R.plurals.settings_summary_duration, duration, duration);
 	}
 
 	private void updateLongBreakIntervalSummary() {
-		setSummary(longBreakIntervalPreference,
-				R.string.settings_summary_long_break_interval,
-				PreferencesHelper.getLongBreakInterval(this));
+		int interval = PreferencesHelper.getLongBreakInterval(this);
+		if (interval == 0) {
+			// Not "zero", but "disabled"
+			setSummary(longBreakIntervalPreference,
+					R.string.settings_sumary_long_break_interval_disabled);
+		}
+		else {
+			setQuantitySummary(longBreakIntervalPreference,
+					R.plurals.settings_summary_long_break_interval, interval,
+					interval);
+		}
 	}
 
 	private void setSummary(Preference preference, int summaryId,
 			Object... args) {
 		preference.setSummary(getString(summaryId, args));
+	}
+
+	private void setQuantitySummary(Preference preference, int summaryId,
+			int quantity, Object... args) {
+		Resources resources = getResources();
+		String summary = resources.getQuantityString(summaryId, quantity, args);
+		preference.setSummary(summary);
 	}
 
 	/* Private inner classes ******************* */

@@ -36,8 +36,15 @@ application is not affiliated by, associated with nor endorsed by the Pomodoro T
     <string name="settings_title_long_break_duration">Duración de un descanso largo</string>
     <string name="settings_title_long_break_interval">Intervalo de los descansos largos</string>
     <string name="settings_message_in_minutes">En minutos</string>
-    <string name="settings_summary_duration">%d minutos</string>
+    <plurals name="settings_summary_duration">
+        <item quantity="one">1 minuto</item>
+        <item quantity="other">%d minutos</item>
+    </plurals>
     <string name="settings_message_long_break_interval">Poner a cero para desactivar los descansos largos</string>
-    <string name="settings_summary_long_break_interval">Cada %d pomodoros</string>
+    <plurals name="settings_summary_long_break_interval">
+        <item quantity="one">Cada pomodoro</item>
+        <item quantity="other">Cada %d pomodoros</item>
+    </plurals>
+    <string name="settings_sumary_long_break_interval_disabled">Desactivados</string>
 
 </resources>
