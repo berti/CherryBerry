@@ -19,6 +19,8 @@
 
 package com.primoberti.cherryberry;
 
+import android.content.SharedPreferences;
+
 /**
  * Implementation of {@link Session} with additional setters and other methods.
  * 
@@ -37,6 +39,14 @@ class SessionImpl implements Session {
 	private long finishTime;
 
 	private int count;
+	
+	/* Private constants *********************** */
+
+	private final static String PREF_STATUS = "status";
+
+	private final static String PREF_TIMER_START = "timerStart";
+
+	private final static String PREF_TIMER_END = "timerEnd";
 
 	/* Constructors **************************** */
 
@@ -124,6 +134,32 @@ class SessionImpl implements Session {
 
 	public void setFinishTime(long finishTime) {
 		this.finishTime = finishTime;
+	}
+
+	public void save(SharedPreferences preferences) {
+		SharedPreferences.Editor editor = preferences.edit();
+		save(preferences, editor);
+		editor.commit();
+	}
+
+	public void save(SharedPreferences preferences,
+			SharedPreferences.Editor editor) {
+		editor.putInt(PREF_STATUS, status.ordinal());
+		editor.putLong(PREF_TIMER_START, startTime);
+		editor.putLong(PREF_TIMER_END, finishTime);
+	}
+	
+	/* Public static methods ******************* */
+	
+	public static SessionImpl restore(SharedPreferences preferences) {
+		SessionImpl session = new SessionImpl();
+		
+		session.setStatus(Status.values()[preferences.getInt(PREF_STATUS,
+				Status.IDLE.ordinal())]);
+		session.setStartTime(preferences.getLong(PREF_TIMER_START, 0));
+		session.setFinishTime(preferences.getLong(PREF_TIMER_END, 0));
+		
+		return session;
 	}
 
 	/* Methods inherited from Object *********** */
