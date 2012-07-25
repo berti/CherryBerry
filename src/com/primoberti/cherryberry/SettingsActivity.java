@@ -137,6 +137,12 @@ public class SettingsActivity extends PreferenceActivity implements
 		return getPreferenceScreen().findPreference(getString(keyId));
 	}
 
+	private void updatePomodoroDurationSummary() {
+		setSummary(pomodoroDurationPreference,
+				R.string.settings_summary_duration,
+				PreferencesHelper.getPomodoroDurationMins(this));
+	}
+
 	private void updateBreakDurationSummary() {
 		setSummary(breakDurationPreference, R.string.settings_summary_duration,
 				PreferencesHelper.getBreakDurationMins(this));
@@ -146,12 +152,6 @@ public class SettingsActivity extends PreferenceActivity implements
 		setSummary(longBreakDurationPreference,
 				R.string.settings_summary_duration,
 				PreferencesHelper.getLongBreakDurationMins(this));
-	}
-
-	private void updatePomodoroDurationSummary() {
-		setSummary(pomodoroDurationPreference,
-				R.string.settings_summary_duration,
-				PreferencesHelper.getPomodoroDurationMins(this));
 	}
 
 	private void updateLongBreakIntervalSummary() {
