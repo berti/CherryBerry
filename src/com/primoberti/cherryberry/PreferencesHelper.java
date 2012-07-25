@@ -67,6 +67,12 @@ public abstract class PreferencesHelper {
 		return getLongBreakDurationMins(context) * 60 * 1000;
 	}
 
+	public static int getLongBreakInterval(Context context) {
+		return getIntFromString(context,
+				R.string.settings_key_long_break_interval,
+				R.integer.settings_default_long_break_interval);
+	}
+
 	public static boolean isNotificationLight(Context context) {
 		return getBoolean(context, R.string.settings_key_notification_light,
 				R.bool.settings_default_notification_light);
