@@ -284,12 +284,12 @@ public class PomodoroService extends Service implements
 
 		if (session.getStatus() == Status.POMODORO_RUNNING) {
 			if (session.getFinishTime() <= System.currentTimeMillis()) {
-				session.setStatus(Status.POMODORO_FINISHED);
+				updateSession(Status.POMODORO_FINISHED, 0);
 			}
 		}
 		else if (session.getStatus() == Status.BREAK_RUNNING) {
 			if (session.getFinishTime() <= System.currentTimeMillis()) {
-				session.setStatus(Status.BREAK_FINISHED);
+				updateSession(Status.BREAK_FINISHED, 0);
 			}
 		}
 	}
