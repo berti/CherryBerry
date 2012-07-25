@@ -3,8 +3,8 @@
     <PreferenceCategory android:title="@string/settings_category_pomodoro">
         <EditTextPreference android:key="@string/settings_key_pomodoro_duration" android:dialogMessage="@string/settings_message_in_minutes" android:title="@string/settings_title_pomodoro_duration" android:numeric="" android:defaultValue="@integer/settings_default_pomodoro_duration"/>
         <EditTextPreference android:key="@string/settings_key_break_duration" android:title="@string/settings_title_break_duration" android:numeric="" android:dialogMessage="@string/settings_message_in_minutes" android:defaultValue="@integer/settings_default_break_duration"/>
-        <EditTextPreference android:key="@string/settings_key_long_break_duration" android:title="@string/settings_title_long_break_duration" android:numeric="" android:dialogMessage="@string/settings_message_in_minutes" android:defaultValue="@integer/settings_default_long_break_duration"/>
         <EditTextPreference android:key="@string/settings_key_long_break_interval" android:title="@string/settings_title_long_break_interval" android:numeric="" android:dialogMessage="@string/settings_message_long_break_interval" android:defaultValue="@integer/settings_default_long_break_interval"/>
+        <EditTextPreference android:key="@string/settings_key_long_break_duration" android:title="@string/settings_title_long_break_duration" android:numeric="" android:dialogMessage="@string/settings_message_in_minutes" android:defaultValue="@integer/settings_default_long_break_duration"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/settings_category_notifications">
         <CheckBoxPreference android:title="@string/settings_title_notification_light" android:key="@string/settings_key_notification_light" android:defaultValue="@bool/settings_default_notification_light"/>
