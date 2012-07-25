@@ -33,7 +33,11 @@ application is not affiliated by, associated with nor endorsed by the Pomodoro T
     <string name="settings_title_notification_sound">Sound</string>
     <string name="settings_title_pomodoro_duration">Pomodoro duration</string>
     <string name="settings_title_break_duration">Break duration</string>
+    <string name="settings_title_long_break_duration">Long break duration</string>
+    <string name="settings_title_long_break_interval">Long break interval</string>
     <string name="settings_message_in_minutes">In minutes</string>
     <string name="settings_summary_duration">%d minutes</string>
+    <string name="settings_message_long_break_interval">Set to zero to disable long breaks</string>
+    <string name="settings_summary_long_break_interval">Every %d pomodoros</string>
 
 </resources>
