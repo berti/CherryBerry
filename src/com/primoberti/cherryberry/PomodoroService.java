@@ -53,12 +53,6 @@ public class PomodoroService extends Service implements
 	private final static String SHARED_PREFS = PomodoroService.class
 			+ "_SHARED_PREFS";
 
-	private final static String PREF_STATUS = "status";
-
-	private final static String PREF_TIMER_START = "timerStart";
-
-	private final static String PREF_TIMER_END = "timerEnd";
-
 	/* Private fields ************************** */
 
 	private SessionImpl session;
@@ -262,23 +256,15 @@ public class PomodoroService extends Service implements
 
 		SharedPreferences preferences = getSharedPreferences(SHARED_PREFS,
 				MODE_PRIVATE);
-		SharedPreferences.Editor editor = preferences.edit();
-
-		editor.putInt(PREF_STATUS, session.getStatus().ordinal());
-		editor.putLong(PREF_TIMER_START, session.getStartTime());
-		editor.putLong(PREF_TIMER_END, session.getFinishTime());
-
-		editor.commit();
+		
+		session.save(preferences);
 	}
 
 	private void restoreState() {
 		SharedPreferences preferences = getSharedPreferences(SHARED_PREFS,
 				MODE_PRIVATE);
 
-		session.setStatus(Status.values()[preferences.getInt(PREF_STATUS,
-				Status.IDLE.ordinal())]);
-		session.setStartTime(preferences.getLong(PREF_TIMER_START, 0));
-		session.setFinishTime(preferences.getLong(PREF_TIMER_END, 0));
+		session = SessionImpl.restore(preferences);
 
 		Log.d("PomodoroTimerService", "restoreState " + session.getStatus());
 
