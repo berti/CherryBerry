@@ -89,6 +89,7 @@ public class SettingsActivity extends PreferenceActivity implements
 		updateBreakDurationSummary();
 		updateLongBreakDurationSummary();
 		updateLongBreakIntervalSummary();
+		checkLongBreaksEnabled();
 	}
 
 	@Override
@@ -115,6 +116,7 @@ public class SettingsActivity extends PreferenceActivity implements
 		else if (key
 				.equals(getString(R.string.settings_key_long_break_interval))) {
 			updateLongBreakIntervalSummary();
+			checkLongBreaksEnabled();
 		}
 	}
 
@@ -180,6 +182,15 @@ public class SettingsActivity extends PreferenceActivity implements
 		Resources resources = getResources();
 		String summary = resources.getQuantityString(summaryId, quantity, args);
 		preference.setSummary(summary);
+	}
+	
+	private void checkLongBreaksEnabled() {
+		if (PreferencesHelper.getLongBreakInterval(this) > 0) {
+			longBreakDurationPreference.setEnabled(true);
+		}
+		else {
+			longBreakDurationPreference.setEnabled(false);
+		}
 	}
 
 	/* Private inner classes ******************* */
