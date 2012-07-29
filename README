@@ -1,13 +1,13 @@
 CherryBerry
 ===========
 
-CherryBerry is a simple Pomodoro app for Android, with planned Google Tasks
-integration.
+CherryBerry is a simple, unnoficial application of the Pomodoro Technique® for
+Android, with planned Google Tasks integration.
 
 The Pomodoro Technique
 ----------------------
 
-At its core, the Pomodoro Technique (http://www.pomodorotechnique.com/) is a
+At its core, the Pomodoro Technique® (http://www.pomodorotechnique.com/) is a
 time management technique. You focus on a task for 25 minutes, then take a break
 for 5 minutes, completing a "pomodoro". After you finish a pomodoro, you may
 start another one with the same or a different task. After four pomodoros, you
@@ -22,3 +22,7 @@ License
 
 CherryBerry is free software and is distributed under the GPLv3 license. See
 COPYING for more information.
+
+Pomodoro Technique® is a registered trademark of Francesco Cirillo. This
+application is not affiliated by, associated with nor endorsed by the Pomodoro
+Technique® or Francesco Cirillo.
