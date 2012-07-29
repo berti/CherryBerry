@@ -3,6 +3,10 @@
  * 
  * This file is part of CherryBerry - https://github.com/berti/CherryBerry.
  * 
+ * “Pomodoro Technique® is a registered trademark of Francesco Cirillo. This
+ * application is not affiliated by, associated with nor endorsed by the
+ * Pomodoro Technique® or Francesco Cirillo.
+ * 
  * CherryBerry is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
