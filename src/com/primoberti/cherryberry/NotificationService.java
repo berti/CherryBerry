@@ -86,7 +86,7 @@ public class NotificationService extends Service {
 		String ns = Context.NOTIFICATION_SERVICE;
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
 
-		int icon = R.drawable.ic_notification;
+		int icon = R.drawable.ic_stat_generic;
 		long when = System.currentTimeMillis();
 		Notification notification = new Notification(icon,
 				resources.getString(tickerText), when);
