@@ -16,7 +16,8 @@
     <string name="notification_text_break_running">En un descanso - termina a las %1$s</string>
     <string name="dialog_title_pomodoro_finished">Pomodoro terminado. ¿Y ahora qué?</string>
     <string name="dialog_title_about">Acerca de CherryBerry</string>
-    <string name="dialog_message_about">CherryBerry is un temporizador de Pomodoro realmente sencillo.\n\nLicenciado bajo GPLv3. Ver https://github.com/berti/CherryBerry.\n\nPor Alberto Salmerón Moreno</string>
+    <string name="dialog_message_about">CherryBerry is un temporizador no oficial de Pomodoro™ realmente sencillo.\n\nLicenciado bajo GPLv3. Ver https://github.com/berti/CherryBerry.\n\nPomodoro Technique® is a registered trademark of Francesco Cirillo. This
+application is not affiliated by, associated with nor endorsed by the Pomodoro Technique® or Francesco Cirillo.\n\nPor Alberto Salmerón Moreno</string>
     <string name="button_start_break">Comenzar descanso</string>
     <string name="button_cancel_pomodoro">Cancelar pomodoro</string>
     <string name="button_skip_break">Saltar descanso</string>
