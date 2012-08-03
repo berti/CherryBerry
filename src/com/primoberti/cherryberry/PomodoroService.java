@@ -149,7 +149,13 @@ public class PomodoroService extends Service implements
 					+ session.getStatus() + " state");
 		}
 
-		long millis = PreferencesHelper.getBreakDuration(this);
+		long millis;
+		if (session.getBreakType() == BreakType.NORMAL) {
+			millis = PreferencesHelper.getBreakDuration(this);
+		}
+		else {
+			millis = PreferencesHelper.getLongBreakDuration(this);
+		}
 
 		updateSession(Status.BREAK_RUNNING, millis);
 		AlarmHelper.setBreakAlarm(this, millis);
