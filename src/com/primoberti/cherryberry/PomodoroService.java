@@ -30,6 +30,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.primoberti.cherryberry.Session.BreakType;
 import com.primoberti.cherryberry.Session.Status;
 
 /**
@@ -200,6 +201,18 @@ public class PomodoroService extends Service implements
 	}
 
 	private void onPomodoroFinished() {
+		// FIXME ugly separation between incrementCount and updateSession
+		session.incrementCount();
+
+		// FIXME ugly separation between setBreakType and updateSession
+		int interval = PreferencesHelper.getLongBreakInterval(this);
+		if (session.getCount() % interval == 0) {
+			session.setBreakType(BreakType.LONG);
+		}
+		else {
+			session.setBreakType(BreakType.NORMAL);
+		}
+
 		updateSession(Status.POMODORO_FINISHED, 0);
 		NotificationHelper.showPomodoroNotification(this);
 
