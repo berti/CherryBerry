@@ -115,7 +115,15 @@ public class PomodoroService extends Service implements
 	 */
 	@Override
 	public void startPomodoro() {
-		startPomodoro(PreferencesHelper.getPomodoroDuration(this));
+		long millis = PreferencesHelper.getPomodoroDuration(this);
+
+		updateSession(Status.POMODORO_RUNNING, millis);
+		AlarmHelper.setPomodoroAlarm(this, millis);
+		NotificationHelper.showPersistentPomodoroNotification(this, millis);
+
+		if (listener != null) {
+			listener.onPomodoroStart(this);
+		}
 	}
 
 	/**
@@ -135,7 +143,20 @@ public class PomodoroService extends Service implements
 	 */
 	@Override
 	public void startBreak() {
-		startBreak(PreferencesHelper.getBreakDuration(this));
+		if (session.getStatus() != Status.POMODORO_FINISHED) {
+			throw new IllegalStateException("Can't start break in "
+					+ session.getStatus() + " state");
+		}
+
+		long millis = PreferencesHelper.getBreakDuration(this);
+
+		updateSession(Status.BREAK_RUNNING, millis);
+		AlarmHelper.setBreakAlarm(this, millis);
+		NotificationHelper.showPersistentBreakNotification(this, millis);
+
+		if (listener != null) {
+			listener.onBreakStart(this);
+		}
 	}
 
 	/**
@@ -166,43 +187,6 @@ public class PomodoroService extends Service implements
 	}
 
 	/* Private methods ************************* */
-
-	/**
-	 * Start a pomodoro by updating the session info, setting an alarm and
-	 * showing a persistent notification.
-	 * 
-	 * @param millis the duration of the pomodoro
-	 */
-	private void startPomodoro(long millis) {
-		updateSession(Status.POMODORO_RUNNING, millis);
-		AlarmHelper.setPomodoroAlarm(this, millis);
-		NotificationHelper.showPersistentPomodoroNotification(this, millis);
-
-		if (listener != null) {
-			listener.onPomodoroStart(this);
-		}
-	}
-
-	/**
-	 * Start a break by updating the session info, setting an alarm and showing
-	 * a persistent notification.
-	 * 
-	 * @param millis the duration of the break
-	 */
-	private void startBreak(long millis) {
-		if (session.getStatus() != Status.POMODORO_FINISHED) {
-			throw new IllegalStateException("Can't start break in "
-					+ session.getStatus() + " state");
-		}
-
-		updateSession(Status.BREAK_RUNNING, millis);
-		AlarmHelper.setBreakAlarm(this, millis);
-		NotificationHelper.showPersistentBreakNotification(this, millis);
-
-		if (listener != null) {
-			listener.onBreakStart(this);
-		}
-	}
 
 	/**
 	 * Cancels the current pomodoro or break alarms and notifications, and goes
@@ -256,7 +240,7 @@ public class PomodoroService extends Service implements
 
 		SharedPreferences preferences = getSharedPreferences(SHARED_PREFS,
 				MODE_PRIVATE);
-		
+
 		session.save(preferences);
 	}
 
