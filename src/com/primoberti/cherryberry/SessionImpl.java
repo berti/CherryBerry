@@ -48,6 +48,8 @@ class SessionImpl implements Session {
 
 	private final static String PREF_TIMER_END = "timerEnd";
 
+	private final static String PREF_COUNT = "count";
+
 	/* Constructors **************************** */
 
 	public SessionImpl(BreakType type, Status status, int count,
@@ -147,6 +149,7 @@ class SessionImpl implements Session {
 		editor.putInt(PREF_STATUS, status.ordinal());
 		editor.putLong(PREF_TIMER_START, startTime);
 		editor.putLong(PREF_TIMER_END, finishTime);
+		editor.putInt(PREF_COUNT, count);
 	}
 	
 	/* Public static methods ******************* */
@@ -158,6 +161,7 @@ class SessionImpl implements Session {
 				Status.IDLE.ordinal())]);
 		session.setStartTime(preferences.getLong(PREF_TIMER_START, 0));
 		session.setFinishTime(preferences.getLong(PREF_TIMER_END, 0));
+		session.setCount(preferences.getInt(PREF_COUNT, 0));
 		
 		return session;
 	}
