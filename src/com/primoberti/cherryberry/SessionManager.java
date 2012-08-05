@@ -79,6 +79,9 @@ public class SessionManager {
 
 		@Override
 		public State start() {
+			long millis = PreferencesHelper.getPomodoroDuration(context);
+			AlarmHelper.setPomodoroAlarm(context, millis);
+			
 			return pomodoroRunningState;
 		}
 
@@ -97,6 +100,9 @@ public class SessionManager {
 
 		@Override
 		public State start() {
+			long millis = PreferencesHelper.getBreakDuration(context);
+			AlarmHelper.setBreakAlarm(context, millis);
+			
 			return breakRunningState;
 		}
 
