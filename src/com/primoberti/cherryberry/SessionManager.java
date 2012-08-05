@@ -23,6 +23,8 @@
 
 package com.primoberti.cherryberry;
 
+import android.content.Context;
+
 /**
  * Class for managing the lifecycle of the work sessions.
  * 
@@ -39,7 +41,15 @@ public class SessionManager {
 
 	/* Private fields ************************** */
 	
-	private State state = idleState;
+	private State state;
+	private Context context;
+	
+	/* Public constructors ********************* */
+	
+	public SessionManager(Context context) {
+		this.state = idleState;
+		this.context = context;
+	}
 	
 	/* Public methods ************************** */
 	
