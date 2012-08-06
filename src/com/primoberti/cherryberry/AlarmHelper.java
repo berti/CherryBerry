@@ -67,10 +67,18 @@ public abstract class AlarmHelper {
 				.getSystemService(Context.ALARM_SERVICE);
 		alarmManager.set(AlarmManager.RTC_WAKEUP, finishTime, pendingIntent);
 	}
+	
+	public static void cancelPomodoroAlarm(Context context) {
+		cancelAlarm(context, PomodoroService.POMODORO_FINISHED);
+	}
+	
+	public static void cancelBreakAlarm(Context context) {
+		cancelAlarm(context, PomodoroService.BREAK_FINISHED);
+	}
 
 	public static void cancelAlarms(Context context) {
-		cancelAlarm(context, PomodoroService.POMODORO_FINISHED);
-		cancelAlarm(context, PomodoroService.BREAK_FINISHED);
+		cancelPomodoroAlarm(context);
+		cancelBreakAlarm(context);
 	}
 
 	public static void cancelAlarm(Context context, String action) {
