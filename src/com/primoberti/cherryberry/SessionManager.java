@@ -99,6 +99,8 @@ public class SessionManager {
 
 		@Override
 		public State cancel() {
+			AlarmHelper.cancelPomodoroAlarm(context);
+			
 			return idleState;
 		}
 
@@ -130,6 +132,8 @@ public class SessionManager {
 
 		@Override
 		public State cancel() {
+			AlarmHelper.cancelBreakAlarm(context);
+			
 			return idleState;
 		}
 
