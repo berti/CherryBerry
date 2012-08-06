@@ -40,25 +40,29 @@ public class SessionManager {
 	private final BreakRunningState breakRunningState = new BreakRunningState();
 
 	/* Private fields ************************** */
-	
+
 	private State state;
 	private Context context;
-	
+
 	/* Public constructors ********************* */
-	
+
 	public SessionManager(Context context) {
 		this.state = idleState;
 		this.context = context;
 	}
-	
+
 	/* Public methods ************************** */
-	
+
 	public void start() {
 		state = state.start();
 	}
-	
+
 	public void cancel() {
 		state = state.cancel();
+	}
+
+	public void timeout() {
+		state = state.timeout();
 	}
 
 	/* Private inner classes ******************* */
@@ -73,6 +77,10 @@ public class SessionManager {
 			return this;
 		}
 
+		public State timeout() {
+			return this;
+		}
+
 	}
 
 	private class IdleState extends State {
@@ -81,7 +89,7 @@ public class SessionManager {
 		public State start() {
 			long millis = PreferencesHelper.getPomodoroDuration(context);
 			AlarmHelper.setPomodoroAlarm(context, millis);
-			
+
 			return pomodoroRunningState;
 		}
 
@@ -94,6 +102,11 @@ public class SessionManager {
 			return idleState;
 		}
 
+		@Override
+		public State timeout() {
+			return pomodoroFinishedState;
+		}
+
 	}
 
 	private class PomodoroFinishedState extends State {
@@ -102,7 +115,7 @@ public class SessionManager {
 		public State start() {
 			long millis = PreferencesHelper.getBreakDuration(context);
 			AlarmHelper.setBreakAlarm(context, millis);
-			
+
 			return breakRunningState;
 		}
 
@@ -117,6 +130,11 @@ public class SessionManager {
 
 		@Override
 		public State cancel() {
+			return idleState;
+		}
+
+		@Override
+		public State timeout() {
 			return idleState;
 		}
 
