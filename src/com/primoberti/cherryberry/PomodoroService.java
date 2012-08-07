@@ -23,9 +23,6 @@
 
 package com.primoberti.cherryberry;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -321,13 +318,11 @@ public class PomodoroService extends Service implements
 		/* Private fields ************************** */
 
 		private State state;
-		private List<PomodoroListener> listeners;
 
 		/* Public constructors ********************* */
 
 		public SessionManager() {
 			this.state = idleState;
-			this.listeners = new LinkedList<PomodoroListener>();
 		}
 
 		/* Public methods ************************** */
@@ -342,14 +337,6 @@ public class PomodoroService extends Service implements
 
 		public void timeout() {
 			state = state.timeout();
-		}
-
-		public void addListener(PomodoroListener listener) {
-			listeners.add(listener);
-		}
-
-		public void removeListener(PomodoroListener listener) {
-			listeners.remove(listeners);
 		}
 
 		/* Private inner classes ******************* */
