@@ -203,7 +203,7 @@ public class PomodoroService extends Service implements
 		AlarmHelper.cancelAlarms(this);
 		NotificationHelper.hidePersistentNotification(this);
 
-		updateSession(Status.IDLE, 0);
+		updateSession(Status.IDLE);
 	}
 
 	private void onPomodoroFinished() {
@@ -219,7 +219,7 @@ public class PomodoroService extends Service implements
 			session.setBreakType(BreakType.NORMAL);
 		}
 
-		updateSession(Status.POMODORO_FINISHED, 0);
+		updateSession(Status.POMODORO_FINISHED);
 		NotificationHelper.showPomodoroNotification(this);
 
 		if (listener != null) {
@@ -228,7 +228,7 @@ public class PomodoroService extends Service implements
 	}
 
 	private void onBreakFinished() {
-		updateSession(Status.BREAK_FINISHED, 0);
+		updateSession(Status.BREAK_FINISHED);
 		NotificationHelper.showBreakNotification(this);
 
 		if (listener != null) {
@@ -252,6 +252,17 @@ public class PomodoroService extends Service implements
 		saveState();
 	}
 
+	/**
+	 * Update the status of the current session, and sets it start and finish
+	 * time to the current time. This is for status that don't have a defined
+	 * duration. In addition, save the state.
+	 * 
+	 * @param newStatus the new status of the session
+	 */
+	private void updateSession(Status newStatus) {
+		updateSession(newStatus, 0);
+	}
+
 	/* Private state saving/restoring methods ** */
 
 	private void saveState() {
@@ -273,12 +284,12 @@ public class PomodoroService extends Service implements
 
 		if (session.getStatus() == Status.POMODORO_RUNNING) {
 			if (session.getFinishTime() <= System.currentTimeMillis()) {
-				updateSession(Status.POMODORO_FINISHED, 0);
+				updateSession(Status.POMODORO_FINISHED);
 			}
 		}
 		else if (session.getStatus() == Status.BREAK_RUNNING) {
 			if (session.getFinishTime() <= System.currentTimeMillis()) {
-				updateSession(Status.BREAK_FINISHED, 0);
+				updateSession(Status.BREAK_FINISHED);
 			}
 		}
 	}
