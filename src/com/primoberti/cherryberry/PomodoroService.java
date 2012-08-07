@@ -124,15 +124,7 @@ public class PomodoroService extends Service implements
 	 */
 	@Override
 	public void startPomodoro() {
-		long millis = PreferencesHelper.getPomodoroDuration(this);
-
-		updateSession(Status.POMODORO_RUNNING, millis);
-		AlarmHelper.setPomodoroAlarm(this, millis);
-		NotificationHelper.showPersistentPomodoroNotification(this, millis);
-
-		if (listener != null) {
-			listener.onPomodoroStart(this);
-		}
+		sessionManager.start();
 	}
 
 	/**
@@ -140,11 +132,7 @@ public class PomodoroService extends Service implements
 	 */
 	@Override
 	public void cancelPomodoro() {
-		cancel();
-
-		if (listener != null) {
-			listener.onPomodoroCancel(this);
-		}
+		sessionManager.cancel();
 	}
 
 	/**
@@ -152,26 +140,7 @@ public class PomodoroService extends Service implements
 	 */
 	@Override
 	public void startBreak() {
-		if (session.getStatus() != Status.POMODORO_FINISHED) {
-			throw new IllegalStateException("Can't start break in "
-					+ session.getStatus() + " state");
-		}
-
-		long millis;
-		if (session.getBreakType() == BreakType.NORMAL) {
-			millis = PreferencesHelper.getBreakDuration(this);
-		}
-		else {
-			millis = PreferencesHelper.getLongBreakDuration(this);
-		}
-
-		updateSession(Status.BREAK_RUNNING, millis);
-		AlarmHelper.setBreakAlarm(this, millis);
-		NotificationHelper.showPersistentBreakNotification(this, millis);
-
-		if (listener != null) {
-			listener.onBreakStart(this);
-		}
+		sessionManager.start();
 	}
 
 	/**
@@ -180,7 +149,7 @@ public class PomodoroService extends Service implements
 	 */
 	@Override
 	public void skipBreak() {
-		cancelBreak();
+		sessionManager.cancel();
 	}
 
 	/**
@@ -189,11 +158,7 @@ public class PomodoroService extends Service implements
 	 */
 	@Override
 	public void cancelBreak() {
-		cancel();
-
-		if (listener != null) {
-			listener.onBreakCancel(this);
-		}
+		sessionManager.cancel();
 	}
 
 	@Override
@@ -203,45 +168,12 @@ public class PomodoroService extends Service implements
 
 	/* Private methods ************************* */
 
-	/**
-	 * Cancels the current pomodoro or break alarms and notifications, and goes
-	 * back to the idle state.
-	 */
-	private void cancel() {
-		AlarmHelper.cancelAlarms(this);
-		NotificationHelper.hidePersistentNotification(this);
-
-		updateSession(Status.IDLE);
-	}
-
 	private void onPomodoroFinished() {
-		// FIXME ugly separation between incrementCount and updateSession
-		session.incrementCount();
-
-		// FIXME ugly separation between setBreakType and updateSession
-		int interval = PreferencesHelper.getLongBreakInterval(this);
-		if (session.getCount() % interval == 0) {
-			session.setBreakType(BreakType.LONG);
-		}
-		else {
-			session.setBreakType(BreakType.NORMAL);
-		}
-
-		updateSession(Status.POMODORO_FINISHED);
-		NotificationHelper.showPomodoroNotification(this);
-
-		if (listener != null) {
-			listener.onPomodoroFinish(this);
-		}
+		sessionManager.timeout();
 	}
 
 	private void onBreakFinished() {
-		updateSession(Status.BREAK_FINISHED);
-		NotificationHelper.showBreakNotification(this);
-
-		if (listener != null) {
-			listener.onBreakFinish(this);
-		}
+		sessionManager.timeout();
 	}
 
 	/**
