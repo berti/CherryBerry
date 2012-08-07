@@ -363,6 +363,9 @@ public class PomodoroService extends Service implements
 			public State start() {
 				long millis = PreferencesHelper
 						.getPomodoroDuration(PomodoroService.this);
+
+				updateSession(Status.POMODORO_RUNNING, millis);
+
 				AlarmHelper.setPomodoroAlarm(PomodoroService.this, millis);
 				NotificationHelper.showPersistentPomodoroNotification(
 						PomodoroService.this, millis);
@@ -380,6 +383,8 @@ public class PomodoroService extends Service implements
 
 			@Override
 			public State cancel() {
+				updateSession(Status.IDLE);
+
 				AlarmHelper.cancelPomodoroAlarm(PomodoroService.this);
 				NotificationHelper
 						.hidePersistentNotification(PomodoroService.this);
@@ -393,6 +398,19 @@ public class PomodoroService extends Service implements
 
 			@Override
 			public State timeout() {
+				session.incrementCount();
+
+				int interval = PreferencesHelper
+						.getLongBreakInterval(PomodoroService.this);
+				if (session.getCount() % interval == 0) {
+					session.setBreakType(BreakType.LONG);
+				}
+				else {
+					session.setBreakType(BreakType.NORMAL);
+				}
+
+				updateSession(Status.POMODORO_FINISHED);
+
 				NotificationHelper
 						.showPomodoroNotification(PomodoroService.this);
 
@@ -409,8 +427,18 @@ public class PomodoroService extends Service implements
 
 			@Override
 			public State start() {
-				long millis = PreferencesHelper
-						.getBreakDuration(PomodoroService.this);
+				long millis;
+				if (session.getBreakType() == BreakType.NORMAL) {
+					millis = PreferencesHelper
+							.getBreakDuration(PomodoroService.this);
+				}
+				else {
+					millis = PreferencesHelper
+							.getLongBreakDuration(PomodoroService.this);
+				}
+
+				updateSession(Status.BREAK_RUNNING, millis);
+
 				AlarmHelper.setBreakAlarm(PomodoroService.this, millis);
 				NotificationHelper.showPersistentBreakNotification(
 						PomodoroService.this, millis);
@@ -424,6 +452,8 @@ public class PomodoroService extends Service implements
 
 			@Override
 			public State cancel() {
+				updateSession(Status.IDLE);
+
 				NotificationHelper
 						.hidePersistentNotification(PomodoroService.this);
 
@@ -440,6 +470,8 @@ public class PomodoroService extends Service implements
 
 			@Override
 			public State cancel() {
+				updateSession(Status.IDLE);
+
 				AlarmHelper.cancelBreakAlarm(PomodoroService.this);
 				NotificationHelper
 						.hidePersistentNotification(PomodoroService.this);
@@ -453,6 +485,8 @@ public class PomodoroService extends Service implements
 
 			@Override
 			public State timeout() {
+				updateSession(Status.IDLE);
+
 				NotificationHelper.showBreakNotification(PomodoroService.this);
 
 				if (listener != null) {
