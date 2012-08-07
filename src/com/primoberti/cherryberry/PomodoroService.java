@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Binder;
@@ -307,9 +306,9 @@ public class PomodoroService extends Service implements
 		}
 
 	}
-	
+
 	/* Private inner classes ******************* */
-	
+
 	private class SessionManager {
 
 		/* Private instance constants ************** */
@@ -322,14 +321,12 @@ public class PomodoroService extends Service implements
 		/* Private fields ************************** */
 
 		private State state;
-		private Context context;
 		private List<PomodoroListener> listeners;
 
 		/* Public constructors ********************* */
 
-		public SessionManager(Context context) {
+		public SessionManager() {
 			this.state = idleState;
-			this.context = context;
 			this.listeners = new LinkedList<PomodoroListener>();
 		}
 
@@ -346,11 +343,11 @@ public class PomodoroService extends Service implements
 		public void timeout() {
 			state = state.timeout();
 		}
-		
+
 		public void addListener(PomodoroListener listener) {
 			listeners.add(listener);
 		}
-		
+
 		public void removeListener(PomodoroListener listener) {
 			listeners.remove(listeners);
 		}
@@ -377,8 +374,9 @@ public class PomodoroService extends Service implements
 
 			@Override
 			public State start() {
-				long millis = PreferencesHelper.getPomodoroDuration(context);
-				AlarmHelper.setPomodoroAlarm(context, millis);
+				long millis = PreferencesHelper
+						.getPomodoroDuration(PomodoroService.this);
+				AlarmHelper.setPomodoroAlarm(PomodoroService.this, millis);
 
 				return pomodoroRunningState;
 			}
@@ -389,8 +387,8 @@ public class PomodoroService extends Service implements
 
 			@Override
 			public State cancel() {
-				AlarmHelper.cancelPomodoroAlarm(context);
-				
+				AlarmHelper.cancelPomodoroAlarm(PomodoroService.this);
+
 				return idleState;
 			}
 
@@ -405,8 +403,9 @@ public class PomodoroService extends Service implements
 
 			@Override
 			public State start() {
-				long millis = PreferencesHelper.getBreakDuration(context);
-				AlarmHelper.setBreakAlarm(context, millis);
+				long millis = PreferencesHelper
+						.getBreakDuration(PomodoroService.this);
+				AlarmHelper.setBreakAlarm(PomodoroService.this, millis);
 
 				return breakRunningState;
 			}
@@ -422,8 +421,8 @@ public class PomodoroService extends Service implements
 
 			@Override
 			public State cancel() {
-				AlarmHelper.cancelBreakAlarm(context);
-				
+				AlarmHelper.cancelBreakAlarm(PomodoroService.this);
+
 				return idleState;
 			}
 
