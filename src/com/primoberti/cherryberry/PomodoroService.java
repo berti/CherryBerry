@@ -81,12 +81,7 @@ public class PomodoroService extends Service implements
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent.getAction().equals(PomodoroService.POMODORO_FINISHED)) {
-			onPomodoroFinished();
-		}
-		else if (intent.getAction().equals(PomodoroService.BREAK_FINISHED)) {
-			onBreakFinished();
-		}
+		sessionManager.timeout();
 
 		stopSelf();
 
@@ -141,14 +136,6 @@ public class PomodoroService extends Service implements
 	}
 
 	/* Private methods ************************* */
-
-	private void onPomodoroFinished() {
-		sessionManager.timeout();
-	}
-
-	private void onBreakFinished() {
-		sessionManager.timeout();
-	}
 
 	/**
 	 * Update the status, start and finish times of the current session. Start
