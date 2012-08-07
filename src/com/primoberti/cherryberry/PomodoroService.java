@@ -377,6 +377,8 @@ public class PomodoroService extends Service implements
 				long millis = PreferencesHelper
 						.getPomodoroDuration(PomodoroService.this);
 				AlarmHelper.setPomodoroAlarm(PomodoroService.this, millis);
+				NotificationHelper.showPersistentPomodoroNotification(
+						PomodoroService.this, millis);
 
 				return pomodoroRunningState;
 			}
@@ -388,12 +390,17 @@ public class PomodoroService extends Service implements
 			@Override
 			public State cancel() {
 				AlarmHelper.cancelPomodoroAlarm(PomodoroService.this);
+				NotificationHelper
+						.hidePersistentNotification(PomodoroService.this);
 
 				return idleState;
 			}
 
 			@Override
 			public State timeout() {
+				NotificationHelper
+						.showPomodoroNotification(PomodoroService.this);
+
 				return pomodoroFinishedState;
 			}
 
@@ -406,12 +413,17 @@ public class PomodoroService extends Service implements
 				long millis = PreferencesHelper
 						.getBreakDuration(PomodoroService.this);
 				AlarmHelper.setBreakAlarm(PomodoroService.this, millis);
+				NotificationHelper.showPersistentBreakNotification(
+						PomodoroService.this, millis);
 
 				return breakRunningState;
 			}
 
 			@Override
 			public State cancel() {
+				NotificationHelper
+						.hidePersistentNotification(PomodoroService.this);
+
 				return idleState;
 			}
 
@@ -422,12 +434,16 @@ public class PomodoroService extends Service implements
 			@Override
 			public State cancel() {
 				AlarmHelper.cancelBreakAlarm(PomodoroService.this);
+				NotificationHelper
+						.hidePersistentNotification(PomodoroService.this);
 
 				return idleState;
 			}
 
 			@Override
 			public State timeout() {
+				NotificationHelper.showBreakNotification(PomodoroService.this);
+
 				return idleState;
 			}
 
