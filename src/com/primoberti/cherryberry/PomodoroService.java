@@ -367,6 +367,10 @@ public class PomodoroService extends Service implements
 				NotificationHelper.showPersistentPomodoroNotification(
 						PomodoroService.this, millis);
 
+				if (listener != null) {
+					listener.onPomodoroStart(PomodoroService.this);
+				}
+
 				return pomodoroRunningState;
 			}
 
@@ -380,6 +384,10 @@ public class PomodoroService extends Service implements
 				NotificationHelper
 						.hidePersistentNotification(PomodoroService.this);
 
+				if (listener != null) {
+					listener.onPomodoroCancel(PomodoroService.this);
+				}
+
 				return idleState;
 			}
 
@@ -387,6 +395,10 @@ public class PomodoroService extends Service implements
 			public State timeout() {
 				NotificationHelper
 						.showPomodoroNotification(PomodoroService.this);
+
+				if (listener != null) {
+					listener.onPomodoroFinish(PomodoroService.this);
+				}
 
 				return pomodoroFinishedState;
 			}
@@ -403,6 +415,10 @@ public class PomodoroService extends Service implements
 				NotificationHelper.showPersistentBreakNotification(
 						PomodoroService.this, millis);
 
+				if (listener != null) {
+					listener.onBreakStart(PomodoroService.this);
+				}
+
 				return breakRunningState;
 			}
 
@@ -410,6 +426,10 @@ public class PomodoroService extends Service implements
 			public State cancel() {
 				NotificationHelper
 						.hidePersistentNotification(PomodoroService.this);
+
+				if (listener != null) {
+					listener.onBreakCancel(PomodoroService.this);
+				}
 
 				return idleState;
 			}
@@ -424,12 +444,20 @@ public class PomodoroService extends Service implements
 				NotificationHelper
 						.hidePersistentNotification(PomodoroService.this);
 
+				if (listener != null) {
+					listener.onBreakCancel(PomodoroService.this);
+				}
+
 				return idleState;
 			}
 
 			@Override
 			public State timeout() {
 				NotificationHelper.showBreakNotification(PomodoroService.this);
+
+				if (listener != null) {
+					listener.onBreakFinish(PomodoroService.this);
+				}
 
 				return idleState;
 			}
