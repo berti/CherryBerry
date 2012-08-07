@@ -61,6 +61,14 @@ public class PomodoroService extends Service implements
 	private PomodoroListener listener;
 
 	private IBinder binder = new LocalBinder();
+	
+	private SessionManager sessionManager;
+
+	/* Public constructors ********************* */
+	
+	public PomodoroService() {
+		sessionManager = new SessionManager();
+	}
 
 	/* Public methods ************************** */
 
