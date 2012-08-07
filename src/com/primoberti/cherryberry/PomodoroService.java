@@ -287,6 +287,7 @@ public class PomodoroService extends Service implements
 				MODE_PRIVATE);
 
 		session = SessionImpl.restore(preferences);
+		sessionManager.restore(session);
 
 		Log.d("PomodoroTimerService", "restoreState " + session.getStatus());
 
