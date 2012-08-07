@@ -61,14 +61,6 @@ public class PomodoroService extends Service implements
 	private PomodoroListener listener;
 
 	private IBinder binder = new LocalBinder();
-	
-	private SessionManager sessionManager;
-
-	/* Public constructors ********************* */
-	
-	public PomodoroService() {
-		sessionManager = new SessionManager();
-	}
 
 	/* Public methods ************************** */
 
@@ -81,7 +73,7 @@ public class PomodoroService extends Service implements
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		sessionManager.timeout();
+		timeout();
 
 		stopSelf();
 
@@ -119,7 +111,7 @@ public class PomodoroService extends Service implements
 	 */
 	@Override
 	public void start() {
-		sessionManager.start();
+		state = state.start();
 	}
 
 	/**
@@ -127,7 +119,7 @@ public class PomodoroService extends Service implements
 	 */
 	@Override
 	public void cancel() {
-		sessionManager.cancel();
+		state = state.cancel();
 	}
 
 	@Override
@@ -180,7 +172,7 @@ public class PomodoroService extends Service implements
 				MODE_PRIVATE);
 
 		session = SessionImpl.restore(preferences);
-		sessionManager.restore(session);
+		restore(session);
 
 		Log.d("PomodoroTimerService", "restoreState " + session.getStatus());
 
@@ -206,216 +198,192 @@ public class PomodoroService extends Service implements
 
 	}
 
+	/* Private instance constants ************** */
+
+	private final IdleState idleState = new IdleState();
+	private final PomodoroRunningState pomodoroRunningState = new PomodoroRunningState();
+	private final PomodoroFinishedState pomodoroFinishedState = new PomodoroFinishedState();
+	private final BreakRunningState breakRunningState = new BreakRunningState();
+
+	/* Private fields ************************** */
+
+	private State state = idleState;
+
+	/* Public methods ************************** */
+
+	public void timeout() {
+		state = state.timeout();
+	}
+
+	public void restore(Session session) {
+		switch (session.getStatus()) {
+		case IDLE:
+		case BREAK_FINISHED:
+			state = idleState;
+			break;
+		case POMODORO_RUNNING:
+			state = pomodoroRunningState;
+			break;
+		case POMODORO_FINISHED:
+			state = pomodoroFinishedState;
+			break;
+		case BREAK_RUNNING:
+			state = breakRunningState;
+			break;
+		}
+	}
+
 	/* Private inner classes ******************* */
 
-	private class SessionManager {
+	private abstract class State {
 
-		/* Private instance constants ************** */
-
-		private final IdleState idleState = new IdleState();
-		private final PomodoroRunningState pomodoroRunningState = new PomodoroRunningState();
-		private final PomodoroFinishedState pomodoroFinishedState = new PomodoroFinishedState();
-		private final BreakRunningState breakRunningState = new BreakRunningState();
-
-		/* Private fields ************************** */
-
-		private State state;
-
-		/* Public constructors ********************* */
-
-		public SessionManager() {
-			this.state = idleState;
+		public State start() {
+			return this;
 		}
 
-		/* Public methods ************************** */
-
-		public void start() {
-			state = state.start();
+		public State cancel() {
+			return this;
 		}
 
-		public void cancel() {
-			state = state.cancel();
+		public State timeout() {
+			return this;
 		}
 
-		public void timeout() {
-			state = state.timeout();
-		}
-		
-		public void restore(Session session) {
-			switch (session.getStatus()) {
-			case IDLE:
-			case BREAK_FINISHED:
-				state = idleState;
-				break;
-			case POMODORO_RUNNING:
-				state = pomodoroRunningState;
-				break;
-			case POMODORO_FINISHED:
-				state = pomodoroFinishedState;
-				break;
-			case BREAK_RUNNING:
-				state = breakRunningState;
-				break;
-			}
-		}
+	}
 
-		/* Private inner classes ******************* */
+	private class IdleState extends State {
 
-		private abstract class State {
+		@Override
+		public State start() {
+			long millis = PreferencesHelper
+					.getPomodoroDuration(PomodoroService.this);
 
-			public State start() {
-				return this;
+			updateSession(Status.POMODORO_RUNNING, millis);
+
+			AlarmHelper.setPomodoroAlarm(PomodoroService.this, millis);
+			NotificationHelper.showPersistentPomodoroNotification(
+					PomodoroService.this, millis);
+
+			if (listener != null) {
+				listener.onPomodoroStart(PomodoroService.this);
 			}
 
-			public State cancel() {
-				return this;
-			}
-
-			public State timeout() {
-				return this;
-			}
-
+			return pomodoroRunningState;
 		}
 
-		private class IdleState extends State {
+	}
 
-			@Override
-			public State start() {
-				long millis = PreferencesHelper
-						.getPomodoroDuration(PomodoroService.this);
+	private class PomodoroRunningState extends State {
 
-				updateSession(Status.POMODORO_RUNNING, millis);
+		@Override
+		public State cancel() {
+			updateSession(Status.IDLE);
 
-				AlarmHelper.setPomodoroAlarm(PomodoroService.this, millis);
-				NotificationHelper.showPersistentPomodoroNotification(
-						PomodoroService.this, millis);
+			AlarmHelper.cancelPomodoroAlarm(PomodoroService.this);
+			NotificationHelper.hidePersistentNotification(PomodoroService.this);
 
-				if (listener != null) {
-					listener.onPomodoroStart(PomodoroService.this);
-				}
-
-				return pomodoroRunningState;
+			if (listener != null) {
+				listener.onPomodoroCancel(PomodoroService.this);
 			}
 
+			return idleState;
 		}
 
-		private class PomodoroRunningState extends State {
+		@Override
+		public State timeout() {
+			session.incrementCount();
 
-			@Override
-			public State cancel() {
-				updateSession(Status.IDLE);
-
-				AlarmHelper.cancelPomodoroAlarm(PomodoroService.this);
-				NotificationHelper
-						.hidePersistentNotification(PomodoroService.this);
-
-				if (listener != null) {
-					listener.onPomodoroCancel(PomodoroService.this);
-				}
-
-				return idleState;
+			int interval = PreferencesHelper
+					.getLongBreakInterval(PomodoroService.this);
+			if (session.getCount() % interval == 0) {
+				session.setBreakType(BreakType.LONG);
+			}
+			else {
+				session.setBreakType(BreakType.NORMAL);
 			}
 
-			@Override
-			public State timeout() {
-				session.incrementCount();
+			updateSession(Status.POMODORO_FINISHED);
 
-				int interval = PreferencesHelper
-						.getLongBreakInterval(PomodoroService.this);
-				if (session.getCount() % interval == 0) {
-					session.setBreakType(BreakType.LONG);
-				}
-				else {
-					session.setBreakType(BreakType.NORMAL);
-				}
+			NotificationHelper.showPomodoroNotification(PomodoroService.this);
 
-				updateSession(Status.POMODORO_FINISHED);
-
-				NotificationHelper
-						.showPomodoroNotification(PomodoroService.this);
-
-				if (listener != null) {
-					listener.onPomodoroFinish(PomodoroService.this);
-				}
-
-				return pomodoroFinishedState;
+			if (listener != null) {
+				listener.onPomodoroFinish(PomodoroService.this);
 			}
 
+			return pomodoroFinishedState;
 		}
 
-		private class PomodoroFinishedState extends State {
+	}
 
-			@Override
-			public State start() {
-				long millis;
-				if (session.getBreakType() == BreakType.NORMAL) {
-					millis = PreferencesHelper
-							.getBreakDuration(PomodoroService.this);
-				}
-				else {
-					millis = PreferencesHelper
-							.getLongBreakDuration(PomodoroService.this);
-				}
+	private class PomodoroFinishedState extends State {
 
-				updateSession(Status.BREAK_RUNNING, millis);
-
-				AlarmHelper.setBreakAlarm(PomodoroService.this, millis);
-				NotificationHelper.showPersistentBreakNotification(
-						PomodoroService.this, millis);
-
-				if (listener != null) {
-					listener.onBreakStart(PomodoroService.this);
-				}
-
-				return breakRunningState;
+		@Override
+		public State start() {
+			long millis;
+			if (session.getBreakType() == BreakType.NORMAL) {
+				millis = PreferencesHelper
+						.getBreakDuration(PomodoroService.this);
+			}
+			else {
+				millis = PreferencesHelper
+						.getLongBreakDuration(PomodoroService.this);
 			}
 
-			@Override
-			public State cancel() {
-				updateSession(Status.IDLE);
+			updateSession(Status.BREAK_RUNNING, millis);
 
-				NotificationHelper
-						.hidePersistentNotification(PomodoroService.this);
+			AlarmHelper.setBreakAlarm(PomodoroService.this, millis);
+			NotificationHelper.showPersistentBreakNotification(
+					PomodoroService.this, millis);
 
-				if (listener != null) {
-					listener.onBreakCancel(PomodoroService.this);
-				}
-
-				return idleState;
+			if (listener != null) {
+				listener.onBreakStart(PomodoroService.this);
 			}
 
+			return breakRunningState;
 		}
 
-		private class BreakRunningState extends State {
+		@Override
+		public State cancel() {
+			updateSession(Status.IDLE);
 
-			@Override
-			public State cancel() {
-				updateSession(Status.IDLE);
+			NotificationHelper.hidePersistentNotification(PomodoroService.this);
 
-				AlarmHelper.cancelBreakAlarm(PomodoroService.this);
-				NotificationHelper
-						.hidePersistentNotification(PomodoroService.this);
-
-				if (listener != null) {
-					listener.onBreakCancel(PomodoroService.this);
-				}
-
-				return idleState;
+			if (listener != null) {
+				listener.onBreakCancel(PomodoroService.this);
 			}
 
-			@Override
-			public State timeout() {
-				updateSession(Status.IDLE);
+			return idleState;
+		}
 
-				NotificationHelper.showBreakNotification(PomodoroService.this);
+	}
 
-				if (listener != null) {
-					listener.onBreakFinish(PomodoroService.this);
-				}
+	private class BreakRunningState extends State {
 
-				return idleState;
+		@Override
+		public State cancel() {
+			updateSession(Status.IDLE);
+
+			AlarmHelper.cancelBreakAlarm(PomodoroService.this);
+			NotificationHelper.hidePersistentNotification(PomodoroService.this);
+
+			if (listener != null) {
+				listener.onBreakCancel(PomodoroService.this);
 			}
 
+			return idleState;
+		}
+
+		@Override
+		public State timeout() {
+			updateSession(Status.IDLE);
+
+			NotificationHelper.showBreakNotification(PomodoroService.this);
+
+			if (listener != null) {
+				listener.onBreakFinish(PomodoroService.this);
+			}
+
+			return idleState;
 		}
 
 	}
