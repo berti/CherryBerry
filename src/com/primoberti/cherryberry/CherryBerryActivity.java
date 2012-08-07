@@ -262,18 +262,13 @@ public class CherryBerryActivity extends Activity {
 
 	private void onStartClick() {
 		if (timerServiceBound) {
-			service.startPomodoro();
+			service.start();
 		}
 	}
 
 	private void onStopClick() {
 		if (timerServiceBound) {
-			if (service.getSession().getStatus() == Status.POMODORO_RUNNING) {
-				service.cancelPomodoro();
-			}
-			else {
-				service.cancelBreak();
-			}
+			service.cancel();
 		}
 	}
 
@@ -451,20 +446,20 @@ public class CherryBerryActivity extends Activity {
 			case AlertDialog.BUTTON_POSITIVE:
 				// Start break
 				if (timerServiceBound) {
-					service.startBreak();
+					service.start();
 				}
 				break;
 			case AlertDialog.BUTTON_NEGATIVE:
 				// Cancel pomodoro
 				// FIXME should the user be able to cancel a finished pomodoro?
 				if (timerServiceBound) {
-					service.skipBreak();
+					service.cancel();
 				}
 				break;
 			case AlertDialog.BUTTON_NEUTRAL:
 				// Skip break
 				if (timerServiceBound) {
-					service.skipBreak();
+					service.cancel();
 				}
 				break;
 			}

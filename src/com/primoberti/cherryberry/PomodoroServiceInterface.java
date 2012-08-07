@@ -38,31 +38,14 @@ public interface PomodoroServiceInterface {
 	public Session getSession();
 
 	/**
-	 * Start a new pomodoro from idle.
+	 * Start a new pomodoro from idle, or break after finishing a pomodoro.
 	 */
-	public void startPomodoro();
+	public void start();
 
 	/**
-	 * Cancels the current pomodoro and returns to idle.
+	 * Cancels the current pomodoro or break and returns to idle.
 	 */
-	public void cancelPomodoro();
-
-	/**
-	 * Starts a new break, after a pomodoro has finished.
-	 */
-	public void startBreak();
-
-	/**
-	 * Skips the next scheduled break and returns to idle. Skipping a break does
-	 * not cancel the session, as the pomodoro phase has already finished.
-	 */
-	public void skipBreak();
-
-	/**
-	 * Cancels the current break and return to idle. Cancelling a break does not
-	 * cancel the session, as the pomodoro phase has already finished.
-	 */
-	public void cancelBreak();
+	public void cancel();
 	
 	/**
 	 * Sets the listener that will be notified of events from this service.

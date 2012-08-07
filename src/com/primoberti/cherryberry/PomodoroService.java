@@ -120,44 +120,18 @@ public class PomodoroService extends Service implements
 	}
 
 	/**
-	 * Start a new pomodoro from idle.
+	 * Start a new pomodoro from idle, or break after finishing a pomodoro.
 	 */
 	@Override
-	public void startPomodoro() {
+	public void start() {
 		sessionManager.start();
 	}
 
 	/**
-	 * Cancels the current pomodoro and returns to idle.
+	 * Cancels the current pomodoro or break and returns to idle.
 	 */
 	@Override
-	public void cancelPomodoro() {
-		sessionManager.cancel();
-	}
-
-	/**
-	 * Starts a new break, after a pomodoro has finished.
-	 */
-	@Override
-	public void startBreak() {
-		sessionManager.start();
-	}
-
-	/**
-	 * Skips the next scheduled break and returns to idle. Skipping a break does
-	 * not cancel the session, as the pomodoro phase has already finished.
-	 */
-	@Override
-	public void skipBreak() {
-		sessionManager.cancel();
-	}
-
-	/**
-	 * Cancels the current break and return to idle. Cancelling a break does not
-	 * cancel the session, as the pomodoro phase has already finished.
-	 */
-	@Override
-	public void cancelBreak() {
+	public void cancel() {
 		sessionManager.cancel();
 	}
 
