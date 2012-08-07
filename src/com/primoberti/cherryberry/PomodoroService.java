@@ -338,6 +338,24 @@ public class PomodoroService extends Service implements
 		public void timeout() {
 			state = state.timeout();
 		}
+		
+		public void restore(Session session) {
+			switch (session.getStatus()) {
+			case IDLE:
+			case BREAK_FINISHED:
+				state = idleState;
+				break;
+			case POMODORO_RUNNING:
+				state = pomodoroRunningState;
+				break;
+			case POMODORO_FINISHED:
+				state = pomodoroFinishedState;
+				break;
+			case BREAK_RUNNING:
+				state = breakRunningState;
+				break;
+			}
+		}
 
 		/* Private inner classes ******************* */
 
