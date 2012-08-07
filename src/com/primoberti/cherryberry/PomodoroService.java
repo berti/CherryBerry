@@ -54,11 +54,20 @@ public class PomodoroService extends Service implements
 	private final static String SHARED_PREFS = PomodoroService.class
 			+ "_SHARED_PREFS";
 
+	/* Private instance constants ************** */
+
+	private final IdleState idleState = new IdleState();
+	private final PomodoroRunningState pomodoroRunningState = new PomodoroRunningState();
+	private final PomodoroFinishedState pomodoroFinishedState = new PomodoroFinishedState();
+	private final BreakRunningState breakRunningState = new BreakRunningState();
+
 	/* Private fields ************************** */
 
 	private SessionImpl session;
 
 	private PomodoroListener listener;
+
+	private State state = idleState;
 
 	private IBinder binder = new LocalBinder();
 
@@ -129,6 +138,10 @@ public class PomodoroService extends Service implements
 
 	/* Private methods ************************* */
 
+	private void timeout() {
+		state = state.timeout();
+	}
+
 	/**
 	 * Update the status, start and finish times of the current session. Start
 	 * time is set to the current time, while finish time is computed from that
@@ -188,34 +201,7 @@ public class PomodoroService extends Service implements
 		}
 	}
 
-	/* Public inner classes ******************** */
-
-	public class LocalBinder extends Binder {
-
-		PomodoroServiceInterface getService() {
-			return PomodoroService.this;
-		}
-
-	}
-
-	/* Private instance constants ************** */
-
-	private final IdleState idleState = new IdleState();
-	private final PomodoroRunningState pomodoroRunningState = new PomodoroRunningState();
-	private final PomodoroFinishedState pomodoroFinishedState = new PomodoroFinishedState();
-	private final BreakRunningState breakRunningState = new BreakRunningState();
-
-	/* Private fields ************************** */
-
-	private State state = idleState;
-
-	/* Public methods ************************** */
-
-	public void timeout() {
-		state = state.timeout();
-	}
-
-	public void restore(Session session) {
+	private void restore(Session session) {
 		switch (session.getStatus()) {
 		case IDLE:
 		case BREAK_FINISHED:
@@ -231,6 +217,16 @@ public class PomodoroService extends Service implements
 			state = breakRunningState;
 			break;
 		}
+	}
+
+	/* Public inner classes ******************** */
+
+	public class LocalBinder extends Binder {
+
+		PomodoroServiceInterface getService() {
+			return PomodoroService.this;
+		}
+
 	}
 
 	/* Private inner classes ******************* */
