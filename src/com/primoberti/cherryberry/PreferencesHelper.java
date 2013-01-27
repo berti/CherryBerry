@@ -23,6 +23,8 @@
 
 package com.primoberti.cherryberry;
 
+import com.primoberti.cherryberry.Session.BreakType;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -45,6 +47,15 @@ public abstract class PreferencesHelper {
 				R.integer.settings_default_pomodoro_duration);
 	}
 
+	public static int getBreakDurationMins(Context context, BreakType type) {
+		if (type == BreakType.NORMAL) {
+			return getBreakDurationMins(context);
+		}
+		else {
+			return getLongBreakDurationMins(context);
+		}
+	}
+
 	public static int getBreakDurationMins(Context context) {
 		return getIntFromString(context, R.string.settings_key_break_duration,
 				R.integer.settings_default_break_duration);
@@ -57,6 +68,15 @@ public abstract class PreferencesHelper {
 
 	public static long getPomodoroDuration(Context context) {
 		return getPomodoroDurationMins(context) * 60 * 1000;
+	}
+
+	public static long getBreakDuration(Context context, BreakType type) {
+		if (type == BreakType.NORMAL) {
+			return getBreakDuration(context);
+		}
+		else {
+			return getLongBreakDuration(context);
+		}
 	}
 
 	public static long getBreakDuration(Context context) {

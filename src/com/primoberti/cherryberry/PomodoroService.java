@@ -315,15 +315,8 @@ public class PomodoroService extends Service implements
 
 		@Override
 		public State start() {
-			long millis;
-			if (session.getBreakType() == BreakType.NORMAL) {
-				millis = PreferencesHelper
-						.getBreakDuration(PomodoroService.this);
-			}
-			else {
-				millis = PreferencesHelper
-						.getLongBreakDuration(PomodoroService.this);
-			}
+			long millis = PreferencesHelper.getBreakDuration(
+					PomodoroService.this, session.getBreakType());
 
 			updateSession(Status.BREAK_RUNNING, millis);
 
