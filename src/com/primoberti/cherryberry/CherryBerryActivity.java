@@ -287,7 +287,8 @@ public class CherryBerryActivity extends Activity {
 	}
 
 	private void onPomodoroFinish() {
-		updateTimer(0);
+		updateTimer(PreferencesHelper.getBreakDuration(this, service
+				.getSession().getBreakType()));
 		enableStartButton();
 
 		statusTextView.setText(R.string.status_pomodoro_finished);
@@ -305,7 +306,7 @@ public class CherryBerryActivity extends Activity {
 	}
 
 	private void onBreakFinish() {
-		updateTimer(0);
+		updateTimer(PreferencesHelper.getPomodoroDuration(this));
 		enableStartButton();
 
 		statusTextView.setText(R.string.status_idle);
@@ -314,7 +315,7 @@ public class CherryBerryActivity extends Activity {
 	}
 
 	private void onCancel() {
-		updateTimer(0);
+		updateTimer(PreferencesHelper.getPomodoroDuration(this));
 		enableStartButton();
 
 		statusTextView.setText(R.string.status_idle);
