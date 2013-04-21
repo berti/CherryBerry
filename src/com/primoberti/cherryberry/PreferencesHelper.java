@@ -107,11 +107,6 @@ public abstract class PreferencesHelper {
 				R.bool.settings_default_notification_vibration);
 	}
 
-	public static boolean isNotificationSound(Context context) {
-		return getBoolean(context, R.string.settings_key_notification_sound,
-				R.bool.settings_default_notification_sound);
-	}
-
 	public static boolean isNotificationRingtoneEnabled(Context context) {
 		return getNotificationRingtone(context) != null;
 	}

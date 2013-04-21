@@ -30,7 +30,6 @@ application is not affiliated by, associated with nor endorsed by the Pomodoro T
     <string name="settings_category_notifications">Notificaciones</string>
     <string name="settings_title_notification_light">Luz</string>
     <string name="settings_title_notification_vibration">Vibración</string>
-    <string name="settings_title_notification_sound">Sonido</string>
     <string name="settings_title_pomodoro_duration">Duración de un pomodoro</string>
     <string name="settings_title_break_duration">Duración de un descanso</string>
     <string name="settings_title_long_break_duration">Duración de un descanso largo</string>
