@@ -30,6 +30,7 @@ application is not affiliated by, associated with nor endorsed by the Pomodoro T
     <string name="settings_category_notifications">Notificaciones</string>
     <string name="settings_title_notification_light">Luz</string>
     <string name="settings_title_notification_vibration">Vibración</string>
+    <string name="settings_title_notification_ringtone">Tono</string>
     <string name="settings_title_pomodoro_duration">Duración de un pomodoro</string>
     <string name="settings_title_break_duration">Duración de un descanso</string>
     <string name="settings_title_long_break_duration">Duración de un descanso largo</string>
@@ -45,5 +46,6 @@ application is not affiliated by, associated with nor endorsed by the Pomodoro T
         <item quantity="other">Cada %d pomodoros</item>
     </plurals>
     <string name="settings_sumary_long_break_interval_disabled">Desactivados</string>
+    <string name="settings_summary_notification_ringtone_silent">Desactivado</string>
 
 </resources>
