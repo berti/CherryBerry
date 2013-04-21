@@ -23,12 +23,15 @@
 
 package com.primoberti.cherryberry;
 
-import com.primoberti.cherryberry.Session.BreakType;
-
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.primoberti.cherryberry.Session.BreakType;
 
 /**
  * Abstract helper class for accessing shared preferences across CherryBerry.
@@ -109,6 +112,17 @@ public abstract class PreferencesHelper {
 				R.bool.settings_default_notification_sound);
 	}
 
+	public static Ringtone getNotificationRingtone(Context context) {
+		String uri = getString(context,
+				R.string.settings_key_notification_ringtone,
+				R.string.settings_default_notification_ringtone);
+		Ringtone ringtone = null;
+		if (uri != null && uri.length() > 0) {
+			ringtone = RingtoneManager.getRingtone(context, Uri.parse(uri));
+		}
+		return ringtone;
+	}
+
 	/* Private static methods ****************** */
 
 	private static int getInt(Context context, int key, int defValue) {
@@ -146,6 +160,11 @@ public abstract class PreferencesHelper {
 				.getDefaultSharedPreferences(context);
 		return preferences.getBoolean(context.getResources().getString(key),
 				defValue);
+	}
+
+	private static String getString(Context context, int key, int defValueKey) {
+		String defValue = context.getResources().getString(defValueKey);
+		return getString(context, key, defValue);
 	}
 
 	private static String getString(Context context, int key, String defValue) {

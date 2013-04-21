@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
+import android.media.Ringtone;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -51,6 +52,7 @@ public class SettingsActivity extends PreferenceActivity implements
 	private Preference breakDurationPreference;
 	private Preference longBreakDurationPreference;
 	private Preference longBreakIntervalPreference;
+	private Preference notificationRingtonePreference;
 
 	@Override
 	@TargetApi(11)
@@ -70,6 +72,7 @@ public class SettingsActivity extends PreferenceActivity implements
 		breakDurationPreference = findPreference(R.string.settings_key_break_duration);
 		longBreakDurationPreference = findPreference(R.string.settings_key_long_break_duration);
 		longBreakIntervalPreference = findPreference(R.string.settings_key_long_break_interval);
+		notificationRingtonePreference = findPreference(R.string.settings_key_notification_ringtone);
 
 		OnPreferenceChangeListener listener = new CheckNumberOnPreferenceChangeListener();
 		pomodoroDurationPreference.setOnPreferenceChangeListener(listener);
@@ -90,6 +93,7 @@ public class SettingsActivity extends PreferenceActivity implements
 		updateLongBreakDurationSummary();
 		updateLongBreakIntervalSummary();
 		checkLongBreaksEnabled();
+		updateNotificationRingtoneSummary();
 	}
 
 	@Override
@@ -172,6 +176,18 @@ public class SettingsActivity extends PreferenceActivity implements
 		}
 	}
 
+	private void updateNotificationRingtoneSummary() {
+		Ringtone ringtone = PreferencesHelper.getNotificationRingtone(this);
+		if (ringtone == null) {
+			// Silent ringtone, i.e. disabled
+			setSummary(notificationRingtonePreference,
+					R.string.settings_summary_notification_ringtone_silent);
+		}
+		else {
+			notificationRingtonePreference.setSummary(ringtone.getTitle(this));
+		}
+	}
+
 	private void setSummary(Preference preference, int summaryId,
 			Object... args) {
 		preference.setSummary(getString(summaryId, args));
@@ -183,7 +199,7 @@ public class SettingsActivity extends PreferenceActivity implements
 		String summary = resources.getQuantityString(summaryId, quantity, args);
 		preference.setSummary(summary);
 	}
-	
+
 	private void checkLongBreaksEnabled() {
 		if (PreferencesHelper.getLongBreakInterval(this) > 0) {
 			longBreakDurationPreference.setEnabled(true);

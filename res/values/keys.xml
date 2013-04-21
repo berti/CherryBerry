@@ -4,6 +4,7 @@
     <item name="settings_key_notification_light" format="string" type="string">notification_light</item>
     <item name="settings_key_notification_vibration" format="string" type="string">notification_vibration</item>
     <item name="settings_key_notification_sound" format="string" type="string">notification_sound</item>
+    <item name="settings_key_notification_ringtone" format="string" type="string">notification_ringtone</item>
     <item name="settings_key_pomodoro_duration" format="string" type="string">pomodoro_duration</item>
     <item name="settings_key_break_duration" format="string" type="string">break_duration</item>
     <item name="settings_key_long_break_duration" format="string" type="string">long_break_duration</item>
