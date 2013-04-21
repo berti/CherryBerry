@@ -27,6 +27,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.text.format.DateFormat;
 
 /**
@@ -130,8 +133,9 @@ public abstract class NotificationHelper {
 			notification.defaults |= Notification.DEFAULT_VIBRATE;
 		}
 
-		if (PreferencesHelper.isNotificationSound(context)) {
-			notification.defaults |= Notification.DEFAULT_SOUND;
+		if (PreferencesHelper.isNotificationRingtoneEnabled(context)) {
+			String uri = PreferencesHelper.getNotificationRingtoneUri(context);
+			notification.sound = Uri.parse(uri);
 		}
 
 		if (PreferencesHelper.isNotificationLight(context)) {

@@ -112,15 +112,22 @@ public abstract class PreferencesHelper {
 				R.bool.settings_default_notification_sound);
 	}
 
+	public static boolean isNotificationRingtoneEnabled(Context context) {
+		return getNotificationRingtone(context) != null;
+	}
+
 	public static Ringtone getNotificationRingtone(Context context) {
-		String uri = getString(context,
-				R.string.settings_key_notification_ringtone,
-				R.string.settings_default_notification_ringtone);
+		String uri = getNotificationRingtoneUri(context);
 		Ringtone ringtone = null;
 		if (uri != null && uri.length() > 0) {
 			ringtone = RingtoneManager.getRingtone(context, Uri.parse(uri));
 		}
 		return ringtone;
+	}
+
+	public static String getNotificationRingtoneUri(Context context) {
+		return getString(context, R.string.settings_key_notification_ringtone,
+				R.string.settings_default_notification_ringtone);
 	}
 
 	/* Private static methods ****************** */
