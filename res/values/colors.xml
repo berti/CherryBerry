@@ -3,6 +3,5 @@
 
     <color name="dark_purple">#23091b</color>
     <color name="pomodoro_circle">#aaaaaa</color>
-    <color name="pomodoro_circle_running">#333333</color>
 
 </resources>

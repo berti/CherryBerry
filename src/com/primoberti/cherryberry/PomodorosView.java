@@ -56,7 +56,6 @@ public class PomodorosView extends View {
 
 	private Paint emptyCirclePaint;
 	private Paint fullCirclePaint;
-	private Paint runningCirclePaint;
 
 	private RectF runningPomodoroRect;
 
@@ -152,11 +151,6 @@ public class PomodorosView extends View {
 		fullCirclePaint = new Paint(emptyCirclePaint);
 		fullCirclePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
-		runningCirclePaint = new Paint(emptyCirclePaint);
-		runningCirclePaint
-				.setColor(r.getColor(R.color.pomodoro_circle_running));
-		runningCirclePaint.setStyle(Paint.Style.FILL);
-
 		runningPomodoroRect = new RectF();
 	}
 
@@ -225,7 +219,7 @@ public class PomodorosView extends View {
 					runningPomodoroRect.set(cx - radius, cy - radius, cx
 							+ radius, cy + radius);
 					canvas.drawArc(runningPomodoroRect, 90, 180, false,
-							runningCirclePaint);
+							fullCirclePaint);
 				}
 			}
 			canvas.drawCircle(cx, cy, radius, paint);
