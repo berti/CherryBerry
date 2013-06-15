@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -56,6 +57,8 @@ public class PomodorosView extends View {
 	private Paint emptyCirclePaint;
 	private Paint fullCirclePaint;
 	private Paint runningCirclePaint;
+
+	private RectF runningPomodoroRect;
 
 	/* Constructors **************************** */
 
@@ -153,6 +156,8 @@ public class PomodorosView extends View {
 		runningCirclePaint
 				.setColor(r.getColor(R.color.pomodoro_circle_running));
 		runningCirclePaint.setStyle(Paint.Style.FILL);
+
+		runningPomodoroRect = new RectF();
 	}
 
 	@Override
@@ -217,11 +222,13 @@ public class PomodorosView extends View {
 			else {
 				paint = emptyCirclePaint;
 				if (running) {
-					canvas.drawCircle(cx, cy, radius, runningCirclePaint);
+					runningPomodoroRect.set(cx - radius, cy - radius, cx
+							+ radius, cy + radius);
+					canvas.drawArc(runningPomodoroRect, 90, 180, false,
+							runningCirclePaint);
 				}
 			}
 			canvas.drawCircle(cx, cy, radius, paint);
 		}
 	}
-
 }
