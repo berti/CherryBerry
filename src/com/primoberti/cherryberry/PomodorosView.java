@@ -157,40 +157,30 @@ public class PomodorosView extends View {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		int measuredWidth = measureWidth(widthMeasureSpec);
-		int measuredHeight = measureHeight(heightMeasureSpec);
+		int measuredWidth = measureDimension(widthMeasureSpec, DEFAULT_WIDTH);
+		int measuredHeight = measureDimension(heightMeasureSpec, DEFAULT_HEIGHT);
 
 		setMeasuredDimension(measuredWidth, measuredHeight);
 	}
 
-	private int measureWidth(int widthMeasureSpec) {
-		int specMode = MeasureSpec.getMode(widthMeasureSpec);
-		int specSize = MeasureSpec.getSize(widthMeasureSpec);
+	/**
+	 * Returns the size given in the measure spec, unless the
+	 * <code>specMode</code> is <code>UNSPECIFIED</code> in which case the given
+	 * default value is returned.
+	 * 
+	 * @param measureSpec the measure spec to measure
+	 * @param defaultMeasure the default value to return if
+	 *            <code>specMode</code> unspecified
+	 * @return the given size if <code>EXACTLY</code> or <code>AT_MOST</code>;
+	 *         <code>defaultMeasure</code> otherwise
+	 */
+	private int measureDimension(int measureSpec, int defaultMeasure) {
+		int specMode = MeasureSpec.getMode(measureSpec);
+		int specSize = MeasureSpec.getSize(measureSpec);
 
-		int result = DEFAULT_WIDTH;
+		int result = defaultMeasure;
 
-		if (specMode == MeasureSpec.AT_MOST) {
-			// TODO compute ideal width
-			result = specSize;
-		}
-		else if (specMode == MeasureSpec.EXACTLY) {
-			result = specSize;
-		}
-
-		return result;
-	}
-
-	private int measureHeight(int heightMeasureSpec) {
-		int specMode = MeasureSpec.getMode(heightMeasureSpec);
-		int specSize = MeasureSpec.getSize(heightMeasureSpec);
-
-		int result = DEFAULT_HEIGHT;
-
-		if (specMode == MeasureSpec.AT_MOST) {
-			// TODO compute ideal height
-			result = specSize;
-		}
-		else if (specMode == MeasureSpec.EXACTLY) {
+		if (specMode != MeasureSpec.UNSPECIFIED) {
 			result = specSize;
 		}
 
