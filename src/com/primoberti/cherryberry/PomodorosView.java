@@ -34,6 +34,10 @@ import android.view.View;
  * represented by a circle. An empty circle means a pomodoro that hasn't yet
  * started. A full circle is a finished pomodoro.
  * 
+ * The view fills the available space. The radius of the circles is the maximum
+ * possible, taking into account the height and the width of the view (minus the
+ * padding). The circles are laid out horizontally and evenly distributed.
+ * 
  * @author berti
  */
 public class PomodorosView extends View {
@@ -72,32 +76,68 @@ public class PomodorosView extends View {
 
 	/* Public methods ************************** */
 
+	/**
+	 * Returns the number of pomodoro circles to show.
+	 * 
+	 * @return the number of pomodoro circles to show
+	 */
 	public int getNumPomodoros() {
 		return numPomodoros;
 	}
 
+	/**
+	 * Sets the number of pomodoro circles to show.
+	 * 
+	 * @param numPomodoros the number of pomodoro circles to show.
+	 */
 	public void setNumPomodoros(int numPomodoros) {
 		this.numPomodoros = numPomodoros;
 	}
 
+	/**
+	 * Get the current pomodoro, zero-indexed.
+	 * 
+	 * @return the current pomodoro, zero-indexed.
+	 */
 	public int getCurrentPomodoro() {
 		return currentPomodoro;
 	}
 
+	/**
+	 * Sets the current pomodoro, zero-indexed.
+	 * 
+	 * @param currentPomodoro the current pomodoro, zero-indexed.
+	 */
 	public void setCurrentPomodoro(int currentPomodoro) {
 		this.currentPomodoro = currentPomodoro;
 	}
 
+	/**
+	 * Returns <code>true</code> if the current pomodoro is running.
+	 * 
+	 * @return <code>true</code> if the current pomodoro is running;
+	 *         <code>false</code> otherwise
+	 */
 	public boolean isRunning() {
 		return running;
 	}
 
+	/**
+	 * Sets whether the current pomodoro is running.
+	 * 
+	 * @param running <code>true</code> if the current pomodoro is running;
+	 *            <code>false</code> otherwise
+	 */
 	public void setRunning(boolean running) {
 		this.running = running;
 	}
 
 	/* Private and protected methods *********** */
 
+	/**
+	 * Initialize <code>Paint</code> instances used when drawing and other
+	 * resources.
+	 */
 	private void initView() {
 		Resources r = getResources();
 
