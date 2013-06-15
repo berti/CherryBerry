@@ -94,6 +94,7 @@ public class PomodorosView extends View {
 	 */
 	public void setNumPomodoros(int numPomodoros) {
 		this.numPomodoros = numPomodoros;
+		invalidate();
 	}
 
 	/**
@@ -112,6 +113,7 @@ public class PomodorosView extends View {
 	 */
 	public void setCurrentPomodoro(int currentPomodoro) {
 		this.currentPomodoro = currentPomodoro;
+		invalidate();
 	}
 
 	/**
@@ -132,6 +134,7 @@ public class PomodorosView extends View {
 	 */
 	public void setRunning(boolean running) {
 		this.running = running;
+		invalidate();
 	}
 
 	/* Private and protected methods *********** */
