@@ -3,6 +3,9 @@
 
     <declare-styleable name="PomodorosView">
         <attr name="color" format="color" />
+        <attr name="numPomodoros" format="integer" />
+        <attr name="currentPomodoro" format="integer" />
+        <attr name="running" format="boolean" />
     </declare-styleable>
 
 </resources>
