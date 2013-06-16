@@ -24,6 +24,7 @@ package com.primoberti.cherryberry;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -54,6 +55,8 @@ public class PomodorosView extends View {
 	private int currentPomodoro;
 	private boolean running;
 
+	private int color;
+
 	private Paint emptyCirclePaint;
 	private Paint fullCirclePaint;
 
@@ -68,12 +71,12 @@ public class PomodorosView extends View {
 
 	public PomodorosView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		initView();
+		initView(attrs);
 	}
 
 	public PomodorosView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		initView();
+		initView(attrs);
 	}
 
 	/* Public methods ************************** */
@@ -137,17 +140,44 @@ public class PomodorosView extends View {
 		invalidate();
 	}
 
+	public int getColor() {
+		return color;
+	}
+
+	public void setColor(int color) {
+		this.color = color;
+		invalidate();
+	}
+
 	/* Private and protected methods *********** */
+
+	/**
+	 * Initialize view resources, taking into account the given attribute
+	 * values.
+	 */
+	private void initView(AttributeSet attrs) {
+		Resources r = getResources();
+		TypedArray a = getContext().getTheme().obtainStyledAttributes(attrs,
+				R.styleable.PomodorosView, 0, 0);
+
+		try {
+			color = a.getColor(R.styleable.PomodorosView_color,
+					r.getColor(R.color.pomodoro_circle));
+		}
+		finally {
+			a.recycle();
+		}
+
+		initView();
+	}
 
 	/**
 	 * Initialize <code>Paint</code> instances used when drawing and other
 	 * resources.
 	 */
 	private void initView() {
-		Resources r = getResources();
-
 		emptyCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		emptyCirclePaint.setColor(r.getColor(R.color.pomodoro_circle));
+		emptyCirclePaint.setColor(color);
 		emptyCirclePaint.setStrokeWidth(2);
 		emptyCirclePaint.setStyle(Paint.Style.STROKE);
 
