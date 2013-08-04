@@ -8,4 +8,9 @@
         <attr name="running" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="TimerView">
+        <attr name="activeColor" format="color" />
+        <attr name="inactiveColor" format="color" />
+    </declare-styleable>
+
 </resources>
