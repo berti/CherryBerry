@@ -35,10 +35,8 @@ import android.view.View;
  * A view for showing a countdown timer for the current pomodoro, including cues
  * of how much time is left in the pomodoro or break. The timer is composed of a
  * text enclosed in a circumference. The length of the circumference represents
- * the total time of a pomodoro, plus its break. There is a mark at the top of
- * the circumference, representing the start/end, and another where the pomodoro
- * finishes and the break starts. Finally, there is a moving mark representing
- * the countdown timer.
+ * the total time of a pomodoro, plus its break. The circumference is divided
+ * into segments (arcs) representing the pomodoro, break and elapsed times.
  * 
  * The view takes as much space as possible. The radius of the circumference is
  * thus the maximum available, taking into account the height and the width of
@@ -64,8 +62,6 @@ public class TimerView extends View {
 
 	private Paint activeCircumferencePaint;
 	private Paint inactiveCircumferencePaint;
-	private Paint emptyMarkPaint;
-	private Paint fullMarkPaint;
 
 	private RectF timerRect;
 
@@ -158,14 +154,6 @@ public class TimerView extends View {
 
 		inactiveCircumferencePaint = new Paint(activeCircumferencePaint);
 		inactiveCircumferencePaint.setColor(inactiveColor);
-
-		emptyMarkPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		emptyMarkPaint.setColor(activeColor);
-		emptyMarkPaint.setStrokeWidth(2);
-		emptyMarkPaint.setStyle(Paint.Style.STROKE);
-
-		fullMarkPaint = new Paint(emptyMarkPaint);
-		fullMarkPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
 		timerRect = new RectF();
 	}
