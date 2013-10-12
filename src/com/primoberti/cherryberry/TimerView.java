@@ -57,7 +57,7 @@ public class TimerView extends View {
 	private int pomodoroLength = 25;
 	private int breakLength = 5;
 
-	private float elapsed = 0.0f;
+	private long elapsed = 0;
 
 	private int elapsedColor;
 	private int pomodoroColor;
@@ -127,21 +127,22 @@ public class TimerView extends View {
 	}
 
 	/**
-	 * Return the current elapsed time as a percentage.
+	 * Return the current elapsed time, in milliseconds.
 	 * 
-	 * @return the current elapsed time as a percentage
+	 * @return the current elapsed time, in milliseconds
 	 */
-	public float getElapsed() {
+	public long getElapsed() {
 		return elapsed;
 	}
 
 	/**
-	 * Set the current elapsed time to the given percentage.
+	 * Set the current elapsed time.
 	 * 
-	 * @param elapsed the new current elapsed time as a percentage
+	 * @param elapsed the new current elapsed time, in milliseconds
 	 */
-	public void setElapsed(float elapsed) {
-		this.elapsed = elapsed <= 1.0f ? elapsed : elapsed % 1.0f;
+	public void setElapsed(long elapsed) {
+		int totalTime = (pomodoroLength + breakLength) * 1000 * 60;
+		this.elapsed = elapsed == totalTime ? elapsed : elapsed % totalTime;
 		invalidate();
 	}
 
@@ -234,19 +235,17 @@ public class TimerView extends View {
 		int px = width / 2;
 		int py = height / 2;
 
-		int radius = (int) (Math.min(px, py) - elapsedPaint
-				.getStrokeWidth() / 2);
+		int radius = (int) (Math.min(px, py) - elapsedPaint.getStrokeWidth() / 2);
 
-		int totalLength = pomodoroLength + breakLength;
-		float elapsedSweepAngle = 360f * elapsed;
-		float pomodoroSweepAngle = Math.max(360f * pomodoroLength / totalLength
-				- elapsedSweepAngle, 0);
+		int totalLength = (pomodoroLength + breakLength) * 1000 * 60;
+		float elapsedSweepAngle = 360f * elapsed / totalLength;
+		float pomodoroSweepAngle = Math.max(360f * pomodoroLength * 1000 * 60
+				/ totalLength - elapsedSweepAngle, 0);
 		float breakSweepAngle = 360.0f - elapsedSweepAngle - pomodoroSweepAngle;
 
 		timerRect.set(px - radius, py - radius, px + radius, py + radius);
 
-		canvas.drawArc(timerRect, -90, elapsedSweepAngle, false,
-				elapsedPaint);
+		canvas.drawArc(timerRect, -90, elapsedSweepAngle, false, elapsedPaint);
 		if (pomodoroSweepAngle > 0) {
 			canvas.drawArc(timerRect, -90 + elapsedSweepAngle,
 					pomodoroSweepAngle, false, pomodoroPaint);
