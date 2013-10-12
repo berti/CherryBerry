@@ -213,7 +213,8 @@ public class TimerView extends View {
 		int px = width / 2;
 		int py = height / 2;
 
-		int radius = Math.min(px, py) - 3;
+		int radius = (int) (Math.min(px, py) - elapsedCircumferencePaint
+				.getStrokeWidth() / 2);
 
 		int totalLength = pomodoroLength + breakLength;
 		float elapsedSweepAngle = 360f * elapsed;
