@@ -153,9 +153,12 @@ public class TimerView extends View {
 	 * resources.
 	 */
 	private void initView() {
+		Resources r = getResources();
+
 		elapsedCircumferencePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		elapsedCircumferencePaint.setColor(elapsedColor);
-		elapsedCircumferencePaint.setStrokeWidth(6);
+		elapsedCircumferencePaint.setStrokeWidth(r
+				.getDimension(R.dimen.timer_circunference_stroke_width));
 		elapsedCircumferencePaint.setStyle(Paint.Style.STROKE);
 
 		pomodoroCircumferencePaint = new Paint(elapsedCircumferencePaint);
