@@ -104,6 +104,7 @@ public class TimerView extends View {
 	 */
 	public void setPomodoroLength(int pomodoroLength) {
 		this.pomodoroLength = pomodoroLength;
+		invalidate();
 	}
 
 	/**
@@ -122,6 +123,7 @@ public class TimerView extends View {
 	 */
 	public void setBreakLength(int breakLength) {
 		this.breakLength = breakLength;
+		invalidate();
 	}
 
 	/**
@@ -140,6 +142,7 @@ public class TimerView extends View {
 	 */
 	public void setElapsed(float elapsed) {
 		this.elapsed = elapsed <= 1.0f ? elapsed : elapsed % 1.0f;
+		invalidate();
 	}
 
 	/**
