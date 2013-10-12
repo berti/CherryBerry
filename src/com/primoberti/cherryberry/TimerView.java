@@ -57,7 +57,7 @@ public class TimerView extends View {
 	private int pomodoroLength = 25;
 	private int breakLength = 5;
 
-	private float elapsed = 0.33f;
+	private float elapsed = 0.0f;
 
 	private int elapsedColor;
 	private int pomodoroColor;
@@ -122,6 +122,24 @@ public class TimerView extends View {
 	 */
 	public void setBreakLength(int breakLength) {
 		this.breakLength = breakLength;
+	}
+
+	/**
+	 * Return the current elapsed time as a percentage.
+	 * 
+	 * @return the current elapsed time as a percentage
+	 */
+	public float getElapsed() {
+		return elapsed;
+	}
+
+	/**
+	 * Set the current elapsed time to the given percentage.
+	 * 
+	 * @param elapsed the new current elapsed time as a percentage
+	 */
+	public void setElapsed(float elapsed) {
+		this.elapsed = elapsed <= 1.0f ? elapsed : elapsed % 1.0f;
 	}
 
 	/**
