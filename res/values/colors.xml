@@ -2,7 +2,8 @@
 <resources>
 
     <color name="dark_purple">#23091b</color>
-    <color name="pomodoro_circle">#aaaaaa</color>
-    <color name="inactive_circle">#43192b</color>
+    <color name="elapsed_circle">#ccbbbb</color>
+    <color name="pomodoro_circle">#63394b</color>
+    <color name="break_circle">#43192b</color>
 
 </resources>

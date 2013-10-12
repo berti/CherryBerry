@@ -57,11 +57,15 @@ public class TimerView extends View {
 	private int pomodoroLength = 25;
 	private int breakLength = 5;
 
-	private int activeColor;
-	private int inactiveColor;
+	private float elapsed = 0.33f;
 
-	private Paint activeCircumferencePaint;
-	private Paint inactiveCircumferencePaint;
+	private int elapsedColor;
+	private int pomodoroColor;
+	private int breakColor;
+
+	private Paint elapsedCircumferencePaint;
+	private Paint pomodoroCircumferencePaint;
+	private Paint breakCircumferencePaint;
 
 	private RectF timerRect;
 
@@ -130,10 +134,12 @@ public class TimerView extends View {
 				R.styleable.TimerView, 0, 0);
 
 		try {
-			activeColor = a.getColor(R.styleable.TimerView_activeColor,
+			elapsedColor = a.getColor(R.styleable.TimerView_elapsedColor,
+					r.getColor(R.color.elapsed_circle));
+			pomodoroColor = a.getColor(R.styleable.TimerView_pomodoroColor,
 					r.getColor(R.color.pomodoro_circle));
-			inactiveColor = a.getColor(R.styleable.TimerView_inactiveColor,
-					r.getColor(R.color.inactive_circle));
+			breakColor = a.getColor(R.styleable.TimerView_breakColor,
+					r.getColor(R.color.break_circle));
 		}
 		finally {
 			a.recycle();
@@ -147,13 +153,16 @@ public class TimerView extends View {
 	 * resources.
 	 */
 	private void initView() {
-		activeCircumferencePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		activeCircumferencePaint.setColor(activeColor);
-		activeCircumferencePaint.setStrokeWidth(6);
-		activeCircumferencePaint.setStyle(Paint.Style.STROKE);
+		elapsedCircumferencePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		elapsedCircumferencePaint.setColor(elapsedColor);
+		elapsedCircumferencePaint.setStrokeWidth(6);
+		elapsedCircumferencePaint.setStyle(Paint.Style.STROKE);
 
-		inactiveCircumferencePaint = new Paint(activeCircumferencePaint);
-		inactiveCircumferencePaint.setColor(inactiveColor);
+		pomodoroCircumferencePaint = new Paint(elapsedCircumferencePaint);
+		pomodoroCircumferencePaint.setColor(pomodoroColor);
+
+		breakCircumferencePaint = new Paint(elapsedCircumferencePaint);
+		breakCircumferencePaint.setColor(breakColor);
 
 		timerRect = new RectF();
 	}
@@ -204,15 +213,21 @@ public class TimerView extends View {
 		int radius = Math.min(px, py) - 3;
 
 		int totalLength = pomodoroLength + breakLength;
-		float pomodoroSweepAngle = 360f * pomodoroLength / totalLength;
-		float breakSweepAngle = 360.0f - pomodoroSweepAngle;
+		float elapsedSweepAngle = 360f * elapsed;
+		float pomodoroSweepAngle = Math.max(360f * pomodoroLength / totalLength
+				- elapsedSweepAngle, 0);
+		float breakSweepAngle = 360.0f - elapsedSweepAngle - pomodoroSweepAngle;
 
 		timerRect.set(px - radius, py - radius, px + radius, py + radius);
 
-		canvas.drawArc(timerRect, -90, pomodoroSweepAngle, false,
-				activeCircumferencePaint);
-		canvas.drawArc(timerRect, -90 + pomodoroSweepAngle, breakSweepAngle,
-				false, inactiveCircumferencePaint);
+		canvas.drawArc(timerRect, -90, elapsedSweepAngle, false,
+				elapsedCircumferencePaint);
+		if (pomodoroSweepAngle > 0) {
+			canvas.drawArc(timerRect, -90 + elapsedSweepAngle,
+					pomodoroSweepAngle, false, pomodoroCircumferencePaint);
+		}
+		canvas.drawArc(timerRect, -90 + pomodoroSweepAngle + elapsedSweepAngle,
+				breakSweepAngle, false, breakCircumferencePaint);
 	}
 
 }

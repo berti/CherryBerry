@@ -9,8 +9,9 @@
     </declare-styleable>
 
     <declare-styleable name="TimerView">
-        <attr name="activeColor" format="color" />
-        <attr name="inactiveColor" format="color" />
+        <attr name="elapsedColor" format="color" />
+        <attr name="pomodoroColor" format="color" />
+        <attr name="breakColor" format="color" />
     </declare-styleable>
 
 </resources>

@@ -167,7 +167,7 @@ public class PomodorosView extends View {
 					R.styleable.PomodorosView_currentPomodoro, 0);
 			running = a.getBoolean(R.styleable.PomodorosView_running, false);
 			color = a.getColor(R.styleable.PomodorosView_color,
-					r.getColor(R.color.pomodoro_circle));
+					r.getColor(R.color.elapsed_circle));
 		}
 		finally {
 			a.recycle();
