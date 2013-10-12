@@ -63,9 +63,9 @@ public class TimerView extends View {
 	private int pomodoroColor;
 	private int breakColor;
 
-	private Paint elapsedCircumferencePaint;
-	private Paint pomodoroCircumferencePaint;
-	private Paint breakCircumferencePaint;
+	private Paint elapsedPaint;
+	private Paint pomodoroPaint;
+	private Paint breakPaint;
 
 	private RectF timerRect;
 
@@ -176,17 +176,17 @@ public class TimerView extends View {
 	private void initView() {
 		Resources r = getResources();
 
-		elapsedCircumferencePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		elapsedCircumferencePaint.setColor(elapsedColor);
-		elapsedCircumferencePaint.setStrokeWidth(r
+		elapsedPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		elapsedPaint.setColor(elapsedColor);
+		elapsedPaint.setStrokeWidth(r
 				.getDimension(R.dimen.timer_circunference_stroke_width));
-		elapsedCircumferencePaint.setStyle(Paint.Style.STROKE);
+		elapsedPaint.setStyle(Paint.Style.STROKE);
 
-		pomodoroCircumferencePaint = new Paint(elapsedCircumferencePaint);
-		pomodoroCircumferencePaint.setColor(pomodoroColor);
+		pomodoroPaint = new Paint(elapsedPaint);
+		pomodoroPaint.setColor(pomodoroColor);
 
-		breakCircumferencePaint = new Paint(elapsedCircumferencePaint);
-		breakCircumferencePaint.setColor(breakColor);
+		breakPaint = new Paint(elapsedPaint);
+		breakPaint.setColor(breakColor);
 
 		timerRect = new RectF();
 	}
@@ -234,7 +234,7 @@ public class TimerView extends View {
 		int px = width / 2;
 		int py = height / 2;
 
-		int radius = (int) (Math.min(px, py) - elapsedCircumferencePaint
+		int radius = (int) (Math.min(px, py) - elapsedPaint
 				.getStrokeWidth() / 2);
 
 		int totalLength = pomodoroLength + breakLength;
@@ -246,13 +246,13 @@ public class TimerView extends View {
 		timerRect.set(px - radius, py - radius, px + radius, py + radius);
 
 		canvas.drawArc(timerRect, -90, elapsedSweepAngle, false,
-				elapsedCircumferencePaint);
+				elapsedPaint);
 		if (pomodoroSweepAngle > 0) {
 			canvas.drawArc(timerRect, -90 + elapsedSweepAngle,
-					pomodoroSweepAngle, false, pomodoroCircumferencePaint);
+					pomodoroSweepAngle, false, pomodoroPaint);
 		}
 		canvas.drawArc(timerRect, -90 + pomodoroSweepAngle + elapsedSweepAngle,
-				breakSweepAngle, false, breakCircumferencePaint);
+				breakSweepAngle, false, breakPaint);
 	}
 
 }
