@@ -12,6 +12,7 @@
         <attr name="elapsedColor" format="color" />
         <attr name="pomodoroColor" format="color" />
         <attr name="breakColor" format="color" />
+        <attr name="textColor" format="color" />
     </declare-styleable>
 
 </resources>

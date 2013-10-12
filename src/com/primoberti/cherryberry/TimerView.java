@@ -27,6 +27,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Paint.Align;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
@@ -62,10 +63,12 @@ public class TimerView extends View {
 	private int elapsedColor;
 	private int pomodoroColor;
 	private int breakColor;
+	private int textColor;
 
 	private Paint elapsedPaint;
 	private Paint pomodoroPaint;
 	private Paint breakPaint;
+	private Paint textPaint;
 
 	private RectF timerRect;
 
@@ -162,6 +165,8 @@ public class TimerView extends View {
 					r.getColor(R.color.pomodoro_circle));
 			breakColor = a.getColor(R.styleable.TimerView_breakColor,
 					r.getColor(R.color.break_circle));
+			textColor = a.getColor(R.styleable.TimerView_textColor,
+					r.getColor(R.color.text));
 		}
 		finally {
 			a.recycle();
@@ -188,6 +193,11 @@ public class TimerView extends View {
 
 		breakPaint = new Paint(elapsedPaint);
 		breakPaint.setColor(breakColor);
+
+		textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		textPaint.setColor(textColor);
+		textPaint.setTextAlign(Align.CENTER);
+		textPaint.setTextSize(r.getDimension(R.dimen.timer_text_size));
 
 		timerRect = new RectF();
 	}
@@ -252,6 +262,20 @@ public class TimerView extends View {
 		}
 		canvas.drawArc(timerRect, -90 + pomodoroSweepAngle + elapsedSweepAngle,
 				breakSweepAngle, false, breakPaint);
+
+		long millis = 0;
+		if (elapsed <= pomodoroLength * 1000 * 60) {
+			millis = pomodoroLength * 1000 * 60 - elapsed;
+		}
+		else {
+			millis = totalLength - elapsed;
+		}
+
+		long minutes = millis / 1000 / 60;
+		long seconds = millis / 1000 % 60;
+
+		canvas.drawText(String.format("%2d:%02d", minutes, seconds), px, py
+				- ((textPaint.descent() + textPaint.ascent()) / 2), textPaint);
 	}
 
 }
