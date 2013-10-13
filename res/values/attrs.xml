@@ -13,6 +13,7 @@
         <attr name="pomodoroColor" format="color" />
         <attr name="breakColor" format="color" />
         <attr name="textColor" format="color" />
+        <attr name="textSize" format="dimension" />
     </declare-styleable>
 
 </resources>
