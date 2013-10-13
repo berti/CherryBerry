@@ -63,6 +63,7 @@ public class TimerView extends View {
 	private int elapsedColor;
 	private int pomodoroColor;
 	private int breakColor;
+	private float strokeWidth;
 	private int textColor;
 	private float textSize;
 
@@ -166,6 +167,8 @@ public class TimerView extends View {
 					r.getColor(R.color.pomodoro_circle));
 			breakColor = a.getColor(R.styleable.TimerView_breakColor,
 					r.getColor(R.color.break_circle));
+			strokeWidth = a.getDimension(R.styleable.TimerView_strokeWidth,
+					r.getDimension(R.dimen.timer_circunference_stroke_width));
 			textColor = a.getColor(R.styleable.TimerView_textColor,
 					r.getColor(R.color.text));
 			textSize = a.getDimension(R.styleable.TimerView_textSize,
@@ -183,12 +186,9 @@ public class TimerView extends View {
 	 * resources.
 	 */
 	private void initView() {
-		Resources r = getResources();
-
 		elapsedPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		elapsedPaint.setColor(elapsedColor);
-		elapsedPaint.setStrokeWidth(r
-				.getDimension(R.dimen.timer_circunference_stroke_width));
+		elapsedPaint.setStrokeWidth(strokeWidth);
 		elapsedPaint.setStyle(Paint.Style.STROKE);
 
 		pomodoroPaint = new Paint(elapsedPaint);
