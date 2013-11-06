@@ -23,7 +23,6 @@
 
 package com.primoberti.cherryberry;
 
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -55,7 +54,6 @@ public class SettingsActivity extends PreferenceActivity implements
 	private Preference notificationRingtonePreference;
 
 	@Override
-	@TargetApi(11)
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -63,10 +61,8 @@ public class SettingsActivity extends PreferenceActivity implements
 
 		setTitle(R.string.activity_title_settings);
 
-		if (android.os.Build.VERSION.SDK_INT >= 11) {
-			ActionBar actionBar = getActionBar();
-			actionBar.setDisplayHomeAsUpEnabled(true);
-		}
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
 
 		pomodoroDurationPreference = findPreference(R.string.settings_key_pomodoro_duration);
 		breakDurationPreference = findPreference(R.string.settings_key_break_duration);
