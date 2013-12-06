@@ -70,12 +70,6 @@ public abstract class NotificationHelper {
 		NotificationManager mNotificationManager = (NotificationManager) context
 				.getSystemService(ns);
 
-		int icon = R.drawable.ic_stat_generic;
-		long when = System.currentTimeMillis();
-		Notification notification = new Notification(icon,
-				resources.getString(tickerTextId), when);
-		notification.flags |= Notification.FLAG_ONGOING_EVENT;
-
 		Date date = new Date(finishTime);
 		java.text.DateFormat dateFormat = DateFormat.getTimeFormat(context
 				.getApplicationContext());
@@ -88,9 +82,14 @@ public abstract class NotificationHelper {
 				CherryBerryActivity.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				notificationIntent, 0);
-		notification.setLatestEventInfo(appContext,
-				resources.getString(contentTitleId), contentText2,
-				contentIntent);
+
+		@SuppressWarnings("deprecation")
+		Notification notification = new Notification.Builder(appContext)
+				.setTicker(resources.getString(tickerTextId))
+				.setContentTitle(resources.getString(contentTitleId))
+				.setContentText(contentText2)
+				.setSmallIcon(R.drawable.ic_stat_generic).setOngoing(true)
+				.setContentIntent(contentIntent).getNotification();
 
 		mNotificationManager.notify(id, notification);
 	}
@@ -123,38 +122,41 @@ public abstract class NotificationHelper {
 		NotificationManager mNotificationManager = (NotificationManager) context
 				.getSystemService(ns);
 
-		int icon = R.drawable.ic_stat_generic;
-		long when = System.currentTimeMillis();
-		Notification notification = new Notification(icon,
-				resources.getString(tickerText), when);
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		Context appContext = context.getApplicationContext();
+		Notification.Builder builder = new Notification.Builder(appContext)
+				.setTicker(resources.getString(tickerText))
+				.setSmallIcon(R.drawable.ic_stat_generic).setAutoCancel(true);
+
+		int defaults = 0;
 
 		if (PreferencesHelper.isNotificationVibration(context)) {
-			notification.defaults |= Notification.DEFAULT_VIBRATE;
+			defaults |= Notification.DEFAULT_VIBRATE;
 		}
 
 		if (PreferencesHelper.isNotificationRingtoneEnabled(context)) {
 			String uri = PreferencesHelper.getNotificationRingtoneUri(context);
-			notification.sound = Uri.parse(uri);
+			builder.setSound(Uri.parse(uri));
 		}
 
 		if (PreferencesHelper.isNotificationLight(context)) {
-			notification.ledARGB = 0xffd60707;
-			notification.ledOnMS = 300;
-			notification.ledOffMS = 3000;
-			notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+			defaults |= Notification.DEFAULT_LIGHTS;
+			builder.setLights(0xffd60707, 300, 3000);
 		}
 
-		Context appContext = context.getApplicationContext();
+		builder.setDefaults(defaults);
+
 		Intent notificationIntent = new Intent(context,
 				CherryBerryActivity.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				notificationIntent, 0);
-		notification.setLatestEventInfo(appContext,
-				resources.getString(contentTitle),
-				resources.getString(contentText), contentIntent);
+
+		builder.setContentTitle(resources.getString(contentTitle))
+				.setContentText(resources.getString(contentText))
+				.setContentIntent(contentIntent);
+
+		@SuppressWarnings("deprecation")
+		Notification notification = builder.getNotification();
 
 		mNotificationManager.notify(id, notification);
 	}
-
 }
