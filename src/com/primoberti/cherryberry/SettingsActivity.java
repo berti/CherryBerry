@@ -25,16 +25,8 @@ package com.primoberti.cherryberry;
 
 import android.app.ActionBar;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.res.Resources;
-import android.media.Ringtone;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.MenuItem;
 
 /**
@@ -42,82 +34,30 @@ import android.view.MenuItem;
  * 
  * @author berti
  */
-public class SettingsActivity extends PreferenceActivity implements
-		OnSharedPreferenceChangeListener {
+public class SettingsActivity extends PreferenceActivity {
 
 	private final static String TAG = "SettingsActivity";
-
-	private Preference pomodoroDurationPreference;
-	private Preference breakDurationPreference;
-	private Preference longBreakDurationPreference;
-	private Preference longBreakIntervalPreference;
-	private Preference notificationRingtonePreference;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		addPreferencesFromResource(R.xml.settings);
 
 		setTitle(R.string.activity_title_settings);
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
-		pomodoroDurationPreference = findPreference(R.string.settings_key_pomodoro_duration);
-		breakDurationPreference = findPreference(R.string.settings_key_break_duration);
-		longBreakDurationPreference = findPreference(R.string.settings_key_long_break_duration);
-		longBreakIntervalPreference = findPreference(R.string.settings_key_long_break_interval);
-		notificationRingtonePreference = findPreference(R.string.settings_key_notification_ringtone);
-
-		OnPreferenceChangeListener listener = new CheckNumberOnPreferenceChangeListener();
-		pomodoroDurationPreference.setOnPreferenceChangeListener(listener);
-		breakDurationPreference.setOnPreferenceChangeListener(listener);
-		longBreakDurationPreference.setOnPreferenceChangeListener(listener);
-		longBreakIntervalPreference.setOnPreferenceChangeListener(listener);
+		// Show the only preferences fragment as the main content. If more
+		// fragments are added in the future, remove this, override
+		// onBuildHeaders and load preference headers from XML
+		getFragmentManager().beginTransaction()
+				.replace(android.R.id.content, new PreferencesFragment())
+				.commit();
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-
-		PreferenceManager.getDefaultSharedPreferences(this)
-				.registerOnSharedPreferenceChangeListener(this);
-
-		updatePomodoroDurationSummary();
-		updateBreakDurationSummary();
-		updateLongBreakDurationSummary();
-		updateLongBreakIntervalSummary();
-		checkLongBreaksEnabled();
-		updateNotificationRingtoneSummary();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-
-		PreferenceManager.getDefaultSharedPreferences(this)
-				.unregisterOnSharedPreferenceChangeListener(this);
-	}
-
-	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
-		if (key.equals(getString(R.string.settings_key_pomodoro_duration))) {
-			updatePomodoroDurationSummary();
-		}
-		else if (key.equals(getString(R.string.settings_key_break_duration))) {
-			updateBreakDurationSummary();
-		}
-		else if (key
-				.equals(getString(R.string.settings_key_long_break_duration))) {
-			updateLongBreakDurationSummary();
-		}
-		else if (key
-				.equals(getString(R.string.settings_key_long_break_interval))) {
-			updateLongBreakIntervalSummary();
-			checkLongBreaksEnabled();
-		}
+	protected boolean isValidFragment(String fragmentName) {
+		return fragmentName.equals(PreferencesFragment.class.getName());
 	}
 
 	@Override
@@ -131,97 +71,6 @@ public class SettingsActivity extends PreferenceActivity implements
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	/* Private methods ************************* */
-
-	private Preference findPreference(int keyId) {
-		return getPreferenceScreen().findPreference(getString(keyId));
-	}
-
-	private void updatePomodoroDurationSummary() {
-		int duration = PreferencesHelper.getPomodoroDurationMins(this);
-		setQuantitySummary(pomodoroDurationPreference,
-				R.plurals.settings_summary_duration, duration, duration);
-	}
-
-	private void updateBreakDurationSummary() {
-		int duration = PreferencesHelper.getBreakDurationMins(this);
-		setQuantitySummary(breakDurationPreference,
-				R.plurals.settings_summary_duration, duration, duration);
-	}
-
-	private void updateLongBreakDurationSummary() {
-		int duration = PreferencesHelper.getLongBreakDurationMins(this);
-		setQuantitySummary(longBreakDurationPreference,
-				R.plurals.settings_summary_duration, duration, duration);
-	}
-
-	private void updateLongBreakIntervalSummary() {
-		int interval = PreferencesHelper.getLongBreakInterval(this);
-		if (interval == 0) {
-			// Not "zero", but "disabled"
-			setSummary(longBreakIntervalPreference,
-					R.string.settings_sumary_long_break_interval_disabled);
-		}
-		else {
-			setQuantitySummary(longBreakIntervalPreference,
-					R.plurals.settings_summary_long_break_interval, interval,
-					interval);
-		}
-	}
-
-	private void updateNotificationRingtoneSummary() {
-		Ringtone ringtone = PreferencesHelper.getNotificationRingtone(this);
-		if (ringtone == null) {
-			// Silent ringtone, i.e. disabled
-			setSummary(notificationRingtonePreference,
-					R.string.settings_summary_notification_ringtone_silent);
-		}
-		else {
-			notificationRingtonePreference.setSummary(ringtone.getTitle(this));
-		}
-	}
-
-	private void setSummary(Preference preference, int summaryId,
-			Object... args) {
-		preference.setSummary(getString(summaryId, args));
-	}
-
-	private void setQuantitySummary(Preference preference, int summaryId,
-			int quantity, Object... args) {
-		Resources resources = getResources();
-		String summary = resources.getQuantityString(summaryId, quantity, args);
-		preference.setSummary(summary);
-	}
-
-	private void checkLongBreaksEnabled() {
-		if (PreferencesHelper.getLongBreakInterval(this) > 0) {
-			longBreakDurationPreference.setEnabled(true);
-		}
-		else {
-			longBreakDurationPreference.setEnabled(false);
-		}
-	}
-
-	/* Private inner classes ******************* */
-
-	private class CheckNumberOnPreferenceChangeListener implements
-			OnPreferenceChangeListener {
-
-		@Override
-		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			boolean valid = true;
-			try {
-				Integer.parseInt(newValue.toString());
-			}
-			catch (NumberFormatException e) {
-				Log.w(TAG, preference.getTitle() + ": " + newValue
-						+ " is not a number");
-				valid = false;
-			}
-			return valid;
 		}
 	}
 
