@@ -22,7 +22,10 @@
         </activity>
         <service android:name="NotificationService" android:exported="false"></service>
         <service android:name=".PomodoroService" android:exported="false"></service>
-        <activity android:name="SettingsActivity" android:label="@string/activity_title_settings"></activity>
+        <activity android:name="SettingsActivity" android:label="@string/activity_title_settings" android:parentActivityName=".CherryBerryActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".CherryBerryActivity"/>
+        </activity>
     </application>
 
 </manifest>

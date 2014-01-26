@@ -24,9 +24,9 @@
 package com.primoberti.cherryberry;
 
 import android.app.ActionBar;
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 /**
@@ -62,10 +62,7 @@ public class SettingsActivity extends PreferenceActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			// Go up, i.e. to CherryBerrryActivity
-			Intent intent = new Intent(this, CherryBerryActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
+			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
