@@ -22,7 +22,7 @@
         </activity>
         <service android:name="NotificationService" android:exported="false"></service>
         <service android:name=".PomodoroService" android:exported="false"></service>
-        <activity android:name="SettingsActivity"></activity>
+        <activity android:name="SettingsActivity" android:label="@string/activity_title_settings"></activity>
     </application>
 
 </manifest>
