@@ -153,8 +153,7 @@ public abstract class PreferencesHelper {
 
 	private static boolean getBoolean(Context context, int key, int defValueKey) {
 		boolean defValue = context.getResources().getBoolean(defValueKey);
-		return getBoolean(context,
-				R.string.settings_key_notification_vibration, defValue);
+		return getBoolean(context, key, defValue);
 	}
 
 	private static boolean getBoolean(Context context, int key, boolean defValue) {
